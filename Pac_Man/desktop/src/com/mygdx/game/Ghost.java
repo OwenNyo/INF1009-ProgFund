@@ -6,7 +6,7 @@ import java.util.Random;
 public class Ghost extends Entity{
 	
 		// Static Variables
-		int NoSpawnRadius = 100;
+		int NoSpawnRadius = 30;
 
 		// Class Attributes
 		private float Speed;
@@ -49,27 +49,32 @@ public class Ghost extends Entity{
 		
 		// Class Methods
 		public void GenerateSpawnPoint(float playerX, float playerY) {
-			Random rand = new Random();
-			//System.out.println("Generate the ghost spawning position to not spawn on top of the player");
-			// Generate a min and max pos, prevent ghosts from spawning in this range
-			float minX = playerX - NoSpawnRadius;
-			float maxX = playerX + NoSpawnRadius;
-			float minY = playerY - NoSpawnRadius;
-			float maxY = playerY + NoSpawnRadius;
+		    Random rand = new Random();
+		    System.out.println("Generate the ghost spawning position to not spawn on top of the player");
 
-			// Ensure that ghosts do not spawn within a 50px radius of the player
-			// Can reuse this function to respawn ghost after death
-			
-			// Initialize x and y coordinates to generate spawn location
-			int x = 0;
-			int y = 0 ;
-			do {
-				x = rand.nextInt(800);
-				y = rand.nextInt(600);
-			}while ( x > minX && x < maxX && y > minY && y < maxY);
-			
-			// Set the spawn location after confirming not within range of player
-			super.setX(x);
-			super.setY(y);
+		    // Generate a min and max pos, prevent ghosts from spawning in this range
+		    float minX = playerX - NoSpawnRadius;
+		    float maxX = playerX + NoSpawnRadius;
+		    float minY = playerY - NoSpawnRadius;
+		    float maxY = playerY + NoSpawnRadius;
+
+		    // Ensure that ghosts do not spawn within a 50px radius of the player
+		    // Can reuse this function to respawn ghost after death
+		    
+		    // Initialize x and y coordinates to generate spawn location
+		    int x = 0;
+		    int y = 0;
+		    int screenWidth = 800;  // Assuming 800 is the screen width
+		    int screenHeight = 600; // Assuming 600 is the screen height
+
+		    // Adjust the range for x and y to be within the screen boundaries
+		    do {
+		        x = rand.nextInt(screenWidth);
+		        y = rand.nextInt(screenHeight);
+		    } while (x > minX && x < maxX && y > minY && y < maxY);
+
+		    // Set the spawn location after confirming not within range of player
+		    super.setX(x);
+		    super.setY(y);
 		}
 }

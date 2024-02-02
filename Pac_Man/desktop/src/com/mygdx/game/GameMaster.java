@@ -27,7 +27,7 @@ public class GameMaster extends ApplicationAdapter {
 	// Player Attributes
 	private float Player1SpawnX = 400;
 	private float Player1SpawnY = 300;
-	private float PlayerSpeed = 50;
+	private float PlayerSpeed = 300;
 	private int PlayerHealth = 100;
 	private int PlayerPoints = 0;
 	
@@ -39,6 +39,7 @@ public class GameMaster extends ApplicationAdapter {
 		
 		// Create Ghost Objects
 		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage);
+		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 	}
 	
 	@Override

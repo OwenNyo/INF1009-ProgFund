@@ -54,9 +54,8 @@ public class Player extends Entity{
 		
 		
 		// Class Methods
-		public int PlayerPoints() {
+		public void PlayerPoints(int points) {
 			System.out.println("Player <> earned points");
-			return 0;
 		}
 		
 		public void PlayerDamageTaken(int damage) {
@@ -79,6 +78,7 @@ public class Player extends Entity{
 			if (collidedWithGhost(ghost)) {
 				System.out.println("collision detected");
 				PlayerDamageTaken(10);
+				ghost.GenerateSpawnPoint(getX(), getY());
 			}
 		}
 		

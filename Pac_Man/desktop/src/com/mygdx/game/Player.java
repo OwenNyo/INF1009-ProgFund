@@ -59,9 +59,12 @@ public class Player extends Entity{
 		}
 		
 		public void PlayerDamageTaken(int damage) {
-			System.out.println("Damage Taken by Player");
 			Health -= damage;
-			if (Health == 0) {
+			
+			if (Health != 0) {
+				System.out.println("Damage Taken by Player, Health left:" + getHealth());
+			}
+			else {
 				System.out.println("Player has lost all his health!");
 			}
 		}

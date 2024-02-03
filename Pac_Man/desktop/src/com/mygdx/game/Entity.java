@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Entity {
 	
@@ -12,6 +14,9 @@ public class Entity {
 	private SpriteBatch batch;
 	private float X;
 	private float Y;
+	private Texture texture;
+	private float width;
+	private float height;
 	
 	
 	// Constructors
@@ -20,14 +25,18 @@ public class Entity {
 		this.Tex = null;
 		this.X = 0;
 		this.Y = 0;
+		this.width = 0;
+		this.height = 0;
 	}
 	
 	
-	public Entity(String t, String filename, float x, float y) {
+	public Entity(String t, String filename, float x, float y, float height, float width) {
 		this.Type = t;
 		this.Tex = new Texture(Gdx.files.internal(filename));
 		this.X = x;
 		this.Y = y;
+		this.height = height;
+		this.width = width;
 	}
 	
 	
@@ -62,18 +71,43 @@ public class Entity {
 	public void setY(float y) {
 		Y = y;
 	}
+	public float getWidth() {
+		return width;
+	}
+	public void setWidth(float w) {
+		width = w;
+	}
+	public float getHeight() {
+		return height;
+	}
+	public void setHeight(float h) {
+		height = h;
+	}
 	
 	
 	// Class | Abstract Methods
 	public void draw() {
-		
 		// Initialize batch 
 		batch = new SpriteBatch();
 		batch.begin();
+		
+		// Ensure it doesn't spawn outside the boundary
+		float clampedX = MathUtils.clamp(this.X, 0, Gdx.graphics.getWidth() - this.height);
+	    float clampedY = MathUtils.clamp(this.Y, 0, Gdx.graphics.getHeight() - this.height);
+
 		// Draw with width and height of 50
-		batch.draw(this.Tex, this.X, this.Y, 50, 50);
+		batch.draw(this.Tex, clampedX, clampedY, this.height, this.height);
 		batch.end();
+		
 	}
+	
+	// check collision
+	public Rectangle getBoundingRectangle() {
+		return new Rectangle(getX(), getY(), getHeight(), getWidth());
+		}
+	 
+	 
+	 
 	
 	
 }

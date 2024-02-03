@@ -2,13 +2,15 @@ package com.mygdx.game;
 
 import java.awt.Rectangle;
 
+import com.badlogic.gdx.graphics.Texture;
+
 public class Player extends Entity{
 
 		/// Class Attributes
 		private float Speed;
 		private int Health;
 		private int Points;
-		
+		private Texture texture; 
 		
 		
 		
@@ -20,13 +22,12 @@ public class Player extends Entity{
 		}
 		
 		// Player to earn points via pellet eating -> win cond = survive longer than other player while stacking
-		public Player(String type, String filename, float x, float y, float speed, int health, int points) {
-			super(type, filename, x, y);
+		public Player(String type, String filename, float x, float y, float speed, int health, int points, float height, float width) {
+			super(type, filename, x, y, width, height);
 			this.Speed = speed;
 			this.Health = health;
 			this.Points = points;
 		}
-		
 		
 		
 		
@@ -49,8 +50,6 @@ public class Player extends Entity{
 		public void setPoints(int points) {
 			Points = points; 
 		}
-		
-		
 		
 		
 		// Class Methods
@@ -84,5 +83,7 @@ public class Player extends Entity{
 				ghost.GenerateSpawnPoint(getX(), getY());
 			}
 		}
+		
+		
 		
 }

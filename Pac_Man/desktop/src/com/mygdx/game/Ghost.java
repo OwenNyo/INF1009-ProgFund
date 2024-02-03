@@ -21,8 +21,8 @@ public class Ghost extends Entity{
 			this.Speed = 0;
 			this.Damage = 0;
 		}
-		public Ghost(String type, String filename, float x, float y, float speed, int damage) {
-			super(type, filename, x, y);
+		public Ghost(String type, String filename, float x, float y, float speed, int damage, float height, float width) {
+			super(type, filename, x, y, height, width);
 			this.Speed = speed;
 			this.Damage = damage;
 		}

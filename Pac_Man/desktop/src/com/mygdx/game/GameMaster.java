@@ -1,6 +1,5 @@
 package com.mygdx.game;
 
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -8,14 +7,15 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.utils.ScreenUtils;
+import java.util.Random;
 
 public class GameMaster extends ApplicationAdapter {
 	
 	// Object Declaration
 	private Player player;
 	private Ghost ghost;
+	private collectible[] collectibles;
 
-	
 	// Static Attributes
 	// private int WINNINGSCORE = 100;
 	// private int MAXPLAYERS = 2;
@@ -31,15 +31,30 @@ public class GameMaster extends ApplicationAdapter {
 	private int PlayerHealth = 100;
 	private int PlayerPoints = 0;
 	
+	score score = new score();
+	
 	@Override
 	public void create() {
 		
 		// Create player object
-		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY, PlayerSpeed, PlayerHealth, PlayerPoints);
+		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
+				, PlayerSpeed, PlayerHealth, PlayerPoints, 50, 50);
 		
 		// Create Ghost Objects
-		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage);
+		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 50, 50);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
+		
+		collectibles = new collectible[5];
+	    Random random = new Random();
+		
+		for (int i = 0; i < collectibles.length; i++) {
+            float randomX = random.nextInt(Gdx.graphics.getWidth());
+            float randomY = random.nextInt(Gdx.graphics.getHeight());
+
+            collectibles[i] = new collectible("collectible", "pellet.png", randomX, randomY, 20, 20);
+        }
+		
+		score = new score();
 	}
 	
 	@Override
@@ -49,15 +64,38 @@ public class GameMaster extends ApplicationAdapter {
 		
 		player.draw();  // Draw Player Texture
 		ghost.draw();
+		score.draw();
 		
 		// User Input Segment
 		// Player Movement Segment
-		if (Gdx.input.isKeyPressed(Keys.UP)) player.setY(player.getY() + player.getSpeed() * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) player.setY(player.getY() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) player.setX(player.getX() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			player.setY(player.getY() + player.getSpeed() * Gdx.graphics.getDeltaTime());
+		}
+			
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			player.setY(player.getY() - player.getSpeed() * Gdx.graphics.getDeltaTime());
+		}
+			
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			player.setX(player.getX() - player.getSpeed() * Gdx.graphics.getDeltaTime());
+		}
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
+		}
 		
 		player.checkGhostCollision(ghost);
+		
+		for (collectible collect: collectibles) {
+			collect.draw();
+		}
+		
+		for (collectible collect: collectibles) {
+			if(collect.getBoundingRectangle().overlaps(player.getBoundingRectangle()))
+			{
+				collect.resetPosition(collect.getX(), collect.getY());
+				score.calculateScore();
+			}
+		}
 		
 	}
 	

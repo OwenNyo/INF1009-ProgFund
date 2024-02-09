@@ -24,7 +24,7 @@ public class Score {
 	    ScoreFont = new BitmapFont();
 	    ScoreFont.getData().setScale(2);
 	    ScoreFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-	    ScoreFont.draw(batch, scoreSystem, 50, 450);
+	    ScoreFont.draw(batch, scoreSystem, 50, 550);
 	    batch.end();
 	}
 	

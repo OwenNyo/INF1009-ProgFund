@@ -91,11 +91,11 @@ public class Entity {
 		batch.begin();
 		
 		// Ensure it doesn't spawn outside the boundary
-		float clampedX = MathUtils.clamp(this.X, 0, Gdx.graphics.getWidth() - this.height);
-	    float clampedY = MathUtils.clamp(this.Y, 0, Gdx.graphics.getHeight() - this.height);
+		float clampedX = MathUtils.clamp(getX(), 0, Gdx.graphics.getWidth() - this.width);
+	    float clampedY = MathUtils.clamp(getY(), 0, Gdx.graphics.getHeight() - this.height);
 
 		// Draw with width and height of 50
-		batch.draw(this.Tex, clampedX, clampedY, this.height, this.height);
+		batch.draw(this.Tex, clampedX, clampedY, this.width, this.height);
 		batch.end();
 		
 	}

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.Random;
 
@@ -18,7 +19,6 @@ public class GameMaster extends ApplicationAdapter {
 	private Score score;
 
 	// Static Attributes
-	// private int WINNINGSCORE = 100;
 	private int MAXPELLET = 5;
 	
 	// Ghost Attributes
@@ -36,10 +36,10 @@ public class GameMaster extends ApplicationAdapter {
 		
 		// Create player object
 		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, 50, 50);
+				, PlayerSpeed, PlayerHealth, 40, 40);
 		
 		// Create Ghost Objects
-		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 50, 50);
+		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 40, 40);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 		
 		collectibles = new Collectible[MAXPELLET];
@@ -49,7 +49,7 @@ public class GameMaster extends ApplicationAdapter {
             float randomX = random.nextInt(Gdx.graphics.getWidth());
             float randomY = random.nextInt(Gdx.graphics.getHeight());
 
-            collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 20, 20);
+            collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 15, 15);
         }	
 		
 		score = new Score();
@@ -71,20 +71,21 @@ public class GameMaster extends ApplicationAdapter {
 		
 		// User Input Segment
 		// Player Movement Segment
-		if (Gdx.input.isKeyPressed(Keys.UP)) {
-			player.setY(player.getY() + player.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-			
-		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-			player.setY(player.getY() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-			
-		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-			player.setX(player.getX() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
-		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-			player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
-		}
+		if (Gdx.input.isKeyPressed(Keys.UP) && player.getY() < Gdx.graphics.getHeight() - player.getHeight()) {
+	        player.setY(player.getY() + player.getSpeed() * Gdx.graphics.getDeltaTime());
+	    }
+	        
+	    if (Gdx.input.isKeyPressed(Keys.DOWN) && player.getY() > 0) {
+	        player.setY(player.getY() - player.getSpeed() * Gdx.graphics.getDeltaTime());
+	    }
+	        
+	    if (Gdx.input.isKeyPressed(Keys.LEFT) && player.getX() > 0) {
+	        player.setX(player.getX() - player.getSpeed() * Gdx.graphics.getDeltaTime());
+	    }
+	    if (Gdx.input.isKeyPressed(Keys.RIGHT) && player.getX() < Gdx.graphics.getWidth() - player.getWidth()) {
+	        player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
+	    }
+
 		
 		
 		// Collision Manager's Job

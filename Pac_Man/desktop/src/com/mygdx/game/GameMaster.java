@@ -14,7 +14,7 @@ public class GameMaster extends ApplicationAdapter {
 	// Object Declaration
 	private Player player;
 	private Ghost ghost;
-	private collectible[] collectibles;
+	private Collectible[] collectibles;
 
 	// Static Attributes
 	// private int WINNINGSCORE = 100;
@@ -31,7 +31,7 @@ public class GameMaster extends ApplicationAdapter {
 	private int PlayerHealth = 100;
 	private int PlayerPoints = 0;
 	
-	score score = new score();
+	Score score = new Score();
 	
 	@Override
 	public void create() {
@@ -44,17 +44,17 @@ public class GameMaster extends ApplicationAdapter {
 		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 50, 50);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 		
-		collectibles = new collectible[5];
+		collectibles = new Collectible[5];
 	    Random random = new Random();
 		
 		for (int i = 0; i < collectibles.length; i++) {
             float randomX = random.nextInt(Gdx.graphics.getWidth());
             float randomY = random.nextInt(Gdx.graphics.getHeight());
 
-            collectibles[i] = new collectible("collectible", "pellet.png", randomX, randomY, 20, 20);
+            collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 20, 20);
         }
 		
-		score = new score();
+		score = new Score();
 	}
 	
 	@Override
@@ -85,11 +85,11 @@ public class GameMaster extends ApplicationAdapter {
 		
 		player.checkGhostCollision(ghost);
 		
-		for (collectible collect: collectibles) {
+		for (Collectible collect: collectibles) {
 			collect.draw();
 		}
 		
-		for (collectible collect: collectibles) {
+		for (Collectible collect: collectibles) {
 			if(collect.getBoundingRectangle().overlaps(player.getBoundingRectangle()))
 			{
 				collect.resetPosition(collect.getX(), collect.getY());

@@ -3,14 +3,14 @@ package com.mygdx.game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class score {
+public class Score {
 	
 	private SpriteBatch batch;
 	private int score = 0;
 	private String scoreSystem = "";
 	BitmapFont ScoreFont;
 	
-	public score() {
+	public Score() {
 	    // Initialize score and scoreSystem
 	    score = 0;
 	    scoreSystem = "Score : " + score + " Poor";

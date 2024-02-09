@@ -1,7 +1,5 @@
 package com.mygdx.game;
 
-import com.badlogic.gdx.math.Rectangle;
-
 public class Player extends Entity{
 
 		/// Class Attributes
@@ -47,50 +45,15 @@ public class Player extends Entity{
 		}
 		
 		public void PlayerDamageTaken(int damage) {
+			Health = getHealth();
 			Health -= damage;
 			
-			if (Health != 0) {
+			if (Health > 0) {
 				System.out.println("Damage Taken by Player, Health left:" + getHealth());
 			}
 			else {
 				System.out.println("Player has lost all his health!");
 			}
 		}
-		
-		public boolean collidedWithGhost (Ghost ghost) {
-			Rectangle playerBounds = getBoundingRectangle();
-	        Rectangle ghostBounds = ghost.getBoundingRectangle();
-
-	        return playerBounds.overlaps(ghostBounds);
-		}
-		
-		public void checkGhostCollision (Ghost ghost) {
-			if (collidedWithGhost(ghost)) {
-				System.out.println("Ghost Collision detected");
-				PlayerDamageTaken(10);
-				ghost.GenerateSpawnPoint(getX(), getY());
-			}
-		}
-		
-		public boolean collidedWithCollectible(Collectible c) {
-			Rectangle playerBounds = getBoundingRectangle();
-	        Rectangle collectibleBounds = c.getBoundingRectangle();
-
-	        return playerBounds.overlaps(collectibleBounds);
-	    }
-		
-		public boolean checkCollectibleCollision(Collectible collectibles[]) {
-			for (Collectible c : collectibles) {
-				if(collidedWithCollectible(c)) {
-					System.out.println("Pellet Collision detected");
-					c.resetPosition(getX(), getY());
-					return true;				
-				}
-			}
-			return false;
-	    }
-		
-		
-		
 		
 }

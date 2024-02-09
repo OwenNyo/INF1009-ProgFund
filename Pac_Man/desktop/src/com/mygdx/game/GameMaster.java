@@ -87,15 +87,12 @@ public class GameMaster extends ApplicationAdapter {
 	    }
 
 		
-		
-		// Collision Manager's Job
-		player.checkGhostCollision(ghost);
-		
-		// If true , increment score
-		// If false, nothing
-		if(player.checkCollectibleCollision(collectibles)) {
-			score.calculateScore();
-		}
+	    // Collision Manager 
+	    CollisionManager.checkGhostCollision(player, ghost);
+	    if(CollisionManager.checkCollectibleCollision(player, collectibles))
+	    {
+	    	score.calculateScore();
+	    }
 		
 		
 	}

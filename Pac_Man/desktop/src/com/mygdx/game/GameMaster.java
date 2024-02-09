@@ -93,8 +93,7 @@ public class GameMaster extends ApplicationAdapter {
 	    {
 	    	score.calculateScore();
 	    }
-		
-		
+	    
 	}
 	
 	@Override
@@ -104,7 +103,6 @@ public class GameMaster extends ApplicationAdapter {
 		for (int i = 0; i < MAXPELLET; i++) {  
 			collectibles[i].getTex().dispose();
 		}
-		
 	}
 	
 	

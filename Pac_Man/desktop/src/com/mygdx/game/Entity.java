@@ -14,7 +14,6 @@ public class Entity {
 	private SpriteBatch batch;
 	private float X;
 	private float Y;
-	private Texture texture;
 	private float width;
 	private float height;
 	
@@ -101,12 +100,10 @@ public class Entity {
 		
 	}
 	
-	// check collision
+	// Check collision
 	public Rectangle getBoundingRectangle() {
 		return new Rectangle(getX(), getY(), getHeight(), getWidth());
-		}
-	 
-	 
+	}
 	 
 	
 	

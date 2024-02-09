@@ -1,16 +1,12 @@
 package com.mygdx.game;
 
-import java.awt.Rectangle;
-
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Player extends Entity{
 
 		/// Class Attributes
 		private float Speed;
 		private int Health;
-		private int Points;
-		private Texture texture; 
 		
 		
 		
@@ -18,15 +14,13 @@ public class Player extends Entity{
 		public Player() {
 			this.Speed = 0;
 			this.Health = 0;
-			this.Points = 0;
 		}
 		
 		// Player to earn points via pellet eating -> win cond = survive longer than other player while stacking
-		public Player(String type, String filename, float x, float y, float speed, int health, int points, float height, float width) {
+		public Player(String type, String filename, float x, float y, float speed, int health, float height, float width) {
 			super(type, filename, x, y, width, height);
 			this.Speed = speed;
 			this.Health = health;
-			this.Points = points;
 		}
 		
 		
@@ -44,12 +38,7 @@ public class Player extends Entity{
 		public void setHealth(int health) {
 			Health = health;
 		}
-		public int getPoints() {
-			return Points;
-		}
-		public void setPoints(int points) {
-			Points = points; 
-		}
+		
 		
 		
 		// Class Methods
@@ -69,20 +58,38 @@ public class Player extends Entity{
 		}
 		
 		public boolean collidedWithGhost (Ghost ghost) {
-			 Rectangle playerBounds = new Rectangle((int) super.getX() - 25, (int) super.getY() - 25, 50, 50);
-			 Rectangle ghostBounds = new Rectangle((int) ghost.getX() - 25, (int) ghost.getY() - 25, 50, 50);
+			Rectangle playerBounds = getBoundingRectangle();
+	        Rectangle ghostBounds = ghost.getBoundingRectangle();
 
-			 return playerBounds.intersects(ghostBounds);
-
+	        return playerBounds.overlaps(ghostBounds);
 		}
 		
 		public void checkGhostCollision (Ghost ghost) {
 			if (collidedWithGhost(ghost)) {
-				System.out.println("collision detected");
+				System.out.println("Ghost Collision detected");
 				PlayerDamageTaken(10);
 				ghost.GenerateSpawnPoint(getX(), getY());
 			}
 		}
+		
+		public boolean collidedWithCollectible(Collectible c) {
+			Rectangle playerBounds = getBoundingRectangle();
+	        Rectangle collectibleBounds = c.getBoundingRectangle();
+
+	        return playerBounds.overlaps(collectibleBounds);
+	    }
+		
+		public boolean checkCollectibleCollision(Collectible collectibles[]) {
+			for (Collectible c : collectibles) {
+				if(collidedWithCollectible(c)) {
+					System.out.println("Pellet Collision detected");
+					c.resetPosition(getX(), getY());
+					return true;				
+				}
+			}
+			return false;
+	    }
+		
 		
 		
 		

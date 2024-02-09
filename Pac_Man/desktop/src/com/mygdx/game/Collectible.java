@@ -36,6 +36,9 @@ public class Collectible extends Entity {
 		    return newX >= marginX && newX <= Gdx.graphics.getWidth() - marginX &&
 		           newY >= marginY && newY <= Gdx.graphics.getHeight() - marginY &&
 		           (newX != posX || newY != posY);
-	}
+	 }
+	 
+	 
+	
 	 
 }

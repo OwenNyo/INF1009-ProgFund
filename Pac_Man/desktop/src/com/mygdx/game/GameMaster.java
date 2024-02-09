@@ -14,11 +14,12 @@ public class GameMaster extends ApplicationAdapter {
 	// Object Declaration
 	private Player player;
 	private Ghost ghost;
-	private Collectible[] collectibles;
+	private Collectible collectibles[];
+	private Score score;
 
 	// Static Attributes
 	// private int WINNINGSCORE = 100;
-	// private int MAXPLAYERS = 2;
+	private int MAXPELLET = 5;
 	
 	// Ghost Attributes
 	private int GhostSpeed = 10;
@@ -29,22 +30,19 @@ public class GameMaster extends ApplicationAdapter {
 	private float Player1SpawnY = 300;
 	private float PlayerSpeed = 300;
 	private int PlayerHealth = 100;
-	private int PlayerPoints = 0;
-	
-	Score score = new Score();
 	
 	@Override
 	public void create() {
 		
 		// Create player object
 		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, PlayerPoints, 50, 50);
+				, PlayerSpeed, PlayerHealth, 50, 50);
 		
 		// Create Ghost Objects
 		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 50, 50);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 		
-		collectibles = new Collectible[5];
+		collectibles = new Collectible[MAXPELLET];
 	    Random random = new Random();
 		
 		for (int i = 0; i < collectibles.length; i++) {
@@ -52,7 +50,7 @@ public class GameMaster extends ApplicationAdapter {
             float randomY = random.nextInt(Gdx.graphics.getHeight());
 
             collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 20, 20);
-        }
+        }	
 		
 		score = new Score();
 	}
@@ -60,11 +58,16 @@ public class GameMaster extends ApplicationAdapter {
 	@Override
 	public void render() {
 		// This line is used to ensure that the screen is blank and set to a dark blue background
-		ScreenUtils.clear(0 , 0, 0.2f, 1);  // Tentatively just use a dark blue BG
+		ScreenUtils.clear(0 , 0, 0.2f, 1); 
 		
-		player.draw();  // Draw Player Texture
+		// Texture Drawing 
+		player.draw();  
 		ghost.draw();
 		score.draw();
+		
+		for (int i = 0; i < MAXPELLET; i++) {  
+			collectibles[i].draw();
+		}
 		
 		// User Input Segment
 		// Player Movement Segment
@@ -83,19 +86,16 @@ public class GameMaster extends ApplicationAdapter {
 			player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
 		}
 		
+		
+		// Collision Manager's Job
 		player.checkGhostCollision(ghost);
 		
-		for (Collectible collect: collectibles) {
-			collect.draw();
+		// If true , increment score
+		// If false, nothing
+		if(player.checkCollectibleCollision(collectibles)) {
+			score.calculateScore();
 		}
 		
-		for (Collectible collect: collectibles) {
-			if(collect.getBoundingRectangle().overlaps(player.getBoundingRectangle()))
-			{
-				collect.resetPosition(collect.getX(), collect.getY());
-				score.calculateScore();
-			}
-		}
 		
 	}
 	
@@ -103,6 +103,10 @@ public class GameMaster extends ApplicationAdapter {
 	public void dispose() {
 		player.getTex().dispose();
 		ghost.getTex().dispose();
+		for (int i = 0; i < MAXPELLET; i++) {  
+			collectibles[i].getTex().dispose();
+		}
+		
 	}
 	
 	

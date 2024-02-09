@@ -2,7 +2,6 @@ package com.mygdx.game;
 
 import java.util.Random;
 
-
 public class Ghost extends Entity{
 	
 		// Static Variables

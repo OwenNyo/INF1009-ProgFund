@@ -1,10 +1,14 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+
 public class Player extends Entity{
 
 		/// Class Attributes
 		private float Speed;
 		private int Health;
+		private boolean IsFirstPlayer;
 		
 		
 		
@@ -15,10 +19,11 @@ public class Player extends Entity{
 		}
 		
 		// Player to earn points via pellet eating -> win cond = survive longer than other player while stacking
-		public Player(String type, String filename, float x, float y, float speed, int health, float height, float width) {
-			super(type, filename, x, y, width, height);
+		public Player(String type, String filename, float x, float y, float speed, int health, float height, float width, boolean AIControlled, boolean fp) {
+			super(type, filename, x, y, width, height, AIControlled);
 			this.Speed = speed;
 			this.Health = health;
+			this.IsFirstPlayer = fp;
 		}
 		
 		
@@ -56,4 +61,53 @@ public class Player extends Entity{
 			}
 		}
 		
+		public void Player1Move() {
+			if (Gdx.input.isKeyPressed(Keys.UP) && this.getY() < Gdx.graphics.getHeight() - this.getHeight()) {
+	            this.setY(this.getY() + this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.DOWN) && this.getY() > 0) {
+	            this.setY(this.getY() - this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.LEFT) && this.getX() > 0) {
+	            this.setX(this.getX() - this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.RIGHT) && this.getX() < Gdx.graphics.getWidth() - this.getWidth()) {
+	            this.setX(this.getX() + this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+		}
+		
+		public void Player2Move() {
+			if (Gdx.input.isKeyPressed(Keys.W) && this.getY() < Gdx.graphics.getHeight() - this.getHeight()) {
+	            this.setY(this.getY() + this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.S) && this.getY() > 0) {
+	            this.setY(this.getY() - this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.A) && this.getX() > 0) {
+	            this.setX(this.getX() - this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+	        
+	        if (Gdx.input.isKeyPressed(Keys.D) && this.getX() < Gdx.graphics.getWidth() - this.getWidth()) {
+	            this.setX(this.getX() + this.getSpeed() * Gdx.graphics.getDeltaTime());
+	        }
+		}
+		
+		// Movement Logic
+		public void AIMove() {
+			
+		}
+		
+		public void UserMove() {
+			if(IsFirstPlayer) {
+				Player1Move();
+			}
+			else {
+				Player2Move();
+			}
+		}
 }

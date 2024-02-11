@@ -1,14 +1,10 @@
 package com.mygdx.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.ScreenUtils;
-import java.util.Random;
 
 public class GameMaster extends ApplicationAdapter {
 	
@@ -17,41 +13,21 @@ public class GameMaster extends ApplicationAdapter {
 	private Ghost ghost;
 	private Collectible collectibles[];
 	private Score score;
-
-	// Static Attributes
-	private int MAXPELLET = 5;
+	private List<Entity> entityList;
 	
-	// Ghost Attributes
-	private int GhostSpeed = 10;
-	private int GhostDamage = 10;
-	
-	// Player Attributes
-	private float Player1SpawnX = 400;
-	private float Player1SpawnY = 300;
-	private float PlayerSpeed = 300;
-	private int PlayerHealth = 100;
+	private EntityManager entityManager;
 	
 	@Override
 	public void create() {
 		
-		// Create player object
-		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, 40, 40);
+		// Initialize EntityManager and entities
+		entityManager = new EntityManager();
+		entityManager.initEntities();
 		
-		// Create Ghost Objects
-		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 40, 40);
-		ghost.GenerateSpawnPoint(player.getX(), player.getY());
+		// Fetch Entity List
+		entityList = entityManager.getEntityList();
 		
-		collectibles = new Collectible[MAXPELLET];
-	    Random random = new Random();
-		
-		for (int i = 0; i < collectibles.length; i++) {
-            float randomX = random.nextInt(Gdx.graphics.getWidth());
-            float randomY = random.nextInt(Gdx.graphics.getHeight());
-
-            collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 15, 15);
-        }	
-		
+		// Initialize Scoring System
 		score = new Score();
 	}
 	
@@ -61,48 +37,44 @@ public class GameMaster extends ApplicationAdapter {
 		ScreenUtils.clear(0 , 0, 0.2f, 1); 
 		
 		// Texture Drawing 
-		player.draw();  
-		ghost.draw();
 		score.draw();
-		
-		for (int i = 0; i < MAXPELLET; i++) {  
-			collectibles[i].draw();
-		}
-		
-		// User Input Segment
-		// Player Movement Segment
-		if (Gdx.input.isKeyPressed(Keys.UP) && player.getY() < Gdx.graphics.getHeight() - player.getHeight()) {
-	        player.setY(player.getY() + player.getSpeed() * Gdx.graphics.getDeltaTime());
-	    }
-	        
-	    if (Gdx.input.isKeyPressed(Keys.DOWN) && player.getY() > 0) {
-	        player.setY(player.getY() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-	    }
-	        
-	    if (Gdx.input.isKeyPressed(Keys.LEFT) && player.getX() > 0) {
-	        player.setX(player.getX() - player.getSpeed() * Gdx.graphics.getDeltaTime());
-	    }
-	    if (Gdx.input.isKeyPressed(Keys.RIGHT) && player.getX() < Gdx.graphics.getWidth() - player.getWidth()) {
-	        player.setX(player.getX() + player.getSpeed() * Gdx.graphics.getDeltaTime());
-	    }
+		entityManager.drawEntities();
+        entityManager.moveEntities();
+	
+        // Create a new list to hold the collectible
+        List<Collectible> collectibleList = new ArrayList<>();
 
-		
-	    // Collision Manager 
-	    CollisionManager.checkGhostCollision(player, ghost);
-	    if(CollisionManager.checkCollectibleCollision(player, collectibles))
-	    {
-	    	score.calculateScore();
-	    }
+        // Loop through the entity list to filter collectible
+        for (Entity entity : entityList) {
+            if (entity instanceof Collectible) {
+                collectibleList.add((Collectible) entity);
+            }
+            if (entity instanceof Player) {
+                player = (Player) entity;
+            } else if (entity instanceof Ghost) {
+                ghost = (Ghost) entity;
+            }
+        }
+        
+        // Convert the list of collectible back to an array
+        collectibles = collectibleList.toArray(new Collectible[collectibleList.size()]);
+
+        if (CollisionManager.checkCollectibleCollision(player, collectibles)) {
+            score.calculateScore();
+        }
+
+        
+        // Check ghost collision
+        if (player != null && ghost != null) {
+            CollisionManager.checkGhostCollision(player, ghost);
+        }
 	    
 	}
 	
 	@Override
 	public void dispose() {
-		player.getTex().dispose();
-		ghost.getTex().dispose();
-		for (int i = 0; i < MAXPELLET; i++) {  
-			collectibles[i].getTex().dispose();
-		}
+		// Properly dispose textures
+		entityManager.disposeEntities();
 	}
 	
 	

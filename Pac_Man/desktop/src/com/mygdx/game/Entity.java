@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.MovementManager.Movable;
 
-public class Entity {
+public abstract class Entity implements Movable{
 	
 	// Class Attributes
 	private String Type;
@@ -16,6 +17,7 @@ public class Entity {
 	private float Y;
 	private float width;
 	private float height;
+	private boolean AIControlled;
 	
 	
 	// Constructors
@@ -26,16 +28,18 @@ public class Entity {
 		this.Y = 0;
 		this.width = 0;
 		this.height = 0;
+		this.AIControlled = false;
 	}
 	
 	
-	public Entity(String t, String filename, float x, float y, float height, float width) {
+	public Entity(String t, String filename, float x, float y, float height, float width, boolean b) {
 		this.Type = t;
 		this.Tex = new Texture(Gdx.files.internal(filename));
 		this.X = x;
 		this.Y = y;
 		this.height = height;
 		this.width = width;
+		this.AIControlled = b;
 	}
 	
 	
@@ -83,6 +87,21 @@ public class Entity {
 		height = h;
 	}
 	
+	public boolean getAIControlled() {
+		return AIControlled;
+	}
+
+	public void setAIControlled(boolean b) {
+		AIControlled = b;
+	}
+	
+	public void UserMove() {
+		
+	}
+	
+	public void AIMove(float X, float Y) {
+	}
+	
 	
 	// Class | Abstract Methods
 	public void draw() {
@@ -104,7 +123,5 @@ public class Entity {
 	public Rectangle getBoundingRectangle() {
 		return new Rectangle(getX(), getY(), getHeight(), getWidth());
 	}
-	 
-	
 	
 }

@@ -2,6 +2,9 @@ package com.mygdx.game;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
+
 public class Ghost extends Entity{
 	
 		// Static Variables
@@ -9,10 +12,7 @@ public class Ghost extends Entity{
 
 		// Class Attributes
 		private float Speed;
-		private int Damage;
-		
-		
-		
+		private int Damage;	
 		
 		// Constructors
 		public Ghost() {
@@ -20,13 +20,11 @@ public class Ghost extends Entity{
 			this.Speed = 0;
 			this.Damage = 0;
 		}
-		public Ghost(String type, String filename, float x, float y, float speed, int damage, float height, float width) {
-			super(type, filename, x, y, height, width);
+		public Ghost(String type, String filename, float x, float y, float speed, int damage, float height, float width, boolean AIControlled) {
+			super(type, filename, x, y, height, width, AIControlled);
 			this.Speed = speed;
 			this.Damage = damage;
 		}
-		
-		
 		
 		
 		// Getters and Setters
@@ -75,5 +73,26 @@ public class Ghost extends Entity{
 		    // Set the spawn location after confirming not within range of player
 		    super.setX(x);
 		    super.setY(y);
+		}
+		
+		// Movement Logic
+		public void AIMove(float X, float Y) {
+		    // Calculate the direction vector towards the player
+		    Vector2 playerPosition = new Vector2(X, Y);
+		    Vector2 ghostPosition = new Vector2(super.getX(), super.getY());
+		    Vector2 direction = playerPosition.sub(ghostPosition).nor();
+
+		    // Move the ghost towards the player
+		    float speedMultiplier = 10.0f; // Adjust speed if needed
+		    Vector2 velocity = direction.scl(getSpeed() * speedMultiplier * Gdx.graphics.getDeltaTime());
+		    ghostPosition.add(velocity);
+
+		    // Update the ghost's position
+		    super.setX(ghostPosition.x);
+		    super.setY(ghostPosition.y);
+		}
+		
+		public void UserMove() {
+			
 		}
 }

@@ -4,13 +4,15 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class CollisionManager {
 
+	// Logic to check for collision with Ghost
     public static boolean collidedWithGhost(Player player, Ghost ghost) {
         Rectangle playerBounds = player.getBoundingRectangle();
         Rectangle ghostBounds = ghost.getBoundingRectangle();
 
         return playerBounds.overlaps(ghostBounds);
     }
-
+    
+    // Logic to handle what happens if there is a collision with Ghost
     public static void checkGhostCollision(Player player, Ghost ghost) {
         if (collidedWithGhost(player, ghost)) {
             System.out.println("Ghost Collision detected");
@@ -19,6 +21,7 @@ public class CollisionManager {
         }
     }
 
+    // Logic to check for collision with Pellet
     public static boolean collidedWithCollectible(Player player, Collectible c) {
         Rectangle playerBounds = player.getBoundingRectangle();
         Rectangle collectibleBounds = c.getBoundingRectangle();
@@ -26,6 +29,7 @@ public class CollisionManager {
         return playerBounds.overlaps(collectibleBounds);
     }
 
+    // Logic to handle what happens if there is a collision with Pellet
     public static boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {

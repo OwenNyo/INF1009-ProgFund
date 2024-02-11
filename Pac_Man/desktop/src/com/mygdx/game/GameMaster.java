@@ -44,7 +44,7 @@ public class GameMaster extends ApplicationAdapter {
         // Create a new list to hold the collectible
         List<Collectible> collectibleList = new ArrayList<>();
 
-        // Loop through the entity list to filter collectible
+        // Loop through the entity list to find the entities
         for (Entity entity : entityList) {
             if (entity instanceof Collectible) {
                 collectibleList.add((Collectible) entity);

@@ -70,10 +70,10 @@ public class GameMaster extends ApplicationAdapter {
             score.calculateScore();
         }
 
-        
         // Check ghost collision
         if (player != null && ghost != null) {
             CollisionManager.checkGhostCollision(player, ghost);
+            player.drawRemainingHealth();
         }
 	    
 	}

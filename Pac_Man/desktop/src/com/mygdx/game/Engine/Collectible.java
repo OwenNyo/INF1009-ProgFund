@@ -2,16 +2,24 @@ package com.mygdx.game.Engine;
 
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Collectible extends Entity {
+
+	    private float radius;
+	    private Color color;
+	    private ShapeRenderer shapeRenderer;
 	 
 		 // Constructors
 		 public Collectible() {
 			 super();
 		}
 		 
-		 public Collectible(String type, String fileName, float x, float y, float height, float width, boolean AIControlled) {
-			 super(type, fileName, x, y, height, width, AIControlled);
+		 public Collectible(String type, float x, float y, Color color, float radius, boolean AIControlled) {
+			 super(type, x, y, AIControlled);
+			 this.radius = radius;
+		     this.color = color;
 		}
 		 
 		 public void resetPosition(float posX, float posY) {
@@ -36,6 +44,18 @@ public class Collectible extends Entity {
 			    return newX >= marginX && newX <= Gdx.graphics.getWidth() - marginX &&
 			           newY >= marginY && newY <= Gdx.graphics.getHeight() - marginY &&
 			           (newX != posX || newY != posY);
+		 }
+		 
+
+		 public void setShape(ShapeRenderer shape) {
+			shapeRenderer = shape;
+		}
+		 
+		 public void draw() {
+		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+		    shapeRenderer.setColor(color);
+		    shapeRenderer.circle(getX(), getY(), radius);
+		    shapeRenderer.end();
 		 }
 		  
 }

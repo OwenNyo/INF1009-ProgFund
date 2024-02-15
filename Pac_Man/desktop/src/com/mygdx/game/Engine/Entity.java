@@ -3,7 +3,6 @@ package com.mygdx.game.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class Entity{
@@ -30,6 +29,12 @@ public abstract class Entity{
 		this.AIControlled = false;
 	}
 	
+	public Entity(String t, float x, float y, boolean b) {
+		this.Type = t;
+		this.X = x;
+		this.Y = y;
+		this.AIControlled = b;
+	}
 	
 	public Entity(String t, String filename, float x, float y, float height, float width, boolean b) {
 		this.Type = t;
@@ -96,20 +101,7 @@ public abstract class Entity{
 	
 	
 	// Class | Abstract Methods
-	public void draw() {
-		// Initialize batch 
-		batch = new SpriteBatch();
-		batch.begin();
-		
-		// Ensure it doesn't spawn outside the boundary
-		float clampedX = MathUtils.clamp(getX(), 0, Gdx.graphics.getWidth() - this.width);
-	    float clampedY = MathUtils.clamp(getY(), 0, Gdx.graphics.getHeight() - this.height);
-
-		// Draw with width and height of 50
-		batch.draw(this.Tex, clampedX, clampedY, this.width, this.height);
-		batch.end();
-		
-	}
+	abstract void draw();
 	
 	// Check collision
 	public Rectangle getBoundingRectangle() {

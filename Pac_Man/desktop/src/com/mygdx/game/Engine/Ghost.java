@@ -2,6 +2,11 @@ package com.mygdx.game.Engine;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
 public class Ghost extends Entity{
 	
 		// Static Variables
@@ -10,6 +15,8 @@ public class Ghost extends Entity{
 		// Class Attributes
 		private float Speed;
 		private int Damage;	
+		private SpriteBatch batch;
+		
 		
 		// Constructors
 		public Ghost() {
@@ -71,5 +78,19 @@ public class Ghost extends Entity{
 		    super.setX(x);
 		    super.setY(y);
 		}
+		
+		public void draw() {
+			// Initialize batch 
+			batch = new SpriteBatch();
+			batch.begin();
+			
+			// Ensure it doesn't spawn outside the boundary
+			float clampedX = MathUtils.clamp(getX(), 0, Gdx.graphics.getWidth() - super.getWidth());
+			float clampedY = MathUtils.clamp(getY(), 0, Gdx.graphics.getHeight() - super.getHeight());
+
+			// Draw with width and height of 50
+			batch.draw(super.getTex(), clampedX, clampedY, super.getWidth(), super.getHeight());
+			batch.end();
+		 }
 
 }

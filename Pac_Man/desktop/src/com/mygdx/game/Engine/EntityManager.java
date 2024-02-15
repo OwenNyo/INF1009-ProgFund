@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class EntityManager {
 	
 	// Class Attributes
 	private List<Entity> entityList;
 	private SpriteBatch batch;
+	private ShapeRenderer shape;
 	
 	// Object Declaration
 	private Player player;
@@ -41,6 +44,7 @@ public class EntityManager {
 		// Create Array List
 		entityList = new ArrayList<>();
 		batch = new SpriteBatch();
+    	shape = new ShapeRenderer();
 		
 		// Create Player Object
 		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
@@ -58,7 +62,8 @@ public class EntityManager {
             float randomX = random.nextInt(Gdx.graphics.getWidth());
             float randomY = random.nextInt(Gdx.graphics.getHeight());
 
-            collectibles[i] = new Collectible("collectible", "pellet.png", randomX, randomY, 15, 15, false);
+            collectibles[i] = new Collectible("collectible", randomX, randomY, Color.RED, 15, false);
+            collectibles[i].setShape(shape);
            entityList.add(collectibles[i]);
         }	
 		
@@ -102,7 +107,9 @@ public class EntityManager {
 	public void disposeEntities() {
         batch.dispose();
         for (Entity entity : entityList) {
-            entity.getTex().dispose();
+        	if (entity.getTex() != null) {
+        		entity.getTex().dispose();
+            }   
         }
     }
 

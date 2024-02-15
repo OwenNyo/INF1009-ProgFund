@@ -1,13 +1,19 @@
 package com.mygdx.game.Engine;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
+
 public class Player extends Entity{
 
 		/// Class Attributes
 		private float Speed;
 		private int Health;
 		private boolean IsFirstPlayer;
-		
-		
+		private SpriteBatch batch;
+		private String remainingHealth = "";
+		BitmapFont healthFont;
 		
 		//	Constructors
 		public Player() {
@@ -59,5 +65,33 @@ public class Player extends Entity{
 			else {
 				System.out.println("Player has lost all his health!");
 			}
+		}
+		
+		public void draw() {
+			// Initialize batch 
+			batch = new SpriteBatch();
+			batch.begin();
+			
+			// Ensure it doesn't spawn outside the boundary
+			float clampedX = MathUtils.clamp(getX(), 0, Gdx.graphics.getWidth() - super.getWidth());
+			float clampedY = MathUtils.clamp(getY(), 0, Gdx.graphics.getHeight() - super.getHeight());
+
+			// Draw with width and height of 50
+			batch.draw(super.getTex(), clampedX, clampedY, super.getWidth(), super.getHeight());
+			batch.end();
+		 }
+		
+		public void drawRemainingHealth() {
+
+			remainingHealth = "Health: " + this.Health;
+			
+		    batch = new SpriteBatch();
+			// Initialize batch and ScoreFont
+		    batch.begin();
+		    healthFont = new BitmapFont();
+		    healthFont.getData().setScale(2);
+		    healthFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+		    healthFont.draw(batch, remainingHealth, 625, 575);
+		    batch.end();
 		}
 }

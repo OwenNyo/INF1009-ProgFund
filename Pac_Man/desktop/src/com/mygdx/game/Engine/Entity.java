@@ -1,11 +1,11 @@
-package com.mygdx.game;
+package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.game.MovementManager.Movable;
+import com.mygdx.game.Engine.MovementManager.Movable;
 
 public abstract class Entity implements Movable{
 	

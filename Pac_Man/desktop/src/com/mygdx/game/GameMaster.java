@@ -5,6 +5,13 @@ import java.util.List;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.Engine.Collectible;
+import com.mygdx.game.Engine.CollisionManager;
+import com.mygdx.game.Engine.Entity;
+import com.mygdx.game.Engine.EntityManager;
+import com.mygdx.game.Engine.Ghost;
+import com.mygdx.game.Engine.Player;
+import com.mygdx.game.Engine.Score;
 
 public class GameMaster extends ApplicationAdapter {
 	

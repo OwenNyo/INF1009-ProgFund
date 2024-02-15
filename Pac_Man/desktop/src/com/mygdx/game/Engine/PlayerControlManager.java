@@ -2,8 +2,9 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.mygdx.game.Interfaces.Movement;
 
-public class PlayerControlManager {
+public class PlayerControlManager implements Movement{
     
     private Player player;
     
@@ -11,13 +12,14 @@ public class PlayerControlManager {
         this.player = player;
     }
     
-    public void handlePlayerMovement() {
-        if (player.isFirstPlayer()) {
+	@Override
+	public void handleMovement() {
+		if (player.isFirstPlayer()) {
             handleFirstPlayerMovement();
         } else {
             handleSecondPlayerMovement();
         }
-    }
+	}
     
     private void handleFirstPlayerMovement() {
         if (Gdx.input.isKeyPressed(Keys.UP) && player.getY() < Gdx.graphics.getHeight() - player.getHeight()) {

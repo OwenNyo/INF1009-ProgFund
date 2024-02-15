@@ -45,10 +45,6 @@ public class Player extends Entity{
 		
 		
 		// Class Methods
-		public void PlayerPoints(int points) {
-			System.out.println("Player <> earned points");
-		}
-		
 		public void PlayerDamageTaken(int damage) {
 			Health = getHealth();
 			Health -= damage;
@@ -60,4 +56,5 @@ public class Player extends Entity{
 				System.out.println("Player has lost all his health!");
 			}
 		}
+		
 }

@@ -30,6 +30,10 @@ public class EntityManager {
 	private float PlayerSpeed = 300;
 	private int PlayerHealth = 100;
 	
+	// Manager Attributes
+	private PlayerControlManager playerControlManager;
+	private AIManager aiManager;
+	
 	
 	// Initialize all Entities
 	public void initEntities() {
@@ -61,6 +65,12 @@ public class EntityManager {
 		// Add entities to the list
 		entityList.add(player);
 		entityList.add(ghost);
+		
+		// Initialize PlayerControlManager
+        playerControlManager = new PlayerControlManager(player);
+        
+        // Initialize AIManager
+        aiManager = new AIManager();
 	}
 	
 	public List<Entity> getEntityList() {
@@ -79,11 +89,11 @@ public class EntityManager {
 	public void moveEntities() {
 		for(Entity entity : entityList) {
 			if(entity.getAIControlled()) {
-				entity.AIMove(player.getX(), player.getY());
+				 aiManager.handleAIMovement((Ghost) entity, player.getX(), player.getY());
 			}
 			if(entity instanceof Player) {
 				// UserMove will differentiate Player 1 or 2 in the subclass itself
-				entity.UserMove();
+				playerControlManager.handlePlayerMovement();
 			}
 		}
 	}

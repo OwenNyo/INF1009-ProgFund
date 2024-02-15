@@ -2,9 +2,6 @@ package com.mygdx.game.Engine;
 
 import java.util.Random;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.Vector2;
-
 public class Ghost extends Entity{
 	
 		// Static Variables
@@ -74,25 +71,5 @@ public class Ghost extends Entity{
 		    super.setX(x);
 		    super.setY(y);
 		}
-		
-		// Movement Logic
-		public void AIMove(float X, float Y) {
-		    // Calculate the direction vector towards the player
-		    Vector2 playerPosition = new Vector2(X, Y);
-		    Vector2 ghostPosition = new Vector2(super.getX(), super.getY());
-		    Vector2 direction = playerPosition.sub(ghostPosition).nor();
 
-		    // Move the ghost towards the player
-		    float speedMultiplier = 10.0f; // Adjust speed if needed
-		    Vector2 velocity = direction.scl(getSpeed() * speedMultiplier * Gdx.graphics.getDeltaTime());
-		    ghostPosition.add(velocity);
-
-		    // Update the ghost's position
-		    super.setX(ghostPosition.x);
-		    super.setY(ghostPosition.y);
-		}
-		
-		public void UserMove() {
-			
-		}
 }

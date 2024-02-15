@@ -37,14 +37,5 @@ public class Collectible extends Entity {
 			           newY >= marginY && newY <= Gdx.graphics.getHeight() - marginY &&
 			           (newX != posX || newY != posY);
 		 }
-		 
-		// Movement Logic
-		public void AIMove() {
-			
-		}
-		
-		public void UserMove() {
-			
-		}
-	 
+		  
 }

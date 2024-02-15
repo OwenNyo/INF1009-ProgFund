@@ -5,9 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.game.Engine.MovementManager.Movable;
 
-public abstract class Entity implements Movable{
+public abstract class Entity{
 	
 	// Class Attributes
 	private String Type;
@@ -93,13 +92,6 @@ public abstract class Entity implements Movable{
 
 	public void setAIControlled(boolean b) {
 		AIControlled = b;
-	}
-	
-	public void UserMove() {
-		
-	}
-	
-	public void AIMove(float X, float Y) {
 	}
 	
 	

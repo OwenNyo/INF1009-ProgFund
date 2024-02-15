@@ -12,6 +12,7 @@ import com.mygdx.game.Engine.EntityManager;
 import com.mygdx.game.Engine.Ghost;
 import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.Score;
+import com.mygdx.game.Engine.IOManager;
 
 public class GameMaster extends ApplicationAdapter {
 	
@@ -36,6 +37,9 @@ public class GameMaster extends ApplicationAdapter {
 		
 		// Initialize Scoring System
 		score = new Score();
+
+		// Initialize IO Manager
+		ioManager = new IOManager();
 	}
 	
 	@Override
@@ -75,6 +79,9 @@ public class GameMaster extends ApplicationAdapter {
             CollisionManager.checkGhostCollision(player, ghost);
             player.drawRemainingHealth();
         }
+
+	// Play BG music on start
+        ioManager.playBG();
 	    
 	}
 	

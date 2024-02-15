@@ -34,8 +34,6 @@ public class EntityManager {
 	private int PlayerHealth = 100;
 	
 	// Manager Attributes
-	private PlayerControlManager playerControlManager;
-	private AIManager aiManager;
 	
 	
 	// Initialize all Entities
@@ -70,12 +68,7 @@ public class EntityManager {
 		// Add entities to the list
 		entityList.add(player);
 		entityList.add(ghost);
-		
-		// Initialize PlayerControlManager
-        playerControlManager = new PlayerControlManager(player);
-        
-        // Initialize AIManager
-        aiManager = new AIManager();
+       
 	}
 	
 	public List<Entity> getEntityList() {
@@ -92,16 +85,49 @@ public class EntityManager {
 	
 	// Movement logic for all Entities
 	public void moveEntities() {
-		for(Entity entity : entityList) {
-			if(entity.getAIControlled()) {
-				 aiManager.handleAIMovement((Ghost) entity, player.getX(), player.getY());
-			}
-			if(entity instanceof Player) {
-				// UserMove will differentiate Player 1 or 2 in the subclass itself
-				playerControlManager.handlePlayerMovement();
-			}
-		}
-	}
+        for (Entity entity : entityList) {
+            if (entity instanceof Player) {
+                PlayerControlManager playerControlManager = new PlayerControlManager((Player) entity);
+                playerControlManager.handleMovement();
+            } else if (entity instanceof Ghost) {
+                AIManager aiManager = new AIManager((Ghost) entity, player.getX(), player.getY()); // Pass player coordinates
+                aiManager.handleMovement();
+            }
+        }
+    }
+	
+	
+	
+	// Get Entity from Entity List
+	public Player getPlayer() {
+        for (Entity entity : entityList) {
+            if (entity instanceof Player) {
+                return (Player) entity;
+            }
+        }
+        return null; // Return null if player is not found
+    }
+
+    public Ghost getGhost() {
+        for (Entity entity : entityList) {
+            if (entity instanceof Ghost) {
+                return (Ghost) entity;
+            }
+        }
+        return null; // Return null if ghost is not found
+    }
+
+    public Collectible[] getCollectibles() {
+        List<Collectible> collectibleList = new ArrayList<>();
+        for (Entity entity : entityList) {
+            if (entity instanceof Collectible) {
+                collectibleList.add((Collectible) entity);
+            }
+        }
+        return collectibleList.toArray(new Collectible[0]);
+    }
+    
+    
 	
 	// Dispose of all Entities
 	public void disposeEntities() {

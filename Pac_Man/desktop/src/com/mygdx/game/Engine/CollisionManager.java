@@ -1,8 +1,11 @@
 package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.Engine.IOManager;
 
 public class CollisionManager {
+	
+	private IOManager ioManager = new IOManager();
 
 	// Logic to check for collision with Ghost
     public static boolean collidedWithGhost(Player player, Ghost ghost) {
@@ -13,11 +16,13 @@ public class CollisionManager {
     }
     
     // Logic to handle what happens if there is a collision with Ghost
-    public static void checkGhostCollision(Player player, Ghost ghost) {
+    public void checkGhostCollision(Player player, Ghost ghost) {
         if (collidedWithGhost(player, ghost)) {
             System.out.println("Ghost Collision detected");
             player.PlayerDamageTaken(10);
             ghost.GenerateSpawnPoint(player.getX(), player.getY());
+            
+            ioManager.playSE();
         }
     }
 
@@ -30,7 +35,7 @@ public class CollisionManager {
     }
 
     // Logic to handle what happens if there is a collision with Pellet
-    public static boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
+    public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
                 System.out.println("Pellet Collision detected");

@@ -25,6 +25,9 @@ public class GameMaster extends ApplicationAdapter {
 	
 	private EntityManager entityManager;
 	
+	private IOManager ioManager;
+	private CollisionManager cManager;
+	
 	@Override
 	public void create() {
 		
@@ -38,6 +41,7 @@ public class GameMaster extends ApplicationAdapter {
 		// Initialize Scoring System
 		score = new Score();
 
+		cManager = new CollisionManager();
 		// Initialize IO Manager
 		ioManager = new IOManager();
 	}
@@ -70,13 +74,13 @@ public class GameMaster extends ApplicationAdapter {
         // Convert the list of collectible back to an array
         collectibles = collectibleList.toArray(new Collectible[collectibleList.size()]);
 
-        if (CollisionManager.checkCollectibleCollision(player, collectibles)) {
+        if (cManager.checkCollectibleCollision(player, collectibles)) {
             score.calculateScore();
         }
 
         // Check ghost collision
         if (player != null && ghost != null) {
-            CollisionManager.checkGhostCollision(player, ghost);
+            cManager.checkGhostCollision(player, ghost);
             player.drawRemainingHealth();
         }
 

@@ -19,7 +19,7 @@ public class CollisionManager {
     public void checkGhostCollision(Player player, Ghost ghost) {
         if (collidedWithGhost(player, ghost)) {
             System.out.println("Ghost Collision detected");
-            player.PlayerDamageTaken(10);
+            player.PlayerDamageTaken(ghost.getDamage());
             ghost.GenerateSpawnPoint(player.getX(), player.getY());
             
             ioManager.playSE();

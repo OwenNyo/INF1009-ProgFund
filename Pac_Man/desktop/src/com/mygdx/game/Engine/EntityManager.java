@@ -46,10 +46,10 @@ public class EntityManager {
 		
 		// Create Player Object
 		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, 40, 40, false, true);
+				, PlayerSpeed, PlayerHealth, 50, 50, false, true);
 		
 		// Create Ghost Object
-		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 40, 40, true);
+		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 60, 60, true);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 		
 		// Create Collectible Objects

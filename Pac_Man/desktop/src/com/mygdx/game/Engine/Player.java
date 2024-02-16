@@ -91,7 +91,7 @@ public class Player extends Entity{
 		    healthFont = new BitmapFont();
 		    healthFont.getData().setScale(2);
 		    healthFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		    healthFont.draw(batch, remainingHealth, 625, 575);
+		    healthFont.draw(batch, remainingHealth, 825, 775);
 		    batch.end();
 		}
 }

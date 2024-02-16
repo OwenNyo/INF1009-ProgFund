@@ -77,7 +77,7 @@ public class IOManager {
 //	}
 	
 	
-	//get set 
+	// Getter and Setter
 	public int getBGVolume() {
 		return BGVolume;
 	}
@@ -93,14 +93,20 @@ public class IOManager {
 		this.SEVolume = sevolume;
 	}
 	
-	
-	
+
 	public boolean getmuteState() {
 		return muteState;
 	}
 	public void setmuteState(boolean mutestate) {
 		this.muteState = mutestate;
 	}
+	
+	
+	 // Dispose method to clear resources
+	 public void dispose() {
+	        BGMusic.dispose();
+	        SEMusic.dispose();
+	 }
 	
 
 	

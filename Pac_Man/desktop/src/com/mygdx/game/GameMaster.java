@@ -1,22 +1,20 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.mygdx.game.Scene.SceneManager;
+import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
+import com.mygdx.game.Scene.SceneManager;
 
 public class GameMaster extends Game {
 	
-    private SceneManager sceneManager;
+	// Initialize Scene Manager to handle all
+	private SceneManager sceneManager;
 
     @Override
     public void create() {
-    	// Initialize Scene Manager
-        this.sceneManager = new SceneManager(this);
-        // Set current screen to menu scene
-        this.setScreen(new MenuScene(this));
-    }
-
-    public SceneManager getSceneManager() {
-        return sceneManager;
+    	// Initialize the SceneManager
+        sceneManager = new SceneManager(this);
+        // Set the initial screen to the menu scene
+        sceneManager.setMenuScreen();
     }
 }

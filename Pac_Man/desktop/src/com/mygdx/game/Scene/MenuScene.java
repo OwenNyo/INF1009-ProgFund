@@ -17,13 +17,15 @@ import com.mygdx.game.GameMaster;
 public class MenuScene extends ScreenAdapter {
 
     private GameMaster gameMaster;
+    private SceneManager sceneManager;
     private SpriteBatch batch;
     private Texture menuTexture;
     private Stage stage;
-    private TextButton playButton;
 
-    public MenuScene(GameMaster game) {
-        this.gameMaster = game;
+    public MenuScene(GameMaster gameMaster, SceneManager sceneManager) {
+        this.gameMaster = gameMaster;
+        this.sceneManager = sceneManager;
+        
         batch = new SpriteBatch();
         // Load menu screen texture
         menuTexture = new Texture("menu_screen.png"); 
@@ -37,15 +39,14 @@ public class MenuScene extends ScreenAdapter {
         textButtonStyle.font = new BitmapFont();
         // Set text colour
         textButtonStyle.fontColor = Color.RED;
-        playButton = new TextButton("PLAY", textButtonStyle);
+        TextButton playButton = new TextButton("PLAY", textButtonStyle);
         // Set position of the play button
         playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playButton.getHeight() / 2);
         // Add On Click Listener function for the Play Button
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	gameMaster.getSceneManager().switchToGame();
-                Gdx.input.setInputProcessor(null);
+            	sceneManager.setGameScreen();
             }
         });
 
@@ -68,7 +69,7 @@ public class MenuScene extends ScreenAdapter {
 
     @Override
     public void dispose() {
-    	// Properly dispose of resources
+        // Properly dispose of resources
         batch.dispose();
         menuTexture.dispose();
         stage.dispose();

@@ -7,6 +7,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.GameMaster;
 import com.mygdx.game.Engine.Collectible;
 import com.mygdx.game.Engine.CollisionManager;
 import com.mygdx.game.Engine.Entity;
@@ -27,9 +28,10 @@ public class GameScene extends ScreenAdapter{
     
     private IOManager ioManager;
     private CollisionManager cManager;
+    private GameMaster gameMaster;
 
-    public GameScene() {
-    	
+    public GameScene(GameMaster gameMaster, SceneManager sceneManager) {
+    	this.gameMaster = gameMaster;
         // Initialize EntityManager and entities
         entityManager = new EntityManager();
         entityManager.initEntities();

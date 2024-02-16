@@ -2,12 +2,12 @@ package com.mygdx.game.Scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -23,35 +23,59 @@ public class MenuScene extends ScreenAdapter {
     private Stage stage;
 
     public MenuScene(GameMaster gameMaster, SceneManager sceneManager) {
+    	
+    	// Initialize Managers
         this.gameMaster = gameMaster;
         this.sceneManager = sceneManager;
         
+        // Initialize New Batch
         batch = new SpriteBatch();
+        
         // Load menu screen texture
-        menuTexture = new Texture("menu_screen.png"); 
+        menuTexture = new Texture("Icy_background.jpg"); 
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
+        // Load atlas file to create skin
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
+        
         // Setup button style and add it to the stage
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
-        // Set font style, default font is Arial
-        textButtonStyle.font = new BitmapFont();
-        // Set text colour
-        textButtonStyle.fontColor = Color.RED;
-        TextButton playButton = new TextButton("PLAY", textButtonStyle);
-        // Set position of the play button
-        playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playButton.getHeight() / 2);
-        // Add On Click Listener function for the Play Button
+        TextButton.TextButtonStyle playButtonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+        TextButton playButton = new TextButton("PLAY", playButtonStyle);
+        playButton.setPosition(Gdx.graphics.getWidth() / 2 - playButton.getWidth() / 2, Gdx.graphics.getHeight() * 3 / 4 - playButton.getHeight() / 2);
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	sceneManager.setGameScreen();
+                sceneManager.setGameScreen();
             }
         });
-
-        // Add play button to stage
         stage.addActor(playButton);
+        
+        // Setup Options button
+        TextButton.TextButtonStyle optionsButtonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+        TextButton optionsButton = new TextButton("OPTIONS", optionsButtonStyle);
+        optionsButton.setPosition(Gdx.graphics.getWidth() / 2 - optionsButton.getWidth() / 2, Gdx.graphics.getHeight() / 2 - optionsButton.getHeight() / 2);
+        optionsButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Add code to handle options button click
+            }
+        });
+        stage.addActor(optionsButton);
+        
+        // Setup Exit button
+        TextButton.TextButtonStyle exitButtonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+        TextButton exitButton = new TextButton("EXIT", exitButtonStyle);
+        exitButton.setPosition(Gdx.graphics.getWidth() / 2 - exitButton.getWidth() / 2, Gdx.graphics.getHeight() / 4 - exitButton.getHeight() / 2);
+        exitButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.exit(); // Close the application when exit button is clicked
+            }
+        });
+        stage.addActor(exitButton);
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -96,8 +97,6 @@ public class EntityManager {
         }
     }
 	
-	
-	
 	// Get Entity from Entity List
 	public Player getPlayer() {
         for (Entity entity : entityList) {
@@ -128,15 +127,24 @@ public class EntityManager {
     }
     
     
-	
 	// Dispose of all Entities
 	public void disposeEntities() {
         batch.dispose();
+        shape.dispose();
         for (Entity entity : entityList) {
+        	if (entity.getTex() != null) {
+        		entity.getTex().dispose();
+            }  
+        }
+    }
+	
+	public Ghost gameOverDispose() {
+    	for (Entity entity : entityList) {
         	if (entity.getTex() != null) {
         		entity.getTex().dispose();
             }   
         }
+        return null; // Return null if ghost is not found
     }
 
 }

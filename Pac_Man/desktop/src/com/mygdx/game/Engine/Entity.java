@@ -99,7 +99,6 @@ public abstract class Entity{
 		AIControlled = b;
 	}
 	
-	
 	// Class | Abstract Methods
 	abstract void draw();
 	

@@ -2,14 +2,18 @@ package com.mygdx.game.Scene;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.GameMaster;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.Engine.Collectible;
 import com.mygdx.game.Engine.CollisionManager;
 import com.mygdx.game.Engine.Entity;
@@ -18,7 +22,10 @@ import com.mygdx.game.Engine.Ghost;
 import com.mygdx.game.Engine.IOManager;
 import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.SceneManager;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Engine.Score;
+import com.mygdx.game.Engine.TimerClass;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class GameScene extends ScreenAdapter {
 
@@ -29,6 +36,9 @@ public class GameScene extends ScreenAdapter {
 
     // Score
     private Score score;
+    
+    //Timer
+    private TimerClass timer;
 
     // Entity management
     private EntityManager entityManager;
@@ -46,6 +56,12 @@ public class GameScene extends ScreenAdapter {
     
     // Batch texture
     private SpriteBatch batch;
+    
+    // Stage for UI elements
+    private Stage overlayStage;
+
+    // Button for play again
+    private TextButton playAgainButton, MainMenu;
 
     public GameScene(GameMaster gameMaster, SceneManager sceneManager) {
         this.gameMaster = gameMaster;
@@ -65,12 +81,53 @@ public class GameScene extends ScreenAdapter {
         
         // Initialize Scoring System
         score = new Score();
+        
+        // Initialize Scoring System
+        timer = new TimerClass();
 
         // Initialize Collision Manager
         cManager = new CollisionManager();
 
         // Initialize IO Manager
         ioManager = new IOManager();
+        
+        overlayStage = new Stage(new ScreenViewport());
+        Gdx.input.setInputProcessor(overlayStage);
+        
+    	// Load atlas file to create skin for UI elements
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
+        TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+
+     // Initialize play again button
+        playAgainButton = new TextButton("Play Again", skin);
+        playAgainButton.setPosition(Gdx.graphics.getWidth() / 2 - playAgainButton.getWidth() / 2,
+                                    Gdx.graphics.getHeight() / 2 - playAgainButton.getHeight() / 2); // Adjusted position
+        playAgainButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Reload the game scene
+                sceneManager.setGameScreen();
+            }
+        });
+
+        // Add button to the overlay stage
+        overlayStage.addActor(playAgainButton);
+
+        // Initialize menu button
+        MainMenu = new TextButton("Menu", skin);
+        MainMenu.setPosition(Gdx.graphics.getWidth() / 2 - MainMenu.getWidth() / 2,
+                             Gdx.graphics.getHeight() / 4 - MainMenu.getHeight() / 2); // Adjusted position
+        MainMenu.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // Load the menu screen
+                sceneManager.setMenuScreen();
+            }
+        });
+
+        // Add button to the overlay stage
+        overlayStage.addActor(MainMenu);
     }
 
     @Override
@@ -83,12 +140,11 @@ public class GameScene extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Draw background texture
-        batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
+        drawBackground();
 
         // Draw score and entities
         score.draw();
+        timer.draw();
         entityManager.drawEntities();
         entityManager.moveEntities();
 
@@ -117,12 +173,40 @@ public class GameScene extends ScreenAdapter {
 
         // Check for collision with ghost
         if (player != null && ghost != null) {
-            cManager.checkGhostCollision(player, ghost);
-            player.drawRemainingHealth();
+            int remainingHealth = player.getHealth();
+            if (remainingHealth > 0 ) {
+                cManager.checkGhostCollision(player, ghost);
+                player.drawRemainingHealth();
+            }
+            else {
+            	entityManager.gameOverDispose();
+            	drawBackground();
+            	renderGameOverOverlay();
+            }
+        }
+        
+        // Check for timer
+        if(timer.getTime() == 0) {
+        	entityManager.gameOverDispose();
+        	drawBackground();
+        	renderGameOverOverlay();
         }
 
         // Play background music
         ioManager.playBG();
+    }
+    
+    private void drawBackground() {
+    	batch.begin();
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        batch.end();
+    }
+    
+    private void renderGameOverOverlay() {
+        // Clear the overlay stage
+        overlayStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        overlayStage.draw();
+    	score.draw(score.getScore());
     }
 
     @Override
@@ -131,5 +215,7 @@ public class GameScene extends ScreenAdapter {
         backgroundTexture.dispose();
         entityManager.disposeEntities();
         ioManager.dispose();
+        overlayStage.dispose();
     }
+    
 }

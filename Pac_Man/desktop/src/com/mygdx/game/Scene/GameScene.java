@@ -62,6 +62,15 @@ public class GameScene extends ScreenAdapter {
 
     // Button for play again
     private TextButton playAgainButton, MainMenu;
+    
+    // GameState Enum to manage game state
+    private enum GameState {
+        RUNNING,
+        GAME_OVER;
+    }
+    
+    // Variable to track current game state
+    private GameState gameState = GameState.RUNNING;
 
     public GameScene(GameMaster gameMaster, SceneManager sceneManager) {
         this.gameMaster = gameMaster;
@@ -139,61 +148,67 @@ public class GameScene extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // Draw background texture
-        drawBackground();
-
-        // Draw score and entities
-        score.draw();
-        timer.draw();
-        entityManager.drawEntities();
-        entityManager.moveEntities();
-
-        // Create a list to hold the collectibles
-        List<Collectible> collectibleList = new ArrayList<>();
-
-        // Iterate through entity list to find collectibles, player, and ghost
-        for (Entity entity : entityList) {
-            if (entity instanceof Collectible) {
-                collectibleList.add((Collectible) entity);
-            }
-            if (entity instanceof Player) {
-                player = (Player) entity;
-            } else if (entity instanceof Ghost) {
-                ghost = (Ghost) entity;
-            }
-        }
-        
-        // Convert collectible list back to an array
-        collectibles = collectibleList.toArray(new Collectible[collectibleList.size()]);
-
-        // Check for player collision with collectibles and update score
-        if (cManager.checkCollectibleCollision(player, collectibles)) {
-            score.calculateScore();
-        }
-
-        // Check for collision with ghost
-        if (player != null && ghost != null) {
-            int remainingHealth = player.getHealth();
-            if (remainingHealth > 0 ) {
-                cManager.checkGhostCollision(player, ghost);
-                player.drawRemainingHealth();
-            }
-            else {
-            	entityManager.gameOverDispose();
-            	drawBackground();
-            	renderGameOverOverlay();
-            }
-        }
-        
-        // Check for timer
-        if(timer.getTime() == 0) {
+        if (gameState == GameState.RUNNING) // Check if game state is running before updating entities
+        {
+	        // Draw background texture
+	        drawBackground();
+	
+	        // Draw score and entities
+	        score.draw();
+	        timer.draw();
+	        entityManager.drawEntities();
+	        entityManager.moveEntities();
+	
+	        // Create a list to hold the collectibles
+	        List<Collectible> collectibleList = new ArrayList<>();
+	
+	        // Iterate through entity list to find collectibles, player, and ghost
+	        for (Entity entity : entityList) {
+	            if (entity instanceof Collectible) {
+	                collectibleList.add((Collectible) entity);
+	            }
+	            if (entity instanceof Player) {
+	                player = (Player) entity;
+	            } else if (entity instanceof Ghost) {
+	                ghost = (Ghost) entity;
+	            }
+	        }
+	        
+	        // Convert collectible list back to an array
+	        collectibles = collectibleList.toArray(new Collectible[collectibleList.size()]);
+	
+	        // Check for player collision with collectibles and update score
+	        if (cManager.checkCollectibleCollision(player, collectibles)) {
+	            score.calculateScore();
+	        }
+	
+	        // Check for collision with ghost
+	        if (player != null && ghost != null) {
+	            int remainingHealth = player.getHealth();
+	            if (remainingHealth > 0 ) {
+	                cManager.checkGhostCollision(player, ghost);
+	                player.drawRemainingHealth();
+	            }
+	            else {
+	            	gameState = GameState.GAME_OVER;
+	            }
+	        }
+	        
+	        // Check for timer
+	        if(timer.getTime() == 0) {
+	        	gameState = GameState.GAME_OVER;
+	        }
+	
+	        // Play background music
+	        ioManager.playBG();
+	    }
+        else if (gameState == GameState.GAME_OVER) // If game state is changed to stop
+        {
         	entityManager.gameOverDispose();
+        	ioManager.stopBG();
         	drawBackground();
         	renderGameOverOverlay();
         }
-
-        // Play background music
-        ioManager.playBG();
     }
     
     private void drawBackground() {

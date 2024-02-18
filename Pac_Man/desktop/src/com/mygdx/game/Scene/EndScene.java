@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -50,10 +51,15 @@ public class EndScene extends ScreenAdapter {
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"));
+        // Load atlas file to create skin for UI elements
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
+
+        // Get the default button style from the skin
+        TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
 
         // Initialize play again button
-        TextButton playAgainButton = new TextButton("Play Again", skin);
+        TextButton playAgainButton = new TextButton("Play Again", buttonStyle);
         playAgainButton.setPosition(Gdx.graphics.getWidth() / 2 - playAgainButton.getWidth() / 2,
                                     Gdx.graphics.getHeight() / 2 - playAgainButton.getHeight() / 2);
         playAgainButton.addListener(new ClickListener() {
@@ -64,7 +70,7 @@ public class EndScene extends ScreenAdapter {
         });
         
         // Initialize menu button
-        TextButton mainMenuButton = new TextButton("Menu", skin);
+        TextButton mainMenuButton = new TextButton("Menu", buttonStyle);
         mainMenuButton.setPosition(Gdx.graphics.getWidth() / 2 - mainMenuButton.getWidth() / 2,
                                    Gdx.graphics.getHeight() / 4 - mainMenuButton.getHeight() / 2);
         mainMenuButton.addListener(new ClickListener() {
@@ -113,6 +119,7 @@ public class EndScene extends ScreenAdapter {
         stage.dispose();
         batch.dispose();
         scoreFont.dispose();
+        backgroundTexture.dispose();
     }
 
 }

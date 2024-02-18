@@ -22,6 +22,7 @@ public class CollisionManager {
             player.PlayerDamageTaken(ghost.getDamage());
             ghost.GenerateSpawnPoint(player.getX(), player.getY());
             
+            // Play Sound
             ioManager.playSE();
         }
     }
@@ -30,7 +31,6 @@ public class CollisionManager {
     public static boolean collidedWithCollectible(Player player, Collectible c) {
         Rectangle playerBounds = player.getBoundingRectangle();
         Rectangle collectibleBounds = c.getBoundingRectangle();
-
         return playerBounds.overlaps(collectibleBounds);
     }
 

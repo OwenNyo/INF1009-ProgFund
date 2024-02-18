@@ -10,6 +10,7 @@ public class Player extends Entity{
 		/// Class Attributes
 		private float Speed;
 		private int Health;
+		private int Points;
 		private boolean IsFirstPlayer;
 		private SpriteBatch batch;
 		private String remainingHealth = "";
@@ -22,11 +23,12 @@ public class Player extends Entity{
 		}
 		
 		// Player to earn points via pellet eating -> win cond = survive longer than other player while stacking
-		public Player(String type, String filename, float x, float y, float speed, int health, float height, float width, boolean AIControlled, boolean fp) {
+		public Player(String type, String filename, float x, float y, float speed, int health, int points, float height, float width, boolean AIControlled, boolean fp) {
 			super(type, filename, x, y, width, height, AIControlled);
 			this.Speed = speed;
 			this.Health = health;
 			this.IsFirstPlayer = fp;
+			this.Points = points;
 		}
 		
 		
@@ -44,6 +46,12 @@ public class Player extends Entity{
 		public void setHealth(int health) {
 			Health = health;
 		}
+		public int getPoints() {
+			return Points;
+		}
+		public void setPoints(int points) {
+			Points = points;
+		}
 		
 		public boolean isFirstPlayer() {
 	        return IsFirstPlayer;
@@ -51,8 +59,11 @@ public class Player extends Entity{
 		
 		
 		// Class Methods
-		public void PlayerPoints(int points) {
-			System.out.println("Player <> earned points");
+		public void PlayerScorePoints(int points) {
+			Points = getPoints();
+			Points += points;
+			
+			System.out.println("Player has earned 10 points");
 		}
 		
 		public void PlayerDamageTaken(int damage) {
@@ -66,6 +77,7 @@ public class Player extends Entity{
 				System.out.println("Player has lost all his health!");
 			}
 		}
+		
 		
 		public void draw() {
 			// Initialize batch 
@@ -81,17 +93,4 @@ public class Player extends Entity{
 			batch.end();
 		 }
 		
-		public void drawRemainingHealth() {
-
-			remainingHealth = "Health: " + this.Health;
-			
-		    batch = new SpriteBatch();
-			// Initialize batch and ScoreFont
-		    batch.begin();
-		    healthFont = new BitmapFont();
-		    healthFont.getData().setScale(2);
-		    healthFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-		    healthFont.draw(batch, remainingHealth, 825, 775);
-		    batch.end();
-		}
 }

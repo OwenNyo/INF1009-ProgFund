@@ -33,6 +33,7 @@ public class EntityManager {
 	private float Player1SpawnY = 300;
 	private float PlayerSpeed = 300;
 	private int PlayerHealth = 100;
+	private int PlayerPoints = 0;
 	
 	// Manager Attributes
 	
@@ -47,7 +48,7 @@ public class EntityManager {
 		
 		// Create Player Object
 		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, 50, 50, false, true);
+				, PlayerSpeed, PlayerHealth, PlayerPoints, 50, 50, false, true);
 		
 		// Create Ghost Object
 		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 60, 60, true);
@@ -98,33 +99,38 @@ public class EntityManager {
     }
 	
 	// Get Entity from Entity List
+	public List<Collectible> getCollectibles() {
+	    List<Collectible> collectibleList = new ArrayList<>();
+	    for (Entity entity : entityList) {
+	        if (entity instanceof Collectible) {
+	            collectibleList.add((Collectible) entity);
+	        }
+	    }
+	    return collectibleList;
+	}
+
 	public Player getPlayer() {
-        for (Entity entity : entityList) {
-            if (entity instanceof Player) {
-                return (Player) entity;
-            }
-        }
-        return null; // Return null if player is not found
-    }
+	    for (Entity entity : entityList) {
+	        if (entity instanceof Player) {
+	            return (Player) entity;
+	        }
+	    }
+	    return null; // Return null if player is not found
+	}
 
-    public Ghost getGhost() {
-        for (Entity entity : entityList) {
-            if (entity instanceof Ghost) {
-                return (Ghost) entity;
-            }
-        }
-        return null; // Return null if ghost is not found
-    }
+	public Ghost getGhost() {
+	    for (Entity entity : entityList) {
+	        if (entity instanceof Ghost) {
+	            return (Ghost) entity;
+	        }
+	    }
+	    return null; // Return null if ghost is not found
+	}
 
-    public Collectible[] getCollectibles() {
-        List<Collectible> collectibleList = new ArrayList<>();
-        for (Entity entity : entityList) {
-            if (entity instanceof Collectible) {
-                collectibleList.add((Collectible) entity);
-            }
-        }
-        return collectibleList.toArray(new Collectible[0]);
-    }
+	public Collectible[] getCollectiblesArray() {
+	    List<Collectible> collectibleList = getCollectibles();
+	    return collectibleList.toArray(new Collectible[0]);
+	}
     
     
 	// Dispose of all Entities

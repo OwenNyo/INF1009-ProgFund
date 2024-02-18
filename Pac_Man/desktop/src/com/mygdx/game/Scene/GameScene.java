@@ -63,17 +63,21 @@ public class GameScene extends ScreenAdapter {
     // Button for play again
     private TextButton playAgainButton, MainMenu;
     
+    // Scene Manager
+    private SceneManager sceneManager;
+    
     // GameState Enum to manage game state
     private enum GameState {
         RUNNING,
         GAME_OVER;
     }
     
-    // Variable to track current game state
+    // Initialize current game state to running
     private GameState gameState = GameState.RUNNING;
 
     public GameScene(GameMaster gameMaster, SceneManager sceneManager) {
         this.gameMaster = gameMaster;
+        this.sceneManager = sceneManager;
         
         // Create a new SpriteBatch instance
         batch = new SpriteBatch();
@@ -99,44 +103,6 @@ public class GameScene extends ScreenAdapter {
 
         // Initialize IO Manager
         ioManager = new IOManager();
-        
-        overlayStage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(overlayStage);
-        
-    	// Load atlas file to create skin for UI elements
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
-        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
-        TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
-
-     // Initialize play again button
-        playAgainButton = new TextButton("Play Again", skin);
-        playAgainButton.setPosition(Gdx.graphics.getWidth() / 2 - playAgainButton.getWidth() / 2,
-                                    Gdx.graphics.getHeight() / 2 - playAgainButton.getHeight() / 2); // Adjusted position
-        playAgainButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Reload the game scene
-                sceneManager.setGameScreen();
-            }
-        });
-
-        // Add button to the overlay stage
-        overlayStage.addActor(playAgainButton);
-
-        // Initialize menu button
-        MainMenu = new TextButton("Menu", skin);
-        MainMenu.setPosition(Gdx.graphics.getWidth() / 2 - MainMenu.getWidth() / 2,
-                             Gdx.graphics.getHeight() / 4 - MainMenu.getHeight() / 2); // Adjusted position
-        MainMenu.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                // Load the menu screen
-                sceneManager.setMenuScreen();
-            }
-        });
-
-        // Add button to the overlay stage
-        overlayStage.addActor(MainMenu);
     }
 
     @Override
@@ -202,12 +168,12 @@ public class GameScene extends ScreenAdapter {
 	        // Play background music
 	        ioManager.playBG();
 	    }
-        else if (gameState == GameState.GAME_OVER) // If game state is changed to stop
+        else if (gameState == GameState.GAME_OVER) // If game state is changed to end
         {
         	entityManager.gameOverDispose();
         	ioManager.stopBG();
-        	drawBackground();
-        	renderGameOverOverlay();
+            int finalScore = score.getScore();
+            sceneManager.setEndScreen(finalScore);
         }
     }
     
@@ -215,13 +181,6 @@ public class GameScene extends ScreenAdapter {
     	batch.begin();
         batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         batch.end();
-    }
-    
-    private void renderGameOverOverlay() {
-        // Clear the overlay stage
-        overlayStage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        overlayStage.draw();
-    	score.draw(score.getScore());
     }
 
     @Override

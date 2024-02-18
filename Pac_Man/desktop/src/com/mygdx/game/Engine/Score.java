@@ -9,7 +9,7 @@ public class Score {
 	private SpriteBatch batch;
 	private int score = 0;
 	private String scoreSystem = "";
-	private String EndScore = "";
+//	private String EndScore = "";
 	BitmapFont ScoreFont;
 	
 	public Score() {
@@ -27,19 +27,6 @@ public class Score {
 	    ScoreFont.getData().setScale(2);
 	    ScoreFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
 	    ScoreFont.draw(batch, scoreSystem, 25, 775);
-	    batch.end();
-	}
-	
-	public void draw(int totalScore) {
-
-	    EndScore = "Game Over!\nScore : " + totalScore ;
-	    batch = new SpriteBatch();
-		// Initialize batch and ScoreFont
-	    batch.begin();
-	    ScoreFont = new BitmapFont();
-	    ScoreFont.getData().setScale(3);
-	    ScoreFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-	    ScoreFont.draw(batch, EndScore, 390, 660);
 	    batch.end();
 	}
 	

@@ -1,6 +1,7 @@
 package com.mygdx.game.Engine;
 
 import com.mygdx.game.GameMaster;
+import com.mygdx.game.Scene.EndScene;
 import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
 
@@ -38,5 +39,11 @@ public class SceneManager {
         GameScene gameScene = new GameScene(gameMaster, this);
         // Set the screen using the GameMaster
         gameMaster.setScreen(gameScene);
+    }
+    
+    public void setEndScreen(int finalScore) {
+    	EndScene endScene = new EndScene(gameMaster, this, finalScore);
+    	// Set the screen using the GameMaster
+    	gameMaster.setScreen(endScene);
     }
 }

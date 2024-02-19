@@ -3,6 +3,7 @@ package com.mygdx.game.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Interfaces.Movement;
+import com.mygdx.game.Settings.GameSettings;
 
 public class AIManager implements Movement {
     
@@ -24,7 +25,7 @@ public class AIManager implements Movement {
         Vector2 direction = playerPosition.sub(ghostPosition).nor();
         
         // Move the ghost towards the player
-        float speedMultiplier = 10.0f; // Adjust speed if needed
+        float speedMultiplier = GameSettings.getInstance().getSpeedMultiplier(); // Get speed from GameSettings
         Vector2 velocity = direction.scl(ghost.getSpeed() * speedMultiplier * Gdx.graphics.getDeltaTime());
         ghostPosition.add(velocity);
         

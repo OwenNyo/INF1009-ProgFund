@@ -40,6 +40,9 @@ public class CollisionManager {
             if (collidedWithCollectible(player, c)) {
                 System.out.println("Pellet Collision detected");
                 c.resetPosition(player.getX(), player.getY());
+                
+                //play collect sound effect
+                ioManager.playSECollect(); 
                 return true;
             }
         }

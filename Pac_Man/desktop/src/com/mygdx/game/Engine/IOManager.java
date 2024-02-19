@@ -9,6 +9,7 @@ public class IOManager {
 
     protected Music BGMusic;
     protected Sound SEMusic;
+    protected Sound SEMusicCollect;
     protected float BGVolume;
     protected float SEVolume;
     protected boolean muteState;
@@ -17,6 +18,7 @@ public class IOManager {
     public IOManager() {
         BGMusic = Gdx.audio.newMusic(Gdx.files.internal("BGMusic/bg1.wav"));
         SEMusic = Gdx.audio.newSound(Gdx.files.internal("SEMusic/se1.wav"));
+        SEMusicCollect = Gdx.audio.newSound(Gdx.files.internal("SEMusic/se2.wav"));
         BGVolume = 0.5f; // Default volume set as float
         SEVolume = 0.5f; // Default volume set as float
         muteState = false;
@@ -60,6 +62,10 @@ public class IOManager {
     // Method to play sound effects
     public void playSE() {
         SEMusic.play(SEVolume);
+    }
+    
+    public void playSECollect() {
+        SEMusicCollect.play(SEVolume);
     }
 
     // Method to stop background music
@@ -106,5 +112,6 @@ public class IOManager {
     public void dispose() {
         BGMusic.dispose();
         SEMusic.dispose();
+        SEMusicCollect.dispose();
     }
 }

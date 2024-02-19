@@ -2,9 +2,8 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.mygdx.game.Interfaces.Movement;
 
-public class PlayerControlManager implements Movement{
+public class PlayerControlManager {
     
     private Player player;
     
@@ -12,7 +11,6 @@ public class PlayerControlManager implements Movement{
         this.player = player;
     }
     
-	@Override
 	public void handleMovement() {
 		if (player.isFirstPlayer()) {
             handleFirstPlayerMovement();

@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 public class TimerClass {
 	
 	private SpriteBatch batch;
-	private int time = 20; // Initial time
+	private int time = 60; // Initial time
 	private String TimerText = "";
 	BitmapFont TimeFont;
 	

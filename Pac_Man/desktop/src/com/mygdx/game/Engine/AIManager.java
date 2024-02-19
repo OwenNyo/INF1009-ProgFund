@@ -2,10 +2,9 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.game.Interfaces.Movement;
 import com.mygdx.game.Settings.GameSettings;
 
-public class AIManager implements Movement {
+public class AIManager {
     
     private Ghost ghost;
     private float playerX;
@@ -17,7 +16,6 @@ public class AIManager implements Movement {
         this.playerY = playerY;
     }
 
-    @Override
     public void handleMovement() {
     	// Calculate the direction vector towards the player
         Vector2 playerPosition = new Vector2(playerX, playerY);

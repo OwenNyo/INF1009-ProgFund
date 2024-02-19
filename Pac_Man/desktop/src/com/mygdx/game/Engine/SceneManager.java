@@ -4,6 +4,7 @@ import com.mygdx.game.GameMaster;
 import com.mygdx.game.Scene.EndScene;
 import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
+import com.mygdx.game.Scene.OptionScene;
 
 public class SceneManager {
 
@@ -32,6 +33,15 @@ public class SceneManager {
         MenuScene menuScene = new MenuScene(gameMaster, this);
         // Set the screen using the GameMaster
         gameMaster.setScreen(menuScene);
+    }
+    
+    public void setOptionScreen() {
+    	// Initialize IOManager
+        IOManager ioManager = new IOManager();
+        
+    	OptionScene optionScene = new OptionScene(gameMaster, this, ioManager);
+    	// Set the screen using the GameMaster
+    	gameMaster.setScreen(optionScene);
     }
 
     // Method to set the game screen

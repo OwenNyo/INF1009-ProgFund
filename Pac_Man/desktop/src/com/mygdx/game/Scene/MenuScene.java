@@ -64,6 +64,7 @@ public class MenuScene extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // Add code to handle options button click
+            	sceneManager.setOptionScreen();
             }
         });
         stage.addActor(optionsButton);

@@ -1,115 +1,110 @@
 package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 
 public class IOManager {
 
-//	protected HashMap<String, Music> BGMusic;
-//	protected HashMap<String, Sound> SEMusic;
-	protected Music BGMusic;
-	protected Sound SEMusic;
-	protected int BGVolume;
-	protected int SEVolume;
-	protected boolean muteState;
+    protected Music BGMusic;
+    protected Sound SEMusic;
+    protected float BGVolume;
+    protected float SEVolume;
+    protected boolean muteState;
+    protected Preferences preferences; // Preferences object to save/load settings
 
-	//private List<String> BGList, SEList;
+    public IOManager() {
+        BGMusic = Gdx.audio.newMusic(Gdx.files.internal("BGMusic/bg1.wav"));
+        SEMusic = Gdx.audio.newSound(Gdx.files.internal("SEMusic/se1.wav"));
+        BGVolume = 0.5f; // Default volume set as float
+        SEVolume = 0.5f; // Default volume set as float
+        muteState = false;
 
-	public IOManager(){
-//		BGMusic = new HashMap<String, Music>();
-//		SEMusic = new HashMap<String, Sound>();
-//		BGList = new ArrayList<String>();
-//		SEList = new ArrayList<String>();
-		BGMusic = Gdx.audio.newMusic(Gdx.files.internal("BGMusic/bg1.wav"));
-		SEMusic = Gdx.audio.newSound(Gdx.files.internal("SEMusic/se1.wav"));
-		BGVolume = 1;
-//		SEVolume = 1;
-		muteState = false;
-	}
-	
-	
-	public void playBG() {
-		BGMusic.setLooping(true);
-		BGMusic.setVolume(BGVolume);
-		BGMusic.play();
-	}
+        // Initialize preferences with a unique name
+        preferences = Gdx.app.getPreferences("SoundSettings");
 
-	public void playSE() {
-		SEMusic.play();
-	}
-	
-	public void stopBG() {
-	    if (BGMusic.isPlaying()) {
-	        BGMusic.stop();
-	    }
-	}
-	
-	
-//	public void adjustBG() {
-//		if (BGVolume < 1 && BGVolume > 0) {
-//			if (Gdx.input.isKeyPressed(Keys.MINUS)) {
-//				BGVolume -= 0.1;
-//				BGMusic.setVolume(BGVolume);
-//			}
-//			if (Gdx.input.isKeyPressed(Keys.PLUS)) {
-//				BGVolume += 0.1;
-//				BGMusic.setVolume(BGVolume);
-//			}
-//		
-//		}
-//	}
-	
-	//mute audio 
-//	public void muteToggle() {
-//		// mute or unmute ??
-//		if (muteState = false) {
-//			System.out.println("in mute is false");
-//			this.muteState = true;
-//			setBGVolume(0);
-//			setSEVolume(0);
-//		} else if (muteState = true){
-//			System.out.println("in mute is true");
-//			this.muteState = false;
-//			setBGVolume(1);
-//			setSEVolume(1);
-//		}
-//	
-//		
-//	}
-	
-	
-	// Getter and Setter
-	public int getBGVolume() {
-		return BGVolume;
-	}
-	public void setBGVolume(int bgvolume) {
-		this.BGVolume = bgvolume;
-	}
-	
-	
-	public int getSEVolume() {
-		return SEVolume;
-	}
-	public void setSEVolume(int sevolume) {
-		this.SEVolume = sevolume;
-	}
-	
+        // Load settings from preferences
+        loadSettings();
+    }
 
-	public boolean getmuteState() {
-		return muteState;
-	}
-	public void setmuteState(boolean mutestate) {
-		this.muteState = mutestate;
-	}
-	
-	
-	 // Dispose method to clear resources
-	 public void dispose() {
-	        BGMusic.dispose();
-	        SEMusic.dispose();
-	 }
-	
+    // Method to load settings from preferences
+    private void loadSettings() {
+        // Load background music volume
+        BGVolume = preferences.getFloat("BGVolume", BGVolume);
+        // Load sound effects volume
+        SEVolume = preferences.getFloat("SEVolume", SEVolume);
+        // Load mute state
+        muteState = preferences.getBoolean("muteState", muteState);
+    }
 
-	
+    // Method to save settings to preferences
+    private void saveSettings() {
+        // Save background music volume
+        preferences.putFloat("BGVolume", BGVolume);
+        // Save sound effects volume
+        preferences.putFloat("SEVolume", SEVolume);
+        // Save mute state
+        preferences.putBoolean("muteState", muteState);
+        // Flush changes to file
+        preferences.flush();
+    }
+
+    // Method to play background music
+    public void playBG() {
+        BGMusic.setLooping(true);
+        BGMusic.setVolume(BGVolume);
+        BGMusic.play();
+    }
+
+    // Method to play sound effects
+    public void playSE() {
+        SEMusic.play(SEVolume);
+    }
+
+    // Method to stop background music
+    public void stopBG() {
+        if (BGMusic.isPlaying()) {
+            BGMusic.stop();
+        }
+    }
+
+    // Getter and Setter for background volume
+    public float getBGVolume() {
+        return BGVolume;
+    }
+
+    public void setBGVolume(float volume) {
+        this.BGVolume = volume;
+        // Save settings when volume is changed
+        saveSettings();
+    }
+
+    // Getter and Setter for sound effects volume
+    public float getSEVolume() {
+        return SEVolume;
+    }
+
+    public void setSEVolume(float volume) {
+        this.SEVolume = volume;
+        // Save settings when volume is changed
+        saveSettings();
+    }
+
+    // Getter and Setter for mute state
+    public boolean getMuteState() {
+        return muteState;
+    }
+
+    public void setMuteState(boolean mutestate) {
+        this.muteState = mutestate;
+        // Save settings when mute state is changed
+        saveSettings();
+    }
+
+    // Dispose method to clear resources
+    public void dispose() {
+        BGMusic.dispose();
+        SEMusic.dispose();
+    }
 }

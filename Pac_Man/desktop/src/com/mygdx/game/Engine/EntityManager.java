@@ -18,7 +18,7 @@ public class EntityManager {
 	
 	// Object Declaration
 	private Player player;
-	private Ghost ghost;
+	private Enemy ghost;
 	private Collectible collectibles[];
 
 	// Static Attributes
@@ -50,7 +50,7 @@ public class EntityManager {
 				, PlayerSpeed, PlayerHealth, PlayerPoints, 50, 50, false, true);
 		
 		// Create Ghost Object
-		ghost = new Ghost("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 60, 60, true);
+		ghost = new Enemy("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 60, 60, true);
 		ghost.GenerateSpawnPoint(player.getX(), player.getY());
 		
 		// Create Collectible Objects
@@ -90,8 +90,8 @@ public class EntityManager {
             if (entity instanceof Player) {
                 PlayerControlManager playerControlManager = new PlayerControlManager((Player) entity);
                 playerControlManager.handleMovement();
-            } else if (entity instanceof Ghost) {
-                AIManager aiManager = new AIManager((Ghost) entity, player.getX(), player.getY()); // Pass player coordinates
+            } else if (entity instanceof Enemy) {
+                AIManager aiManager = new AIManager((Enemy) entity, player.getX(), player.getY()); // Pass player coordinates
                 aiManager.handleMovement();
             }
         }
@@ -117,10 +117,10 @@ public class EntityManager {
 	    return null; // Return null if player is not found
 	}
 
-	public Ghost getGhost() {
+	public Enemy getGhost() {
 	    for (Entity entity : entityList) {
-	        if (entity instanceof Ghost) {
-	            return (Ghost) entity;
+	        if (entity instanceof Enemy) {
+	            return (Enemy) entity;
 	        }
 	    }
 	    return null; // Return null if ghost is not found

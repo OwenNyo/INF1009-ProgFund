@@ -6,11 +6,11 @@ import com.mygdx.game.Settings.GameSettings;
 
 public class AIManager {
     
-    private Ghost ghost;
+    private Enemy ghost;
     private float playerX;
     private float playerY;
     
-    public AIManager(Ghost ghost, float playerX, float playerY) {
+    public AIManager(Enemy ghost, float playerX, float playerY) {
         this.ghost = ghost;
         this.playerX = playerX;
         this.playerY = playerY;

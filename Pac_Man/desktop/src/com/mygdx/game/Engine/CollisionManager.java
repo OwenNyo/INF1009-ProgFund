@@ -8,7 +8,7 @@ public class CollisionManager {
 	private IOManager ioManager = new IOManager();
 
 	// Logic to check for collision with Ghost
-    public static boolean collidedWithGhost(Player player, Ghost ghost) {
+    public static boolean collidedWithGhost(Player player, Enemy ghost) {
         Rectangle playerBounds = player.getBoundingRectangle();
         Rectangle ghostBounds = ghost.getBoundingRectangle();
 
@@ -16,7 +16,7 @@ public class CollisionManager {
     }
     
     // Logic to handle what happens if there is a collision with Ghost
-    public void checkGhostCollision(Player player, Ghost ghost) {
+    public void checkGhostCollision(Player player, Enemy ghost) {
         if (collidedWithGhost(player, ghost)) {
             System.out.println("Ghost Collision detected");
             player.PlayerDamageTaken(ghost.getDamage());

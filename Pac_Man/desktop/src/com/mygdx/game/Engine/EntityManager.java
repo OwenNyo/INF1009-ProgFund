@@ -143,14 +143,4 @@ public class EntityManager {
             }  
         }
     }
-	
-	public Ghost gameOverDispose() {
-    	for (Entity entity : entityList) {
-        	if (entity.getTex() != null) {
-        		entity.getTex().dispose();
-            }   
-        }
-        return null; // Return null if ghost is not found
-    }
-
 }

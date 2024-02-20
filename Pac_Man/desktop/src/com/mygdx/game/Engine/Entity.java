@@ -103,7 +103,7 @@ public abstract class Entity{
 	abstract void draw();
 	
 	// Check collision
-	public Rectangle getBoundingRectangle() {
+	protected Rectangle getBoundingRectangle() {
 		return new Rectangle(getX(), getY(), getHeight(), getWidth());
 	}
 	

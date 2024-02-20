@@ -37,7 +37,6 @@ public class EntityManager {
 	
 	// Manager Attributes
 	
-	
 	// Initialize all Entities
 	public void initEntities() {
 		

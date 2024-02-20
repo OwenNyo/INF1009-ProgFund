@@ -9,7 +9,7 @@ public class IOManager {
 
     protected Music BGMusic;
     protected Sound SEMusic;
-    protected Sound SEMusicCollect;
+    protected Sound SEMusicCollect; 
     protected float BGVolume;
     protected float SEVolume;
     protected boolean muteState;

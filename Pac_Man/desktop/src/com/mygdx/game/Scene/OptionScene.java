@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Engine.SceneManager;
 import com.mygdx.game.Settings.GameSettings;
+import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.IOManager;
 import com.mygdx.game.GameMaster;
 
@@ -31,7 +32,8 @@ public class OptionScene extends ScreenAdapter {
 
     private final SpriteBatch batch;
     private final Stage stage;
-    private final Texture menuTexture;
+    private final Texture optionTexture;
+    private HUD hud;
 
     public OptionScene(GameMaster gameMaster, SceneManager sceneManager, IOManager ioManager) {
         // Initialize game objects
@@ -42,10 +44,11 @@ public class OptionScene extends ScreenAdapter {
         // Create sprite batch and stage
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
+        hud = new HUD();
         Gdx.input.setInputProcessor(stage);
 
         // Load menu background texture and UI skin
-        menuTexture = new Texture("Icy_background.jpg");
+        optionTexture = new Texture("Icy_background.jpg");
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
         Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
 
@@ -176,9 +179,7 @@ public class OptionScene extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Render background texture
-        batch.begin();
-        batch.draw(menuTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
+        hud.drawBackground(optionTexture);
 
         // Render the stage
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
@@ -189,7 +190,7 @@ public class OptionScene extends ScreenAdapter {
     public void dispose() {
         // Dispose of resources
         batch.dispose();
-        menuTexture.dispose();
+        optionTexture.dispose();
         stage.dispose();
     }
 }

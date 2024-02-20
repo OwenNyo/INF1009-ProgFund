@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.SceneManager;
 import com.mygdx.game.GameMaster;
 
@@ -25,6 +26,7 @@ public class MenuScene extends ScreenAdapter {
     private final SpriteBatch batch;
     private final Stage stage;
     private final Texture menuTexture;
+    private HUD hud;
 
     public MenuScene(GameMaster gameMaster, SceneManager sceneManager) {
         this.gameMaster = gameMaster;
@@ -33,6 +35,7 @@ public class MenuScene extends ScreenAdapter {
         // Initialize rendering components
         batch = new SpriteBatch();
         stage = new Stage(new ScreenViewport());
+        hud = new HUD();
 
         // Set input processor to the stage to handle UI input
         Gdx.input.setInputProcessor(stage);
@@ -95,9 +98,7 @@ public class MenuScene extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // Render menu background
-        batch.begin();
-        batch.draw(menuTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
+        hud.drawBackground(menuTexture);
 
         // Update and render the stage
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));

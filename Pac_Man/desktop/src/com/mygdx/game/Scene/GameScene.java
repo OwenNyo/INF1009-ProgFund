@@ -34,7 +34,7 @@ public class GameScene extends ScreenAdapter {
     private Enemy ghost;
     private Collectible collectibles[];
 
-    // Score
+    // Hud
     private HUD hud;
     
     //Timer

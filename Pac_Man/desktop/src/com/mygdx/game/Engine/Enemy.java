@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Ghost extends Entity{
+public class Enemy extends Entity{
 	
 		// Static Variables
 		int NoSpawnRadius = 30;
@@ -19,12 +19,12 @@ public class Ghost extends Entity{
 		
 		
 		// Constructors
-		public Ghost() {
+		public Enemy() {
 			super();
 			this.Speed = 0;
 			this.Damage = 0;
 		}
-		public Ghost(String type, String filename, float x, float y, float speed, int damage, float height, float width, boolean AIControlled) {
+		public Enemy(String type, String filename, float x, float y, float speed, int damage, float height, float width, boolean AIControlled) {
 			super(type, filename, x, y, height, width, AIControlled);
 			this.Speed = speed;
 			this.Damage = damage;

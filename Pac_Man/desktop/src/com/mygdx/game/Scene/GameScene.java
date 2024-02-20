@@ -18,7 +18,7 @@ import com.mygdx.game.Engine.Collectible;
 import com.mygdx.game.Engine.CollisionManager;
 import com.mygdx.game.Engine.Entity;
 import com.mygdx.game.Engine.EntityManager;
-import com.mygdx.game.Engine.Ghost;
+import com.mygdx.game.Engine.Enemy;
 import com.mygdx.game.Engine.IOManager;
 import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.SceneManager;
@@ -31,7 +31,7 @@ public class GameScene extends ScreenAdapter {
 
     // Entities
     private Player player;
-    private Ghost ghost;
+    private Enemy ghost;
     private Collectible collectibles[];
 
     // Score

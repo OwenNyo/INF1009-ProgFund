@@ -8,19 +8,19 @@ public class CollisionManager {
 	private IOManager ioManager = new IOManager();
 
 	// Logic to check for collision with Ghost
-    public static boolean collidedWithGhost(Player player, Enemy ghost) {
+    public static boolean collidedWithEnemy(Player player, Enemy enemy) {
         Rectangle playerBounds = player.getBoundingRectangle();
-        Rectangle ghostBounds = ghost.getBoundingRectangle();
+        Rectangle ghostBounds = enemy.getBoundingRectangle();
 
         return playerBounds.overlaps(ghostBounds);
     }
     
     // Logic to handle what happens if there is a collision with Ghost
-    public void checkGhostCollision(Player player, Enemy ghost) {
-        if (collidedWithGhost(player, ghost)) {
+    public void checkEnemyCollision(Player player, Enemy enemy) {
+        if (collidedWithEnemy(player, enemy)) {
             System.out.println("Ghost Collision detected");
-            player.PlayerDamageTaken(ghost.getDamage());
-            ghost.GenerateSpawnPoint(player.getX(), player.getY());
+            player.PlayerDamageTaken(enemy.getDamage());
+            enemy.GenerateSpawnPoint(player.getX(), player.getY());
             
             // Play Sound
             ioManager.playSE();

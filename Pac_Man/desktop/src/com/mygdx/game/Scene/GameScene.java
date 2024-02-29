@@ -31,7 +31,7 @@ public class GameScene extends ScreenAdapter {
 
     // Entities
     private Player player;
-    private Enemy ghost;
+    private Enemy enemy;
     private Collectible collectibles[];
 
     // Hud
@@ -83,7 +83,7 @@ public class GameScene extends ScreenAdapter {
         batch = new SpriteBatch();
 
         // Load background texture
-        backgroundTexture = new Texture("PacMan_Background.jpg");
+        backgroundTexture = new Texture("Space_Background.png");
 
         // Initialize EntityManager and entities
         entityManager = new EntityManager();
@@ -127,7 +127,7 @@ public class GameScene extends ScreenAdapter {
 	
 	        // Get Entities
 	        player = entityManager.getPlayer();
-	        ghost = entityManager.getGhost();
+	        enemy = entityManager.getEnemy();
 	        collectibles = entityManager.getCollectiblesArray();
 	        
 	        // Update and draw score
@@ -139,10 +139,10 @@ public class GameScene extends ScreenAdapter {
 	        }
 	
 	        // Check for collision with ghost
-	        if (player != null && ghost != null) {
+	        if (player != null && enemy != null) {
 	            int remainingHealth = player.getHealth();
 	            if (remainingHealth > 0 ) {
-	                cManager.checkGhostCollision(player, ghost);
+	                cManager.checkEnemyCollision(player, enemy);
 	                hud.drawRemainingHealth(player.getHealth());
 	            }
 	            else {

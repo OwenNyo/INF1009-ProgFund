@@ -18,15 +18,15 @@ public class EntityManager {
 	
 	// Object Declaration
 	private Player player;
-	private Enemy ghost;
+	private Enemy enemy;
 	private Collectible collectibles[];
 
 	// Static Attributes
 	private int MAXPELLET = 5;
 	
 	// Ghost Attributes
-	private int GhostSpeed = 10;
-	private int GhostDamage = 10;
+	private int EnemySpeed = 10;
+	private int EnemyDamage = 10;
 	
 	// Player Attributes
 	private float Player1SpawnX = 400;
@@ -46,12 +46,12 @@ public class EntityManager {
     	shape = new ShapeRenderer();
 		
 		// Create Player Object
-		player = new Player("player", "PacMan.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, PlayerPoints, 50, 50, false, true);
+		player = new Player("player", "Astronaut.png", Player1SpawnX, Player1SpawnY
+				, PlayerSpeed, PlayerHealth, PlayerPoints, 80, 80, false, true);
 		
 		// Create Ghost Object
-		ghost = new Enemy("ghost", "ghost.png", 0, 0, GhostSpeed, GhostDamage, 60, 60, true);
-		ghost.GenerateSpawnPoint(player.getX(), player.getY());
+		enemy = new Enemy("enemy", "Alien.png", 0, 0, EnemySpeed, EnemyDamage, 80, 80, true);
+		enemy.GenerateSpawnPoint(player.getX(), player.getY());
 		
 		// Create Collectible Objects
 		collectibles = new Collectible[MAXPELLET];
@@ -68,7 +68,7 @@ public class EntityManager {
 		
 		// Add entities to the list
 		entityList.add(player);
-		entityList.add(ghost);
+		entityList.add(enemy);
        
 	}
 	
@@ -117,7 +117,7 @@ public class EntityManager {
 	    return null; // Return null if player is not found
 	}
 
-	public Enemy getGhost() {
+	public Enemy getEnemy() {
 	    for (Entity entity : entityList) {
 	        if (entity instanceof Enemy) {
 	            return (Enemy) entity;

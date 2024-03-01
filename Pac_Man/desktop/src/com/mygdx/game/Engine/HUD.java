@@ -9,6 +9,7 @@ public class HUD {
     private SpriteBatch batch;
     private BitmapFont scoreFont;
     private BitmapFont healthFont;
+	int screenHeight = Gdx.graphics.getHeight();
 
     public HUD() {
         batch = new SpriteBatch();
@@ -21,7 +22,7 @@ public class HUD {
     public void drawScore(int score) {
         batch.begin();
         scoreFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-        scoreFont.draw(batch, "Score: " + score, 25, 775);
+        scoreFont.draw(batch, "Score: " + score, 25, screenHeight - 25);
         batch.end();
     }
 
@@ -29,7 +30,7 @@ public class HUD {
         batch.begin();
         healthFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         healthFont.getData().setScale(2);
-        healthFont.draw(batch, "Health: " + health, 825, 775);
+        healthFont.draw(batch, "Health: " + health, 1500, screenHeight - 25);
         batch.end();
     }
     

@@ -213,4 +213,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 		stageBackground: dialog
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+    "black-background": {
+        "name": "white", 
+        "color": "black"
+    }
+}
 }

@@ -3,15 +3,20 @@ package com.mygdx.game.Scene;
 import java.util.ArrayList;
 import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.GameMaster;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.Engine.Collectible;
@@ -32,7 +37,13 @@ public class GameScene extends ScreenAdapter {
     // Entities
     private Player player;
     private Enemy enemy;
-    private Collectible collectibles[];
+    private Collectible collectibles[], asteroids[];
+    
+    private Label popupLabel, popupAsteroid;
+    private Table popupTable, popupAsteroidTable;
+    private boolean showingPopup;
+    private boolean asteroidCollisionOccurred = false;
+    private boolean asteroidPopupShown = false;
 
     // Hud
     private HUD hud;
@@ -66,6 +77,14 @@ public class GameScene extends ScreenAdapter {
     // Scene Manager
     private SceneManager sceneManager;
     
+    private OrthographicCamera camera;
+    
+    private Texture collisionTexture;
+    private boolean showCollisionTexture;
+    private float collisionTextureTimer;
+    
+    private float backgroundSpeed = 6;
+    
     // GameState Enum to manage game state
     private enum GameState {
         RUNNING,
@@ -81,9 +100,18 @@ public class GameScene extends ScreenAdapter {
         
         // Create a new SpriteBatch instance
         batch = new SpriteBatch();
+        
+        int screenWidth = Gdx.graphics.getWidth();
+        int screenHeight = Gdx.graphics.getHeight();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, screenWidth, screenHeight);
 
         // Load background texture
-        backgroundTexture = new Texture("Space_Background.png");
+        backgroundTexture = new Texture("space.jpg");
+
+        collisionTexture = new Texture("Space_Background.png");
+        showCollisionTexture = false;
+        collisionTextureTimer = 0f;
 
         // Initialize EntityManager and entities
         entityManager = new EntityManager();
@@ -103,6 +131,47 @@ public class GameScene extends ScreenAdapter {
 
         // Initialize IO Manager
         ioManager = new IOManager();
+        
+        // Create the stage for UI elements
+        overlayStage = new Stage(new ScreenViewport());
+
+        // Initialize popup message
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); // Assuming you have a skin file
+        popupLabel = new Label("Beware of the blackhole!!!", skin);
+        popupLabel.setAlignment(Align.center);
+        
+        popupLabel.setFontScale(2.5f);
+
+        popupTable = new Table();
+        popupTable.setFillParent(true);
+        popupTable.add(popupLabel).expand().center();
+        
+//        popupAsteroid = new Label("Did you Know? \n "
+//        		+ "There are over 900.000 \n "
+//        		+ "confirmed asteroids in the \n "
+//        		+ "Solar System, "
+//        		+ "and more and more \n "
+//        		+ "are found each day.", skin);
+//        popupAsteroid.setAlignment(Align.center);
+//        
+//        popupAsteroid.setFontScale(2.5f);
+//
+//        popupAsteroidTable = new Table();
+//        popupAsteroidTable.setFillParent(true);
+//        popupAsteroidTable.setBackground(skin.getDrawable("black-background"));
+//        popupAsteroidTable.add(popupAsteroid).expand().center();
+        
+        showingPopup = true;
+
+        // Schedule a task to hide the popup after 2 seconds
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                showingPopup = false;
+            }
+        }, 5);
+        
+        asteroidPopupShown = false;
     }
 
     @Override
@@ -114,11 +183,16 @@ public class GameScene extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        camera.position.x += backgroundSpeed * Gdx.graphics.getDeltaTime();
 
         if (gameState == GameState.RUNNING) // Check if game state is running before updating entities
         {
 	        // Draw background texture
-	        hud.drawBackground(backgroundTexture);
+        	// Draw background using camera's combined matrix
+            batch.setProjectionMatrix(camera.combined);
+            batch.begin();
+            batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth()*2, Gdx.graphics.getHeight());
+            batch.end();
 	
 	        // Draw timer and entities
 	        timer.draw();
@@ -135,7 +209,14 @@ public class GameScene extends ScreenAdapter {
 	
 	        // Check for player collision with collectibles and update score
 	        if (cManager.checkCollectibleCollision(player, collectibles)) {
-	        	player.PlayerScorePoints(10);
+//	        	player.PlayerScorePoints(10);
+	        	
+	        }
+	        
+	        asteroids = entityManager.getAsteroidArray();
+	        if (cManager.checkasteroidCollision(player, asteroids)) {
+	        	// Add Collision Code
+                
 	        }
 	
 	        // Check for collision with ghost
@@ -151,9 +232,9 @@ public class GameScene extends ScreenAdapter {
 	        }
 	        
 	        // Check for timer
-	        if(timer.getTime() == 0) {
-	        	gameState = GameState.GAME_OVER;
-	        }
+//	        if(timer.getTime() == 0) {
+//	        	gameState = GameState.GAME_OVER;
+//	        }
 	
 	        // Play background music
 	        ioManager.playBG();
@@ -166,6 +247,15 @@ public class GameScene extends ScreenAdapter {
         	hud.dispose();
             sceneManager.setEndScreen(player.getPoints());
         }
+        
+        if (showingPopup) {
+            // Draw the popup message
+            overlayStage.addActor(popupTable);
+            overlayStage.act(delta);
+            overlayStage.draw();
+        }
+        
+        camera.update();
     }
 
     @Override
@@ -176,6 +266,8 @@ public class GameScene extends ScreenAdapter {
         ioManager.dispose();
         hud.dispose();
         overlayStage.dispose();
+        popupLabel.clear();
+        popupTable.clear();
     }
     
 }

@@ -3,13 +3,17 @@ package com.mygdx.game.Engine;
 import java.util.Random;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
 
 public class Collectible extends Entity {
 
 	    private float radius;
 	    private Color color;
 	    private ShapeRenderer shapeRenderer;
+		private SpriteBatch batch;
+		private float Speed;
 	 
 		 // Constructors
 		 public Collectible() {
@@ -20,6 +24,16 @@ public class Collectible extends Entity {
 			 super(type, x, y, AIControlled);
 			 this.radius = radius;
 		     this.color = color;
+		}
+
+
+		public Collectible(String type, String filename, float x, float y, float height, float width, boolean AIControlled) {
+			super(type, filename, x, y, height, width, AIControlled);
+		}
+		
+		public Collectible(String type, String filename, float x, float y, float speed, float height, float width, boolean AIControlled) {
+			super(type, filename, x, y, height, width, AIControlled);
+			this.Speed = speed;
 		}
 		 
 		 public void resetPosition(float posX, float posY) {
@@ -51,11 +65,33 @@ public class Collectible extends Entity {
 			shapeRenderer = shape;
 		}
 		 
-		 public void draw() {
-		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-		    shapeRenderer.setColor(color);
-		    shapeRenderer.circle(getX(), getY(), radius);
-		    shapeRenderer.end();
-		 }
+		// Getters and Setters
+		public float getSpeed() {
+			return Speed;
+		}
+		public void setSpeed(float speed) {
+			Speed = speed;
+		}
+		 
+//		 public void draw() {
+//		    shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+//		    shapeRenderer.setColor(color);
+//		    shapeRenderer.circle(getX(), getY(), radius);
+//		    shapeRenderer.end();
+//		 }
+		 
+		public void draw() {
+			// Initialize batch 
+			batch = new SpriteBatch();
+			batch.begin();
+					
+			// Ensure it doesn't spawn outside the boundary
+			float clampedX = MathUtils.clamp(getX(), 0, Gdx.graphics.getWidth() - super.getWidth());
+			float clampedY = MathUtils.clamp(getY(), 0, Gdx.graphics.getHeight() - super.getHeight());
+				    
+			// Draw with width and height of 50
+			batch.draw(super.getTex(), clampedX, clampedY, super.getWidth(), super.getHeight());
+			batch.end();
+		}
 		  
 }

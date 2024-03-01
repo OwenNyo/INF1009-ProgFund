@@ -19,10 +19,10 @@ public class EntityManager {
 	// Object Declaration
 	private Player player;
 	private Enemy enemy;
-	private Collectible collectibles[];
+	private Collectible collectibles[], asteroids[];
 
 	// Static Attributes
-	private int MAXPELLET = 5;
+	private int MAXPELLET = 3;
 	
 	// Ghost Attributes
 	private int EnemySpeed = 10;
@@ -46,25 +46,44 @@ public class EntityManager {
     	shape = new ShapeRenderer();
 		
 		// Create Player Object
-		player = new Player("player", "Astronaut.png", Player1SpawnX, Player1SpawnY
-				, PlayerSpeed, PlayerHealth, PlayerPoints, 80, 80, false, true);
+		player = new Player("player", "CuteAstro.png", Player1SpawnX, Player1SpawnY
+				, PlayerSpeed, PlayerHealth, PlayerPoints, 100, 100, false, true);
 		
 		// Create Ghost Object
-		enemy = new Enemy("enemy", "Alien.png", 0, 0, EnemySpeed, EnemyDamage, 80, 80, true);
+		enemy = new Enemy("enemy", "blackhole.png", 0, 0, EnemySpeed, EnemyDamage, 80, 80, true);
 		enemy.GenerateSpawnPoint(player.getX(), player.getY());
 		
+		String[] planetsName = {"Earth", "Uranus", "Moon", "Mercury"
+				, "Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
+		
+		String[] planets = {"earth.png", "uranus.png", "moon.png"
+				, "mercury.png", "venus.png", "mars.png", "jupiter.png", "saturn.png", "neptune.png"};
+
+		int[] planetSize = {120, 160, 80, 80, 100, 80, 200, 180, 140};
+		
 		// Create Collectible Objects
-		collectibles = new Collectible[MAXPELLET];
+		collectibles = new Collectible[9];
 	    Random random = new Random();
 		
 		for (int i = 0; i < collectibles.length; i++) {
             float randomX = random.nextInt(Gdx.graphics.getWidth());
             float randomY = random.nextInt(Gdx.graphics.getHeight());
-
-            collectibles[i] = new Collectible("collectible", randomX, randomY, Color.RED, 15, false);
-            collectibles[i].setShape(shape);
+            
+            collectibles[i] = new Collectible(planetsName[i], planets[i], randomX, randomY
+            		, planetSize[i], planetSize[i], false);
            entityList.add(collectibles[i]);
         }	
+		
+		// Create Collectible Objects
+		asteroids = new Collectible[3];
+				
+		for (int i = 0; i < asteroids.length; i++) {
+            float randomX = random.nextInt(Gdx.graphics.getWidth());
+            asteroids[i] = new Collectible("asteroid", "asteroid.png", randomX, 1200, 1
+		    		, 80, 80, false);
+		    entityList.add(asteroids[i]);
+		 }	
+		
 		
 		// Add entities to the list
 		entityList.add(player);
@@ -93,7 +112,12 @@ public class EntityManager {
             } else if (entity instanceof Enemy) {
                 AIManager aiManager = new AIManager((Enemy) entity, player.getX(), player.getY()); // Pass player coordinates
                 aiManager.handleMovement();
-            }
+            } 
+        }
+        
+        for (int i = 0; i < asteroids.length; i++) {
+        	AIManager aiManager = new AIManager(asteroids[i], asteroids[i].getX(), asteroids[i].getY());
+        	aiManager.handleMovement(asteroids[i].getSpeed());
         }
     }
 	
@@ -129,6 +153,21 @@ public class EntityManager {
 	public Collectible[] getCollectiblesArray() {
 	    List<Collectible> collectibleList = getCollectibles();
 	    return collectibleList.toArray(new Collectible[0]);
+	}
+	
+	public Collectible[] getAsteroidArray() {
+	    List<Collectible> collectibleList = getCollectibles();
+	    List<Collectible> asteroidList = new ArrayList<>();
+
+	    // Filter collectibles with type "asteroid"
+	    for (Collectible collectible : collectibleList) {
+	        if (collectible.getType() == "asteroid") {
+	            asteroidList.add(collectible);
+	        }
+	    }
+
+	    // Convert the filtered list to an array
+	    return asteroidList.toArray(new Collectible[0]);
 	}
     
     

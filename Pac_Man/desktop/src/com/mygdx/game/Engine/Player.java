@@ -63,7 +63,7 @@ public class Player extends Entity{
 			Points = getPoints();
 			Points += points;
 			
-			System.out.println("Player has earned 10 points");
+//			System.out.println("Player has earned 10 points");
 		}
 		
 		public void PlayerDamageTaken(int damage) {

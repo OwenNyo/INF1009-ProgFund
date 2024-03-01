@@ -37,7 +37,7 @@ public class GameSettings {
     
     // Getter method for difficulty
     public String getDifficulty() {
-        if (speedMultiplier == 5.0f) {
+        if (speedMultiplier == 2.5f) {
             return "Easy";
         } else if (speedMultiplier == 10.0f) {
             return "Medium";

@@ -1,5 +1,6 @@
 package com.mygdx.game.Engine;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
@@ -37,14 +38,14 @@ public class TimerClass {
     }
 	
 	public void draw() {
-
+		int screenHeight = Gdx.graphics.getHeight();
 	    batch = new SpriteBatch();
 		// Initialize batch and ScoreFont
 	    batch.begin();
 	    TimeFont = new BitmapFont();
 	    TimeFont.getData().setScale(2);
 	    TimeFont.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-	    TimeFont.draw(batch, TimerText, 390, 775);
+	    TimeFont.draw(batch, TimerText, 750, screenHeight - 25);
 	    batch.end();
 	}
 	

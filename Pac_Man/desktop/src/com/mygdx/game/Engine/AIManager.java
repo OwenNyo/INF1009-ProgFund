@@ -1,5 +1,7 @@
 package com.mygdx.game.Engine;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.Settings.GameSettings;
@@ -9,12 +11,22 @@ public class AIManager {
     private Enemy ghost;
     private float playerX;
     private float playerY;
+    private float asteroidX;
+    private float asteroidY;
+    private Collectible asteroid;
     
     public AIManager(Enemy ghost, float playerX, float playerY) {
         this.ghost = ghost;
         this.playerX = playerX;
         this.playerY = playerY;
     }
+    
+    public AIManager(Collectible asteroid, float asteroidX, float asteroidY) {
+        this.asteroid = asteroid;
+        this.asteroidX = asteroidX;
+        this.asteroidY = asteroidY;
+    }
+
 
     public void handleMovement() {
     	// Calculate the direction vector towards the player
@@ -30,5 +42,22 @@ public class AIManager {
         // Update the ghost's position
         ghost.setX(ghostPosition.x);
         ghost.setY(ghostPosition.y);
+    }
+    
+    public void handleMovement(float speed) {
+	    Random random = new Random();
+
+    	// Asteroid movement
+    	asteroidX -= speed;
+    	asteroidY -= speed;
+    	asteroid.setX(asteroid.getX() - speed);
+    	asteroid.setY(asteroid.getY() - speed);
+    	if(asteroid.getX() == 0) {
+            float randomX = random.nextInt(Gdx.graphics.getWidth());
+            asteroid.setX(randomX);
+    	}
+    	else if(asteroid.getY() == 0) {
+    		asteroid.setY(750);
+    	}
     }
 }

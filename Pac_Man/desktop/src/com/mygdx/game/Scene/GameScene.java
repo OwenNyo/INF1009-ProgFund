@@ -39,11 +39,9 @@ public class GameScene extends ScreenAdapter {
     private Enemy enemy;
     private Collectible collectibles[], asteroids[];
     
-    private Label popupLabel, popupAsteroid;
-    private Table popupTable, popupAsteroidTable;
+    private Label popupLabel;
+    private Table popupTable;
     private boolean showingPopup;
-    private boolean asteroidCollisionOccurred = false;
-    private boolean asteroidPopupShown = false;
 
     // Hud
     private HUD hud;
@@ -146,21 +144,6 @@ public class GameScene extends ScreenAdapter {
         popupTable.setFillParent(true);
         popupTable.add(popupLabel).expand().center();
         
-//        popupAsteroid = new Label("Did you Know? \n "
-//        		+ "There are over 900.000 \n "
-//        		+ "confirmed asteroids in the \n "
-//        		+ "Solar System, "
-//        		+ "and more and more \n "
-//        		+ "are found each day.", skin);
-//        popupAsteroid.setAlignment(Align.center);
-//        
-//        popupAsteroid.setFontScale(2.5f);
-//
-//        popupAsteroidTable = new Table();
-//        popupAsteroidTable.setFillParent(true);
-//        popupAsteroidTable.setBackground(skin.getDrawable("black-background"));
-//        popupAsteroidTable.add(popupAsteroid).expand().center();
-        
         showingPopup = true;
 
         // Schedule a task to hide the popup after 2 seconds
@@ -171,7 +154,6 @@ public class GameScene extends ScreenAdapter {
             }
         }, 5);
         
-        asteroidPopupShown = false;
     }
 
     @Override
@@ -184,6 +166,7 @@ public class GameScene extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         camera.position.x += backgroundSpeed * Gdx.graphics.getDeltaTime();
+        
 
         if (gameState == GameState.RUNNING) // Check if game state is running before updating entities
         {
@@ -203,23 +186,23 @@ public class GameScene extends ScreenAdapter {
 	        player = entityManager.getPlayer();
 	        enemy = entityManager.getEnemy();
 	        collectibles = entityManager.getCollectiblesArray();
+	        asteroids = entityManager.getAsteroidArray();
 	        
 	        // Update and draw score
 	        hud.drawScore(player.getPoints());
 	
 	        // Check for player collision with collectibles and update score
 	        if (cManager.checkCollectibleCollision(player, collectibles)) {
-//	        	player.PlayerScorePoints(10);
 	        	
 	        }
 	        
-	        asteroids = entityManager.getAsteroidArray();
+	        // Check for player collision with asteroids and update score
 	        if (cManager.checkasteroidCollision(player, asteroids)) {
-	        	// Add Collision Code
+
                 
 	        }
 	
-	        // Check for collision with ghost
+	        // Check for collision with enemy
 	        if (player != null && enemy != null) {
 	            int remainingHealth = player.getHealth();
 	            if (remainingHealth > 0 ) {
@@ -248,14 +231,15 @@ public class GameScene extends ScreenAdapter {
             sceneManager.setEndScreen(player.getPoints());
         }
         
+        camera.update();
+        
+        // Draw Pop Up Message
         if (showingPopup) {
-            // Draw the popup message
             overlayStage.addActor(popupTable);
             overlayStage.act(delta);
             overlayStage.draw();
         }
         
-        camera.update();
     }
 
     @Override

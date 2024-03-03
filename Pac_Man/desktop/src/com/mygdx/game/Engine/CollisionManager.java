@@ -38,11 +38,8 @@ public class CollisionManager {
     public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
-//                System.out.println("Pellet Collision detected");
                 c.resetPosition(player.getX(), player.getY());
                 
-                if(c.getType().equals(""))
-
                 //play collect sound effect
                 ioManager.playSECollect(); 
 		    
@@ -55,7 +52,7 @@ public class CollisionManager {
     public boolean checkasteroidCollision(Player player, Collectible collectibles[]) {
     	for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
-            	if(c.getType().equals("asteroid") || c.getType() == "asteroid"){
+            	if(c.getType().equals("asteroid")){
             		System.out.println("Asteroid Collision detected");
     				return true;
             	}
@@ -63,6 +60,6 @@ public class CollisionManager {
             }
         }
         return false;
-		}
+	}
 }
 

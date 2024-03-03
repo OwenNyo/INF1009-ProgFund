@@ -38,52 +38,34 @@ public class GameScene extends ScreenAdapter {
     private Player player;
     private Enemy enemy;
     private Collectible collectibles[], asteroids[];
-    
-    private Label popupLabel;
-    private Table popupTable;
-    private boolean showingPopup;
-
-    // Hud
-    private HUD hud;
-    
-    //Timer
-    private TimerClass timer;
-
-    // Entity management
-    private EntityManager entityManager;
     private List<Entity> entityList;
 
-    // Managers
+    // Initialize Managers and classes
+    private EntityManager entityManager;
     private IOManager ioManager;
     private CollisionManager cManager;
-
-    // GameMaster reference
-    private GameMaster gameMaster;
-
-    // Background texture
-    private Texture backgroundTexture;
-    
-    // Batch texture
-    private SpriteBatch batch;
-    
-    // Stage for UI elements
-    private Stage overlayStage;
-
-    // Button for play again
-    private TextButton playAgainButton, MainMenu;
-    
-    // Scene Manager
     private SceneManager sceneManager;
+    private GameMaster gameMaster;
     
+    // Static Tables
+    private Label BlackholeLabel, AsteroidLabel;
+    private Table BHTable, AsteroidTable;
+    private boolean showingBlackholePopup;
+    private boolean showingAsteroidPopup;
+
+    // Texture and Drawings
+    private Texture backgroundTexture;
+    private SpriteBatch batch;
+    private HUD hud;
+    private TimerClass timer;
+    private Stage overlayStage;
     private OrthographicCamera camera;
-    
-    private Texture collisionTexture;
-    private boolean showCollisionTexture;
-    private float collisionTextureTimer;
-    
     private float backgroundSpeed = 6;
     
-    // GameState Enum to manage game state
+    // Variable to track if the player collided with an asteroid before
+    private boolean firstAsteroidCollision = true;
+    
+    // Game State management
     private enum GameState {
         RUNNING,
         GAME_OVER;
@@ -96,63 +78,57 @@ public class GameScene extends ScreenAdapter {
         this.gameMaster = gameMaster;
         this.sceneManager = sceneManager;
         
-        // Create a new SpriteBatch instance
+        // Create Instances
         batch = new SpriteBatch();
-        
-        int screenWidth = Gdx.graphics.getWidth();
-        int screenHeight = Gdx.graphics.getHeight();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, screenWidth, screenHeight);
-
-        // Load background texture
-        backgroundTexture = new Texture("space.jpg");
-
-        collisionTexture = new Texture("Space_Background.png");
-        showCollisionTexture = false;
-        collisionTextureTimer = 0f;
-
-        // Initialize EntityManager and entities
+        overlayStage = new Stage(new ScreenViewport());
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        
+        
+        // Class & Manager Initialization
+        hud = new HUD();
+        timer = new TimerClass();
+        cManager = new CollisionManager();
+        ioManager = new IOManager();
         entityManager = new EntityManager();
         entityManager.initEntities();
-        
-        // Fetch Entity List
         entityList = entityManager.getEntityList();
         
-        // Initialize Scoring System
-        hud = new HUD();
+        // Load background texture
+        backgroundTexture = new Texture("space.jpg");     
+
+        // Initialize Labels & Tables
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); 
         
-        // Initialize Scoring System
-        timer = new TimerClass();
-
-        // Initialize Collision Manager
-        cManager = new CollisionManager();
-
-        // Initialize IO Manager
-        ioManager = new IOManager();
+        BHTable = new Table();
+        AsteroidTable = new Table();
         
-        // Create the stage for UI elements
-        overlayStage = new Stage(new ScreenViewport());
-
-        // Initialize popup message
-        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); // Assuming you have a skin file
-        popupLabel = new Label("Beware of the blackhole!!!", skin);
-        popupLabel.setAlignment(Align.center);
+        BlackholeLabel = new Label("Beware of the hole!!!", skin);
+        BlackholeLabel.setAlignment(Align.center);
+        BlackholeLabel.setFontScale(2.5f);
         
-        popupLabel.setFontScale(2.5f);
-
-        popupTable = new Table();
-        popupTable.setFillParent(true);
-        popupTable.add(popupLabel).expand().center();
+        AsteroidLabel = new Label("You collided with an asteroid!!!", skin);
+        AsteroidLabel.setAlignment(Align.center);
+        AsteroidLabel.setFontScale(2.5f);
         
-        showingPopup = true;
+        BHTable = new Table();
+        BHTable.setFillParent(true);
+        BHTable.add(BlackholeLabel).expand().center();
+        
+        AsteroidTable = new Table();
+        AsteroidTable.setFillParent(true);
+        AsteroidTable.add(AsteroidLabel).expand().center();
+        
+        // Initialize popup visibility
+        showingBlackholePopup = true;
 
-        // Schedule a task to hide the popup after 2 seconds
+        // Schedule tasks to hide the popups after 5 seconds
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                showingPopup = false;
+            	showingBlackholePopup = false;
             }
-        }, 5);
+        }, 2);      
         
     }
 
@@ -165,83 +141,113 @@ public class GameScene extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        // Update camera position based on background scrolling speed
         camera.position.x += backgroundSpeed * Gdx.graphics.getDeltaTime();
         
 
-        if (gameState == GameState.RUNNING) // Check if game state is running before updating entities
-        {
-	        // Draw background texture
-        	// Draw background using camera's combined matrix
-            batch.setProjectionMatrix(camera.combined);
-            batch.begin();
-            batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth()*2, Gdx.graphics.getHeight());
-            batch.end();
-	
-	        // Draw timer and entities
-	        timer.draw();
-	        entityManager.drawEntities();
-	        entityManager.moveEntities();
-	
-	        // Get Entities
-	        player = entityManager.getPlayer();
-	        enemy = entityManager.getEnemy();
-	        collectibles = entityManager.getCollectiblesArray();
-	        asteroids = entityManager.getAsteroidArray();
-	        
-	        // Update and draw score
-	        hud.drawScore(player.getPoints());
-	
-	        // Check for player collision with collectibles and update score
-	        if (cManager.checkCollectibleCollision(player, collectibles)) {
-	        	
-	        }
-	        
-	        // Check for player collision with asteroids and update score
-	        if (cManager.checkasteroidCollision(player, asteroids)) {
-
-                
-	        }
-	
-	        // Check for collision with enemy
-	        if (player != null && enemy != null) {
-	            int remainingHealth = player.getHealth();
-	            if (remainingHealth > 0 ) {
-	                cManager.checkEnemyCollision(player, enemy);
-	                hud.drawRemainingHealth(player.getHealth());
-	            }
-	            else {
-	            	gameState = GameState.GAME_OVER;
-	            }
-	        }
-	        
-	        // Check for timer
-//	        if(timer.getTime() == 0) {
-//	        	gameState = GameState.GAME_OVER;
-//	        }
-	
-	        // Play background music
-	        ioManager.playBG();
-	    }
-        else if (gameState == GameState.GAME_OVER) // If game state is changed to end
-        {
-        	backgroundTexture.dispose();
-        	entityManager.disposeEntities();
-        	ioManager.dispose();
-        	hud.dispose();
-            sceneManager.setEndScreen(player.getPoints());
+        // Render game elements based on game state
+        if (gameState == GameState.RUNNING) {
+            renderRunningState();
+        } else if (gameState == GameState.GAME_OVER) {
+            renderGameOverState();
         }
         
         camera.update();
         
-        // Draw Pop Up Message
-        if (showingPopup) {
-            overlayStage.addActor(popupTable);
-            overlayStage.act(delta);
-            overlayStage.draw();
+        // Draw Pop Up Messages
+        if (showingBlackholePopup) {
+            overlayStage.addActor(BHTable);
+        } else {
+            BHTable.remove(); // Remove the table if the popup is not showing
         }
         
+        if (showingAsteroidPopup) {
+            overlayStage.addActor(AsteroidTable);
+        } else {
+            AsteroidTable.remove(); // Remove the table if the popup is not showing
+        }
+        
+        overlayStage.act(delta);
+        overlayStage.draw();
+        
     }
+    
+ // Render game elements when game state is RUNNING
+    private void renderRunningState() {
+        // Draw background texture
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight());
+        batch.end();
 
+        // Draw timer and entities
+        timer.draw();
+        entityManager.drawEntities();
+        entityManager.moveEntities();
+        
+        // Get Entities Instances
+        player = entityManager.getPlayer();
+        enemy = entityManager.getEnemy();
+        collectibles = entityManager.getCollectiblesArray();
+        asteroids = entityManager.getAsteroidArray();
+
+        // Update and draw score
+        hud.drawScore(player.getPoints());
+
+        // Check for player collision with collectibles and update score
+        if (cManager.checkCollectibleCollision(player, collectibles)) {
+            // Handle collectible collision
+        }
+
+        // Check for player collision with asteroids and update score
+        if (cManager.checkasteroidCollision(player, asteroids)) {
+            // Handle asteroid collision
+        	if (firstAsteroidCollision) {
+                // Handle asteroid collision
+                showingAsteroidPopup = true;
+                
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        showingAsteroidPopup = false;
+                    }
+                }, 2);
+                // Set to false after the first collision
+                firstAsteroidCollision = false; 
+            }
+        }
+
+        // Check for collision with enemy
+        if (player != null && enemy != null) {
+            int remainingHealth = player.getHealth();
+            if (remainingHealth > 0) {
+                cManager.checkEnemyCollision(player, enemy);
+                hud.drawRemainingHealth(player.getHealth());
+            } else {
+                gameState = GameState.GAME_OVER;
+            }
+        }
+        
+        // Timer Over
+		//if(timer.getTime() == 0) {
+		//  gameState = GameState.GAME_OVER;
+		//}
+        
+
+        // Play background music
+        ioManager.playBG();
+    }
+    
+    // Render game elements when game state is GAME_OVER
+    private void renderGameOverState() {
+        // Dispose resources and switch to end screen
+        backgroundTexture.dispose();
+        entityManager.disposeEntities();
+        ioManager.dispose();
+        hud.dispose();
+        sceneManager.setEndScreen(player.getPoints());
+    }
+    
     @Override
     public void dispose() {
         // Properly dispose of textures
@@ -250,8 +256,8 @@ public class GameScene extends ScreenAdapter {
         ioManager.dispose();
         hud.dispose();
         overlayStage.dispose();
-        popupLabel.clear();
-        popupTable.clear();
+        AsteroidLabel.clear();
+        
     }
     
 }

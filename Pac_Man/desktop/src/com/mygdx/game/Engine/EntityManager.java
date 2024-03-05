@@ -38,56 +38,93 @@ public class EntityManager {
 	// Manager Attributes
 	
 	// Initialize all Entities
-	public void initEntities() {
+	public void initEntities(int Stage) {
 		
 		// Create Array List
 		entityList = new ArrayList<>();
 		batch = new SpriteBatch();
     	shape = new ShapeRenderer();
-		
+    	
 		// Create Player Object
-		player = new Player("player", "CuteAstro.png", Player1SpawnX, Player1SpawnY
+		player = new Player("player", "spaceDog.png", Player1SpawnX, Player1SpawnY
 				, PlayerSpeed, PlayerHealth, PlayerPoints, 100, 100, false, true);
-		
+
 		// Create Ghost Object
 		enemy = new Enemy("enemy", "blackhole.png", 0, 0, EnemySpeed, EnemyDamage, 80, 80, true);
 		enemy.GenerateSpawnPoint(player.getX(), player.getY());
 		
+
 		String[] planetsName = {"Earth", "Uranus", "Moon", "Mercury"
 				, "Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
 		
 		String[] planets = {"earth.png", "uranus.png", "moon.png"
 				, "mercury.png", "venus.png", "mars.png", "jupiter.png", "saturn.png", "neptune.png"};
 
-		int[] planetSize = {120, 160, 80, 80, 100, 80, 200, 180, 140};
+		int[] planetSize = {240, 320, 160, 160, 200, 160, 400, 360, 280};
+    	
+    	if(Stage == 1)
+    	{
+
+    		// Add entities to the list
+    		entityList.add(player);
+    		entityList.add(enemy);
+    		
+    		// Create Collectible Objects
+    		collectibles = new Collectible[3];
+    	    Random random = new Random();
+    		
+    		for (int i = 0; i < collectibles.length; i++) {
+                float randomX = random.nextInt(Gdx.graphics.getWidth());
+                float randomY = random.nextInt(Gdx.graphics.getHeight());
+                
+                collectibles[i] = new Collectible(planetsName[i], planets[i], randomX, randomY
+                		, planetSize[i], planetSize[i], false);
+               entityList.add(collectibles[i]);
+            }	
+    		
+    		// Create Collectible Objects
+    		asteroids = new Collectible[3];
+    				
+    		for (int i = 0; i < asteroids.length; i++) {
+                float randomX = random.nextInt(Gdx.graphics.getWidth());
+                asteroids[i] = new Collectible("asteroid", "asteroid.png", randomX, 1200, 1
+    		    		, 80, 80, false);
+    		    entityList.add(asteroids[i]);
+    		 }	
+    		
+    	}		
+    	else if(Stage == 2){
+
+    		// Add entities to the list
+    		entityList.add(player);
+    		entityList.add(enemy);
+    		
+    		// Create Collectible Objects
+    		collectibles = new Collectible[3];
+    	    Random random = new Random();
+    		
+    		for (int i = 0; i < collectibles.length; i++) {
+                float randomX = random.nextInt(Gdx.graphics.getWidth());
+                float randomY = random.nextInt(Gdx.graphics.getHeight());
+                
+                collectibles[i] = new Collectible(planetsName[i+collectibles.length]
+                		, planets[i+collectibles.length], randomX, randomY
+                		, planetSize[i+collectibles.length], planetSize[i+collectibles.length], false);
+               entityList.add(collectibles[i]);
+            }	
+    		
+    		// Create Collectible Objects
+    		asteroids = new Collectible[3];
+    				
+    		for (int i = 0; i < asteroids.length; i++) {
+                float randomX = random.nextInt(Gdx.graphics.getWidth());
+                asteroids[i] = new Collectible("spaceStation", "space_station.png", randomX, 1200, 1
+    		    		, 80, 80, false);
+    		    entityList.add(asteroids[i]);
+    		 }	
+    	}
+
 		
-		// Create Collectible Objects
-		collectibles = new Collectible[3];
-	    Random random = new Random();
-		
-		for (int i = 0; i < collectibles.length; i++) {
-            float randomX = random.nextInt(Gdx.graphics.getWidth());
-            float randomY = random.nextInt(Gdx.graphics.getHeight());
-            
-            collectibles[i] = new Collectible(planetsName[i], planets[i], randomX, randomY
-            		, planetSize[i], planetSize[i], false);
-           entityList.add(collectibles[i]);
-        }	
-		
-		// Create Collectible Objects
-		asteroids = new Collectible[3];
-				
-		for (int i = 0; i < asteroids.length; i++) {
-            float randomX = random.nextInt(Gdx.graphics.getWidth());
-            asteroids[i] = new Collectible("asteroid", "asteroid.png", randomX, 1200, 1
-		    		, 80, 80, false);
-		    entityList.add(asteroids[i]);
-		 }	
-		
-		
-		// Add entities to the list
-		entityList.add(player);
-		entityList.add(enemy);
        
 	}
 	

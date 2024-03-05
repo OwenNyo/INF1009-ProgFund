@@ -55,7 +55,7 @@ public class GameScene extends ScreenAdapter {
     private boolean showingAsteroidPopup;
 
     // Texture and Drawings
-    private Texture backgroundTexture;
+    private Texture backgroundTexture, astronautVeteran, astronautCommander;
     private SpriteBatch batch;
     private HUD hud;
     private TimerClass timer;
@@ -92,11 +92,13 @@ public class GameScene extends ScreenAdapter {
         cManager = new CollisionManager();
         ioManager = new IOManager();
         entityManager = new EntityManager();
-        entityManager.initEntities();
+        entityManager.initEntities(1);
         entityList = entityManager.getEntityList();
         
         // Load background texture
-        backgroundTexture = new Texture("space.jpg");     
+        backgroundTexture = new Texture("space.jpg");  
+        astronautVeteran = new Texture("astronaut.png");  
+        astronautCommander = new Texture("astronautCommander.png");     
 
         // Initialize Labels & Tables
         Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); 
@@ -104,7 +106,7 @@ public class GameScene extends ScreenAdapter {
         BHTable = new Table();
         AsteroidTable = new Table();
         
-        BlackholeLabel = new Label("Beware of the hole!!!", skin);
+        BlackholeLabel = new Label("Welcome New Astronaut!\n Let's Discover the Space Together!", skin);
         BlackholeLabel.setAlignment(Align.center);
         BlackholeLabel.setFontScale(2.5f);
         
@@ -129,7 +131,7 @@ public class GameScene extends ScreenAdapter {
             public void run() {
             	showingBlackholePopup = false;
             }
-        }, 2);      
+        }, 3);      
         
     }
 
@@ -171,14 +173,21 @@ public class GameScene extends ScreenAdapter {
         overlayStage.act(delta);
         overlayStage.draw();
         
+        if(player.getPoints() > 100 && player.getPoints() < 200) {
+        	player.setTex(astronautVeteran);
+        }
+        else if (player.getPoints() > 200){
+        	player.setTex(astronautCommander);
+        }
+        
     }
     
- // Render game elements when game state is RUNNING
+    // Render game elements when game state is RUNNING
     private void renderRunningState() {
         // Draw background texture
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight());
+        batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth() * 2 , Gdx.graphics.getHeight());
         batch.end();
 
         // Draw timer and entities
@@ -191,8 +200,6 @@ public class GameScene extends ScreenAdapter {
         enemy = entityManager.getEnemy();
         collectibles = entityManager.getCollectiblesArray();
         asteroids = entityManager.getAsteroidArray();
-        
-
 
         // Update and draw score
         hud.drawScore(player.getPoints());
@@ -215,6 +222,11 @@ public class GameScene extends ScreenAdapter {
                 firstAsteroidCollision = false; 
             }
         }
+        
+        if (cManager.checkCollectibleCollision(player, collectibles)) {
+        	player.PlayerScorePoints(10);
+        	// Add relevant fun fact code here
+        }
 
         // Check for collision with enemy
         if (player != null && enemy != null) {
@@ -227,10 +239,13 @@ public class GameScene extends ScreenAdapter {
             }
         }
         
-        // Timer Over
-		//if(timer.getTime() == 0) {
-		//  gameState = GameState.GAME_OVER;
-		//}
+        // Timer Over change to scene 2
+		if(timer.getTime() == 0) {
+			timer.setTime(30);
+	        entityManager.disposeEntities();
+	        entityManager.initEntities(2);
+	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		}
         
 
         // Play background music

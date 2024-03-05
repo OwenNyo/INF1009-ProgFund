@@ -62,7 +62,7 @@ public class EntityManager {
 		int[] planetSize = {120, 160, 80, 80, 100, 80, 200, 180, 140};
 		
 		// Create Collectible Objects
-		collectibles = new Collectible[9];
+		collectibles = new Collectible[3];
 	    Random random = new Random();
 		
 		for (int i = 0; i < collectibles.length; i++) {

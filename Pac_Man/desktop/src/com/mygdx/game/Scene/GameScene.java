@@ -1,6 +1,7 @@
 package com.mygdx.game.Scene;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -190,18 +191,16 @@ public class GameScene extends ScreenAdapter {
         enemy = entityManager.getEnemy();
         collectibles = entityManager.getCollectiblesArray();
         asteroids = entityManager.getAsteroidArray();
+        
+
 
         // Update and draw score
         hud.drawScore(player.getPoints());
 
         // Check for player collision with collectibles and update score
-        if (cManager.checkCollectibleCollision(player, collectibles)) {
+        if (cManager.checkCollectibleCollision(player, asteroids)) {
             // Handle collectible collision
-        }
-
-        // Check for player collision with asteroids and update score
-        if (cManager.checkasteroidCollision(player, asteroids)) {
-            // Handle asteroid collision
+        	// Handle asteroid collision
         	if (firstAsteroidCollision) {
                 // Handle asteroid collision
                 showingAsteroidPopup = true;

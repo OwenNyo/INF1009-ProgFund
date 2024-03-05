@@ -38,28 +38,25 @@ public class CollisionManager {
     public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
-                c.resetPosition(player.getX(), player.getY());
-                
-                //play collect sound effect
-                ioManager.playSECollect(); 
-		    
-                return true;
+            	
+            	// If asteroid, return asteroid, else, return planet
+            	if(c.getType().equals("asteroid")){
+            		c.resetPosition(player.getX(), player.getY());
+            		System.out.println("Asteroid Collision detected");
+    				return true;
+            	}
+            	else {
+                    c.resetPosition(player.getX(), player.getY());
+                    System.out.println("Planet Collision detected");
+                    //play collect sound effect
+                    ioManager.playSECollect(); 
+                    return true;
+            	}
+      
             }
         }
         return false;
     }
-    
-    public boolean checkasteroidCollision(Player player, Collectible collectibles[]) {
-    	for (Collectible c : collectibles) {
-            if (collidedWithCollectible(player, c)) {
-            	if(c.getType().equals("asteroid")){
-            		System.out.println("Asteroid Collision detected");
-    				return true;
-            	}
-		    
-            }
-        }
-        return false;
-	}
+
 }
 

@@ -69,8 +69,8 @@ public class EntityManager {
     		entityList.add(player);
     		entityList.add(enemy);
     		
-    		// Create Collectible Objects
-    		collectibles = new Collectible[3];
+    		// Create Planet Objects
+    		collectibles = new Collectible[4];
     	    Random random = new Random();
     		
     		for (int i = 0; i < collectibles.length; i++) {
@@ -82,7 +82,7 @@ public class EntityManager {
                entityList.add(collectibles[i]);
             }	
     		
-    		// Create Collectible Objects
+    		// Create Asteroid Objects
     		asteroids = new Collectible[3];
     				
     		for (int i = 0; i < asteroids.length; i++) {
@@ -99,8 +99,8 @@ public class EntityManager {
     		entityList.add(player);
     		entityList.add(enemy);
     		
-    		// Create Collectible Objects
-    		collectibles = new Collectible[3];
+    		// Create Planet Objects
+    		collectibles = new Collectible[4];
     	    Random random = new Random();
     		
     		for (int i = 0; i < collectibles.length; i++) {
@@ -113,7 +113,7 @@ public class EntityManager {
                entityList.add(collectibles[i]);
             }	
     		
-    		// Create Collectible Objects
+    		// Create SpaceStation Objects
     		asteroids = new Collectible[3];
     				
     		for (int i = 0; i < asteroids.length; i++) {

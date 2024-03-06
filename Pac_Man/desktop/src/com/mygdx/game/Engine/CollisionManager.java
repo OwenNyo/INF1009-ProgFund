@@ -34,7 +34,7 @@ public class CollisionManager {
         return playerBounds.overlaps(collectibleBounds);
     }
 
-    // Logic to handle what happens if there is a collision with Pellet
+    // Logic to handle what happens if there is a collision with Planet / Station / Asteroid
     public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {

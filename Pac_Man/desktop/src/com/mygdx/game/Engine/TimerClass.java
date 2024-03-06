@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TimerClass {
 	
@@ -56,4 +57,17 @@ public class TimerClass {
 	public void setTime(int time) {
 		this.time = time;
 	}
+	
+	public class MutableBoolean {
+	    public boolean value;
+	}
+
+	public void timerCountdown(int seconds, AtomicBoolean variable) {
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+            	variable.set(false);
+            }
+        }, seconds);
+    }
 }

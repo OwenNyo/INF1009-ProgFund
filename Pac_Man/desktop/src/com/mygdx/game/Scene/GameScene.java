@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.TimerClass;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameScene extends ScreenAdapter {
 
@@ -51,8 +52,8 @@ public class GameScene extends ScreenAdapter {
     // Static Tables
     private Label BlackholeLabel, AsteroidLabel;
     private Table BHTable, AsteroidTable;
-    private boolean showingBlackholePopup;
-    private boolean showingAsteroidPopup;
+    private AtomicBoolean showingBlackholePopup;
+    private AtomicBoolean showingAsteroidPopup;
 
     // Texture and Drawings
     private Texture backgroundTexture, astronautVeteran, astronautCommander;
@@ -123,15 +124,14 @@ public class GameScene extends ScreenAdapter {
         AsteroidTable.add(AsteroidLabel).expand().center();
         
         // Initialize popup visibility
-        showingBlackholePopup = true;
+        // Set true explicitly
+        
+        // Initialize popup visibility
+        showingBlackholePopup = new AtomicBoolean(true);
+        showingAsteroidPopup = new AtomicBoolean(false);
 
-        // Schedule tasks to hide the popups after 5 seconds
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-            	showingBlackholePopup = false;
-            }
-        }, 3);      
+        // Schedule tasks to hide the popups after 3 seconds
+        timer.timerCountdown(3, showingBlackholePopup);    
         
     }
 
@@ -158,13 +158,13 @@ public class GameScene extends ScreenAdapter {
         camera.update();
         
         // Draw Pop Up Messages
-        if (showingBlackholePopup) {
+        if (showingBlackholePopup.get()) {
             overlayStage.addActor(BHTable);
         } else {
             BHTable.remove(); // Remove the table if the popup is not showing
         }
         
-        if (showingAsteroidPopup) {
+        if (showingAsteroidPopup.get()) {
             overlayStage.addActor(AsteroidTable);
         } else {
             AsteroidTable.remove(); // Remove the table if the popup is not showing
@@ -172,13 +172,6 @@ public class GameScene extends ScreenAdapter {
         
         overlayStage.act(delta);
         overlayStage.draw();
-        
-        if(player.getPoints() > 100 && player.getPoints() < 200) {
-        	player.setTex(astronautVeteran);
-        }
-        else if (player.getPoints() > 200){
-        	player.setTex(astronautCommander);
-        }
         
     }
     
@@ -203,26 +196,32 @@ public class GameScene extends ScreenAdapter {
 
         // Update and draw score
         hud.drawScore(player.getPoints());
+        
+        // Handle player logic to display different avatars
+        if(player.getPoints() > 100 && player.getPoints() < 200) {
+        	player.setTex(astronautVeteran);
+        }
+        else if (player.getPoints() > 200){
+        	player.setTex(astronautCommander);
+        }
 
-        // Check for player collision with collectibles and update score
+        // Check for player collision with asteroids
         if (cManager.checkCollectibleCollision(player, asteroids)) {
             // Handle collectible collision
         	// Handle asteroid collision
         	if (firstAsteroidCollision) {
                 // Handle asteroid collision
-                showingAsteroidPopup = true;
+        		// Set true explicitly
+                showingAsteroidPopup.set(true);
                 
-                Timer.schedule(new Timer.Task() {
-                    @Override
-                    public void run() {
-                        showingAsteroidPopup = false;
-                    }
-                }, 2);
+                // Schedule tasks to hide the popups after 2 seconds
+                timer.timerCountdown(2, showingAsteroidPopup);
                 // Set to false after the first collision
                 firstAsteroidCollision = false; 
             }
         }
         
+        // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, collectibles)) {
         	player.PlayerScorePoints(10);
         	// Add relevant fun fact code here

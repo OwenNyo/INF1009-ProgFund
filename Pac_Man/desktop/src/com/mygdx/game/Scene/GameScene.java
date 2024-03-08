@@ -68,8 +68,9 @@ public class GameScene extends ScreenAdapter {
     private boolean firstAsteroidCollision = true;
     
     // Game State management
-    private enum GameState {
+    public enum GameState {
         RUNNING,
+        PAUSED,
         GAME_OVER;
     }
     
@@ -85,7 +86,6 @@ public class GameScene extends ScreenAdapter {
         camera = new OrthographicCamera();
         overlayStage = new Stage(new ScreenViewport());
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        
         
         // Class & Manager Initialization
         hud = new HUD();
@@ -147,12 +147,20 @@ public class GameScene extends ScreenAdapter {
         // Update camera position based on background scrolling speed
         camera.position.x += backgroundSpeed * Gdx.graphics.getDeltaTime();
         
-
+        
         // Render game elements based on game state
-        if (gameState == GameState.RUNNING) {
+        switch (gameState) {
+        case RUNNING:
             renderRunningState();
-        } else if (gameState == GameState.GAME_OVER) {
+            break;
+        case GAME_OVER:
             renderGameOverState();
+            break;
+        case PAUSED:
+            // Keep the game in its current visual state, but do not update entities
+            overlayStage.act(delta);
+            overlayStage.draw();
+            break;
         }
         
         camera.update();
@@ -224,7 +232,16 @@ public class GameScene extends ScreenAdapter {
         // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, collectibles)) {
         	player.PlayerScorePoints(10);
-        	// Add relevant fun fact code here
+        	
+            // Pause game when player collides with a planet
+            gameState = GameState.PAUSED;
+            
+            // Stop BG music
+            ioManager.stopBG();
+            
+            // Set screen to planet fun fact scene
+            System.out.println("Planet: " +cManager.getLastCollidedPlanetName());
+            sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());
         }
 
         // Check for collision with enemy
@@ -248,7 +265,9 @@ public class GameScene extends ScreenAdapter {
         
 
         // Play background music
-        ioManager.playBG();
+		if (gameState != GameState.PAUSED) {
+			ioManager.playBG();
+		}
     }
     
     // Render game elements when game state is GAME_OVER
@@ -261,6 +280,11 @@ public class GameScene extends ScreenAdapter {
         sceneManager.setEndScreen(player.getPoints());
     }
     
+    // Method to update game state
+    public void updateGameState(GameState newState) {
+        this.gameState = newState;
+    }
+        
     @Override
     public void dispose() {
         // Properly dispose of textures

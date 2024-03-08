@@ -1,10 +1,12 @@
 package com.mygdx.game.Engine;
 
+import com.badlogic.gdx.Screen;
 import com.mygdx.game.GameMaster;
 import com.mygdx.game.Scene.EndScene;
 import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
 import com.mygdx.game.Scene.OptionScene;
+import com.mygdx.game.Scene.PlanetScene;
 
 public class SceneManager {
 
@@ -13,6 +15,9 @@ public class SceneManager {
 
     // Reference to the GameMaster
     private GameMaster gameMaster;
+    
+    // Reference to previous scene
+    private Screen previousScene;
 
     // Private constructor to prevent direct instantiation
     private SceneManager(GameMaster gameMaster) {
@@ -35,10 +40,11 @@ public class SceneManager {
         gameMaster.setScreen(menuScene);
     }
     
+    // Method to set the option screen
     public void setOptionScreen() {
     	// Initialize IOManager
         IOManager ioManager = new IOManager();
-        
+        // Initialize OptionScene
     	OptionScene optionScene = new OptionScene(gameMaster, this, ioManager);
     	// Set the screen using the GameMaster
     	gameMaster.setScreen(optionScene);
@@ -46,12 +52,39 @@ public class SceneManager {
 
     // Method to set the game screen
     public void setGameScreen() {
+    	// Initialize GameScene
         GameScene gameScene = new GameScene(gameMaster, this);
         // Set the screen using the GameMaster
         gameMaster.setScreen(gameScene);
     }
     
+    // Method to set the planet fact screen
+    public void setPlanetScreen(String planetName) {
+    	// Store current scene
+    	previousScene = gameMaster.getScreen();
+    	// Initialize PlanetScene
+        PlanetScene planetScene = new PlanetScene(gameMaster, this, planetName);
+        // Set the screen using the GameMaster
+        gameMaster.setScreen(planetScene);
+    }
+    
+    // Method to set game screen to previous instance
+    public void resumeGameScreen() {
+        if (previousScene != null) {
+            if (previousScene instanceof GameScene) {
+                ((GameScene) previousScene).updateGameState(GameScene.GameState.RUNNING);
+            }
+            // Set the screen using the GameMaster
+            gameMaster.setScreen(previousScene);
+        }
+        else {
+        	System.out.println("Error, previous screen is null");
+        }
+    }
+    
+    // Method to set the end screen
     public void setEndScreen(int finalScore) {
+    	// Initialize EndScene
     	EndScene endScene = new EndScene(gameMaster, this, finalScore);
     	// Set the screen using the GameMaster
     	gameMaster.setScreen(endScene);

@@ -6,6 +6,9 @@ import com.mygdx.game.Engine.IOManager;
 public class CollisionManager {
 	
 	private IOManager ioManager = new IOManager();
+	
+	// Reference to last collided planet's name
+	private String lastCollidedPlanetName = "";
 
 	// Logic to check for collision with Ghost
     public static boolean collidedWithEnemy(Player player, Enemy enemy) {
@@ -35,7 +38,7 @@ public class CollisionManager {
     }
 
     // Logic to handle what happens if there is a collision with Planet / Station / Asteroid
-    public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {
+    public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {    	
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
             	
@@ -57,6 +60,8 @@ public class CollisionManager {
                     System.out.println("Planet Collision detected");
                     //play collect sound effect
                     ioManager.playSECollect(); 
+                    // Store collided planet's name
+                    lastCollidedPlanetName = c.getType(); 
                     return true;
             	}
       
@@ -64,6 +69,12 @@ public class CollisionManager {
         }
         return false;
     }
+    
+    // Getter for last collided planet's name
+    public String getLastCollidedPlanetName() {
+    	return lastCollidedPlanetName;
+    }
+    
 
 }
 

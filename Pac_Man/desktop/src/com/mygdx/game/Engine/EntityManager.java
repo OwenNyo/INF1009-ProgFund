@@ -74,21 +74,20 @@ public class EntityManager {
     	    Random random = new Random();
     		
     		for (int i = 0; i < collectibles.length; i++) {
-                float randomX = random.nextInt(Gdx.graphics.getWidth());
-                float randomY = random.nextInt(Gdx.graphics.getHeight());
                 
-                collectibles[i] = new Collectible(planetsName[i], planets[i], randomX, randomY
+                collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0
                 		, planetSize[i], planetSize[i], false);
+                collectibles[i].GenerateSpawnPoint(player.getX(), player.getY());
                entityList.add(collectibles[i]);
             }	
     		
     		// Create Asteroid Objects
     		asteroids = new Collectible[3];
-    				
+    		
     		for (int i = 0; i < asteroids.length; i++) {
-                float randomX = random.nextInt(Gdx.graphics.getWidth());
-                asteroids[i] = new Collectible("asteroid", "asteroid.png", randomX, 1200, 1
+                asteroids[i] = new Collectible("asteroid", "asteroid.png", 0, 0, 1
     		    		, 80, 80, false);
+                asteroids[i].GenerateSpawnPoint(player.getX(), player.getY());
     		    entityList.add(asteroids[i]);
     		 }	
     		

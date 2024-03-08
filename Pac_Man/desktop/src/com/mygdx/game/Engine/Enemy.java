@@ -62,10 +62,10 @@ public class Enemy extends Entity{
 		    // Can reuse this function to respawn ghost after death
 		    
 		    // Initialize x and y coordinates to generate spawn location
-		    int x = 0;
-		    int y = 0;
-		    int screenWidth = 800;  // Assuming 800 is the screen width
-		    int screenHeight = 600; // Assuming 600 is the screen height
+		    int x;
+		    int y;
+		    int screenWidth = Gdx.graphics.getWidth();
+		    int screenHeight = Gdx.graphics.getHeight();
 
 		    // Adjust the range for x and y to be within the screen boundaries
 		    do {

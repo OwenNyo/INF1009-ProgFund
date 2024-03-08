@@ -213,9 +213,9 @@ public class EntityManager {
         batch.dispose();
         shape.dispose();
         for (Entity entity : entityList) {
-        	if (entity.getTex() != null) {
+        	if (entity.getTex() != null && entity instanceof Player == false){
         		entity.getTex().dispose();
-            }  
+        	}
         }
     }
 }

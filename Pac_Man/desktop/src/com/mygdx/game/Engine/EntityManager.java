@@ -60,7 +60,7 @@ public class EntityManager {
 		String[] planets = {"earth.png", "uranus.png", "moon.png"
 				, "mercury.png", "venus.png", "mars.png", "jupiter.png", "saturn.png", "neptune.png"};
 
-		int[] planetSize = {240, 320, 160, 160, 200, 160, 400, 360, 280};
+		int[] planetSize = {140, 180, 120, 90, 130, 110, 220, 200, 160};
     	
     	if(Stage == 1)
     	{
@@ -77,7 +77,7 @@ public class EntityManager {
                 collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0
                 		, planetSize[i], planetSize[i], false);
                 collectibles[i].GenerateSpawnPoint(player.getX(), player.getY());
-               entityList.add(collectibles[i]);
+                entityList.add(collectibles[i]);
             }	
     		
     		// Create Asteroid Objects

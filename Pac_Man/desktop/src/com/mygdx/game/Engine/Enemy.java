@@ -57,25 +57,21 @@ public class Enemy extends Entity{
 		    float maxX = playerX + NoSpawnRadius;
 		    float minY = playerY - NoSpawnRadius;
 		    float maxY = playerY + NoSpawnRadius;
-
-		    // Ensure that ghosts do not spawn within a 50px radius of the player
-		    // Can reuse this function to respawn ghost after death
 		    
 		    // Initialize x and y coordinates to generate spawn location
-		    int x;
-		    int y;
-		    int screenWidth = Gdx.graphics.getWidth();
-		    int screenHeight = Gdx.graphics.getHeight();
+		    int x = 0;
+		    int y = 0;
 
 		    // Adjust the range for x and y to be within the screen boundaries
 		    do {
-		        x = rand.nextInt(screenWidth);
-		        y = rand.nextInt(screenHeight);
+		        x = rand.nextInt(1500);
+		        y = rand.nextInt(900);
 		    } while (x > minX && x < maxX && y > minY && y < maxY);
 
 		    // Set the spawn location after confirming not within range of player
 		    super.setX(x);
 		    super.setY(y);
+		    rand = null;
 		}
 		
 		public void draw() {

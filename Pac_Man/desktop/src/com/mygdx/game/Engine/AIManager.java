@@ -60,4 +60,5 @@ public class AIManager {
     		asteroid.setY(750);
     	}
     }
+
 }

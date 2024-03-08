@@ -20,6 +20,7 @@ public class Collectible extends Entity {
 		private SpriteBatch batch;
 		private float Speed;
 		
+		
 		// Collection of spawned collectible positions
 	    private static List<Vector2> collectiblePositions = new ArrayList<>();
 	 
@@ -55,33 +56,30 @@ public class Collectible extends Entity {
 	        float maxY = playerY + NoSpawnRadius;
 
 	        // Initialize x and y coordinates to generate spawn location
-	        int x;
-	        int y;
-	        int screenWidth = Gdx.graphics.getWidth();
-	        int screenHeight = Gdx.graphics.getHeight();
+	        int x = 0;
+	        int y = 0;
 
 	        // Adjust the range for x and y to be within the screen boundaries and not spawn on top of other collectibles
 	        do {
-	            x = rand.nextInt(screenWidth);
-	            y = rand.nextInt(screenHeight);
-	        } while ((x > minX && x < maxX && y > minY && y < maxY) && isOnExistingCollectible(x, y));
+	            x = rand.nextInt(1500);
+	            y = rand.nextInt(900);
+	        } while ((x > minX && x < maxX && y > minY && y < maxY) || isOnExistingCollectible(x, y, collectiblePositions));
 
 	        // Set the spawn location after confirming not within range of player or other collectibles
 	        super.setX(x);
 	        super.setY(y);
-	        // Add the newly spawned collectible position to the list
-	        collectiblePositions.add(new Vector2(x, y));
+	        rand = null;
 	    }
-
-	    private boolean isOnExistingCollectible(int x, int y) {
-	        // Check if the new position is too close to any existing collectible positions
-	        for (Vector2 pos : collectiblePositions) {
-	            if (pos.dst(x, y) < 2 * NoSpawnRadius) {
-	                return true;
-	            }
-	        }
-	        return false;
-	    }
+		
+		// Method to check if the potential spawn point is too close to existing collectibles
+		private boolean isOnExistingCollectible(float x, float y, List<Vector2> collectiblePositions) {
+		    for (Vector2 pos : collectiblePositions) {
+		        if (pos.dst(x, y) < NoSpawnRadius * 2) { // Ensure sufficient distance between collectibles
+		            return true;
+		        }
+		    }
+		    return false;
+		}
 		 
 
 		 public void setShape(ShapeRenderer shape) {

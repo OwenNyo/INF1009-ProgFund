@@ -309,6 +309,9 @@ public class GameScene extends ScreenAdapter {
         entityManager.disposeEntities();
         ioManager.dispose();
         hud.dispose();
+        overlayStage.dispose();
+        AsteroidLabel.clear();
+        BlackholeLabel.clear();
         sceneManager.setEndScreen(player.getPoints());
     }
     
@@ -326,7 +329,7 @@ public class GameScene extends ScreenAdapter {
         hud.dispose();
         overlayStage.dispose();
         AsteroidLabel.clear();
-        
+        BlackholeLabel.clear();
     }
     
 }

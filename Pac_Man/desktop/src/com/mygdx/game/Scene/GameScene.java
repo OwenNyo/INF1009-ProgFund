@@ -50,10 +50,11 @@ public class GameScene extends ScreenAdapter {
     private GameMaster gameMaster;
     
     // Static Tables
-    private Label BlackholeLabel, AsteroidLabel;
-    private Table BHTable, AsteroidTable;
+    private Label BlackholeLabel, AsteroidLabel, AstronautLabel;
+    private Table BHTable, AsteroidTable, ATable;
     private AtomicBoolean showingBlackholePopup;
     private AtomicBoolean showingAsteroidPopup;
+    private AtomicBoolean showingAstronautPopup;
 
     // Texture and Drawings
     private Texture backgroundTexture, astronautVeteran, astronautCommander;
@@ -66,6 +67,7 @@ public class GameScene extends ScreenAdapter {
     
     // Variable to track if the player collided with an asteroid before
     private boolean firstAsteroidCollision = true;
+    private boolean achievementUnlock = true;
     
     // Game State management
     public enum GameState {
@@ -123,12 +125,21 @@ public class GameScene extends ScreenAdapter {
         AsteroidTable.setFillParent(true);
         AsteroidTable.add(AsteroidLabel).expand().center();
         
+        AstronautLabel = new Label("You've become a \n Astronaut Veteran!!!", skin);
+        AstronautLabel.setAlignment(Align.right);
+        AstronautLabel.setFontScale(2.5f);
+        
+        ATable = new Table();
+        ATable.setFillParent(true);
+        ATable.add(AstronautLabel).expand().bottom().right();
+        
         // Initialize popup visibility
         // Set true explicitly
         
         // Initialize popup visibility
         showingBlackholePopup = new AtomicBoolean(true);
         showingAsteroidPopup = new AtomicBoolean(false);
+        showingAstronautPopup = new AtomicBoolean(false);
 
         // Schedule tasks to hide the popups after 3 seconds
         timer.timerCountdown(3, showingBlackholePopup);    
@@ -178,6 +189,12 @@ public class GameScene extends ScreenAdapter {
             AsteroidTable.remove(); // Remove the table if the popup is not showing
         }
         
+        if (showingAstronautPopup.get()) {
+            overlayStage.addActor(ATable);
+        } else {
+        	ATable.remove(); // Remove the table if the popup is not showing
+        }
+        
         overlayStage.act(delta);
         overlayStage.draw();
         
@@ -205,12 +222,27 @@ public class GameScene extends ScreenAdapter {
         // Update and draw score
         hud.drawScore(player.getPoints());
         
-        // Handle player logic to display different avatars
+        // Handle player logic to display different avatar
         if(player.getPoints() > 100 && player.getPoints() < 200) {
-        	player.setTex(astronautVeteran);
+        	if (achievementUnlock) {
+            	player.setTex(astronautVeteran);
+                showingAstronautPopup.set(true);
+                
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = false; 
+            }
+            
         }
         else if (player.getPoints() > 200){
-        	player.setTex(astronautCommander);
+        	AstronautLabel.setText("You've become a \n Astronaut Commander!!!");
+            achievementUnlock = true; 
+        	if (achievementUnlock) {
+            	player.setTex(astronautCommander);
+                showingAstronautPopup.set(true);
+                
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = false; 
+            }
         }
 
         // Check for player collision with asteroids
@@ -231,7 +263,7 @@ public class GameScene extends ScreenAdapter {
         
         // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, collectibles)) {
-        	player.PlayerScorePoints(10);
+        	player.PlayerScorePoints(110);
         	
             // Pause game when player collides with a planet
             gameState = GameState.PAUSED;
@@ -240,7 +272,7 @@ public class GameScene extends ScreenAdapter {
             ioManager.stopBG();
             
             // Set screen to planet fun fact scene
-            System.out.println("Planet: " +cManager.getLastCollidedPlanetName());
+            System.out.println("Planet: " + cManager.getLastCollidedPlanetName());
             sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());
         }
 

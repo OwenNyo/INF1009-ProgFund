@@ -53,7 +53,7 @@ public class EntityManager {
 		enemy = new Enemy("enemy", "blackhole.png", 0, 0, EnemySpeed, EnemyDamage, 80, 80, true);
 		enemy.GenerateSpawnPoint(player.getX(), player.getY());
 		
-
+		
 		String[] planetsName = {"Earth", "Uranus", "Moon", "Mercury"
 				, "Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
 		
@@ -64,7 +64,6 @@ public class EntityManager {
     	
     	if(Stage == 1)
     	{
-
     		// Add entities to the list
     		entityList.add(player);
     		entityList.add(enemy);
@@ -91,10 +90,8 @@ public class EntityManager {
     		    		, 80, 80, false);
     		    entityList.add(asteroids[i]);
     		 }	
-    		
     	}		
     	else if(Stage == 2){
-
     		// Add entities to the list
     		entityList.add(player);
     		entityList.add(enemy);
@@ -123,9 +120,6 @@ public class EntityManager {
     		    entityList.add(asteroids[i]);
     		 }	
     	}
-
-		
-       
 	}
 	
 	public List<Entity> getEntityList() {

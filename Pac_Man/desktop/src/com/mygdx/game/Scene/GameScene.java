@@ -57,7 +57,7 @@ public class GameScene extends ScreenAdapter {
     private AtomicBoolean showingAstronautPopup;
 
     // Texture and Drawings
-    private Texture backgroundTexture, astronautVeteran, astronautCommander;
+    private Texture backgroundTexture, astronautVeteran, astronautCommander, astronautMaster;
     private SpriteBatch batch;
     private HUD hud;
     private TimerClass timer;
@@ -101,7 +101,8 @@ public class GameScene extends ScreenAdapter {
         // Load background texture
         backgroundTexture = new Texture("space.jpg");  
         astronautVeteran = new Texture("astronaut.png");  
-        astronautCommander = new Texture("astronautCommander.png");     
+        astronautCommander = new Texture("astronautCommander.png");
+        astronautMaster = new Texture("astronautRocket.png");
 
         // Initialize Labels & Tables
         Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); 
@@ -222,27 +223,35 @@ public class GameScene extends ScreenAdapter {
         // Update and draw score
         hud.drawScore(player.getPoints());
         
-        // Handle player logic to display different avatar
-        if(player.getPoints() > 100 && player.getPoints() < 200) {
-        	if (achievementUnlock) {
-            	player.setTex(astronautVeteran);
+        if (player.getPoints() > 200 && player.getPoints() < 400) {
+            AstronautLabel.setText("You've become a \n Rookie Astronaut!!!");
+            if (!achievementUnlock) {
+                player.setTex(astronautVeteran);
                 showingAstronautPopup.set(true);
-                
                 timer.timerCountdown(4, showingAstronautPopup);
-                achievementUnlock = false; 
+                achievementUnlock = true; // Indicate that an achievement has been unlocked
             }
-            
+        } else if (player.getPoints() >= 400 && player.getPoints() < 700) {
+            if (!achievementUnlock) {
+                AstronautLabel.setText("You've become a \n Astronaut Commander!!!");
+                player.setTex(astronautCommander);
+                showingAstronautPopup.set(true);
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = true;
+            }
+        } else if (player.getPoints() >= 700) {
+            if (!achievementUnlock) {
+                AstronautLabel.setText("You've become a \n Master Astronomer!!!");
+                player.setTex(astronautMaster);
+                showingAstronautPopup.set(true);
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = true;
+            }
         }
-        else if (player.getPoints() > 200){
-        	AstronautLabel.setText("You've become a \n Astronaut Commander!!!");
-            achievementUnlock = true; 
-        	if (achievementUnlock) {
-            	player.setTex(astronautCommander);
-                showingAstronautPopup.set(true);
-                
-                timer.timerCountdown(4, showingAstronautPopup);
-                achievementUnlock = false; 
-            }
+
+        // After displaying any achievement and starting the countdown, reset the flag
+        if (achievementUnlock) {
+            achievementUnlock = false; // Ensure this is set after the popup logic
         }
 
         // Check for player collision with asteroids

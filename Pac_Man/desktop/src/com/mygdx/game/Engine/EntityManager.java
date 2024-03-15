@@ -200,6 +200,50 @@ public class EntityManager {
 	    return asteroidList.toArray(new Collectible[0]);
 	}
     
+    public void removePlanetFromCollectibles(String planetName) {    	
+        // Count how many collectibles that match the planetName to remove
+        int removeCount = 0;
+        for (int i = 0; i < collectibles.length; i++) {
+            if (collectibles[i].getType().equalsIgnoreCase(planetName)) {
+                removeCount++;
+            }
+        }
+
+        // If nothing to remove, return and end method
+        if (removeCount == 0) {
+            return;
+        }
+        
+        // Create a new array for collectibles excluding the removed planet
+        Collectible[] newCollectibles = new Collectible[collectibles.length - removeCount];
+        
+        int index = 0;
+        for (int i = 0; i < collectibles.length; i++) {
+            if (!collectibles[i].getType().equalsIgnoreCase(planetName)) {
+                newCollectibles[index++] = collectibles[i];
+            } else {
+                // Remove the collectible from entityList
+                entityList.remove(collectibles[i]);
+            }
+        }
+        
+        // Update the collectibles array
+        collectibles = newCollectibles; 
+    }
+    
+    public int countRemainingPlanets() {
+        int planetCount = 0;
+        for (Collectible collectible : collectibles) {
+            if (collectible.getType().equals("Earth") || collectible.getType().equals("Uranus") || 
+                collectible.getType().equals("Moon") || collectible.getType().equals("Mercury") ||
+                collectible.getType().equals("Venus") || collectible.getType().equals("Mars") || 
+                collectible.getType().equals("Jupiter") || collectible.getType().equals("Saturn") ||
+                collectible.getType().equals("Neptune")) {
+                planetCount++;
+            }
+        }
+        return planetCount;
+    }
     
 	// Dispose of all Entities
 	public void disposeEntities() {

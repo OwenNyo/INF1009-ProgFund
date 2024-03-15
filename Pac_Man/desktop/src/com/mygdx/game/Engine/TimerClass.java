@@ -13,6 +13,8 @@ public class TimerClass {
 	private int time = 30; // Initial time
 	private String TimerText = "";
 	BitmapFont TimeFont;
+	private Task timerTask; // Reference to the scheduled task
+	private boolean isPaused = true; // Is timer currently paused
 	
 	public TimerClass() {
 		
@@ -22,16 +24,17 @@ public class TimerClass {
 	 // Initialize timer text
         updateTimerText();
         
-        // Schedule a task to decrease time every second
-        Timer.schedule(new Task() {
-            @Override
-            public void run() {
-                if (time > 0) {
-                    time--; // Decrease time by 1 second
-                    updateTimerText(); // Update timer text
-                }
-            }
-        }, 1, 1); // Initial delay of 1 second, repeat every 1 second
+//        // Schedule a task to decrease time every second
+//        Timer.schedule(new Task() {
+//            @Override
+//            public void run() {
+//                if (time > 0) {
+//                    time--; // Decrease time by 1 second
+//                    updateTimerText(); // Update timer text
+//                }
+//            }
+//        }, 1, 1); // Initial delay of 1 second, repeat every 1 second
+        scheduleTimerTask();
 	}
 	
 	private void updateTimerText() {
@@ -70,4 +73,34 @@ public class TimerClass {
             }
         }, seconds);
     }
+	
+    public void pauseTimer() {
+    	if (!isPaused) {
+	        if (timerTask != null) {
+	        	isPaused = true;
+	            timerTask.cancel(); // Cancel the current task to pause the timer
+	        }
+    	}
+    }
+    
+    public void resumeTimer() {
+    	if (isPaused) {
+    		scheduleTimerTask(); // Schedule the timer task to resume counting down
+    	}
+    }
+    
+    private void scheduleTimerTask() {
+    	isPaused = false;
+        timerTask = new Task() {
+            @Override
+            public void run() {
+                if (time > 0) {
+                    time--; // Decrease time by 1 second
+                    updateTimerText(); // Update timer text
+                }
+            }
+        };
+        Timer.schedule(timerTask, 1, 1); // Initial delay of 1 second, repeat every 1 second
+    }
+    
 }

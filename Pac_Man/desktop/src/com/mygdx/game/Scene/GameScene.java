@@ -69,6 +69,9 @@ public class GameScene extends ScreenAdapter {
     private boolean firstAsteroidCollision = true;
     private boolean achievementUnlock = true;
     
+    // Variable to track if second stage of game is initialized
+    private boolean isSecondStageInitialized = false;
+    
     // Game State management
     public enum GameState {
         RUNNING,
@@ -211,6 +214,7 @@ public class GameScene extends ScreenAdapter {
 
         // Draw timer and entities
         timer.draw();
+        timer.resumeTimer();
         entityManager.drawEntities();
         entityManager.moveEntities();
         
@@ -274,15 +278,34 @@ public class GameScene extends ScreenAdapter {
         if (cManager.checkCollectibleCollision(player, collectibles)) {
         	player.PlayerScorePoints(110);
         	
-            // Pause game when player collides with a planet
-            gameState = GameState.PAUSED;
-            
-            // Stop BG music
-            ioManager.stopBG();
-            
-            // Set screen to planet fun fact scene
-            System.out.println("Planet: " + cManager.getLastCollidedPlanetName());
+        	// Set screen to planet fun fact scene
             sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());
+            
+        	// Remove collided planet from collectibles array
+        	entityManager.removePlanetFromCollectibles(cManager.getLastCollidedPlanetName());
+        	
+        	if (entityManager.countRemainingPlanets() == 0) {
+                // Pause game when player collides with a planet
+                gameState = GameState.PAUSED;
+                
+                // Stop BG music
+                ioManager.stopBG();
+                
+                // Pause Timer
+                timer.pauseTimer();
+        		
+                // Set the timer to 6 seconds if all planets are collected
+        		timer.setTime(6); 
+        	} else {
+                // Pause game when player collides with a planet
+                gameState = GameState.PAUSED;
+                
+                // Stop BG music
+                ioManager.stopBG();
+                
+                // Pause Timer
+                timer.pauseTimer();
+        	}
         }
 
         // Check for collision with enemy
@@ -297,11 +320,12 @@ public class GameScene extends ScreenAdapter {
         }
         
         // Timer Over change to scene 2
-		if(timer.getTime() == 0) {
+		if(timer.getTime() == 0 && !isSecondStageInitialized) {
 			timer.setTime(30);
 	        entityManager.disposeEntities();
 	        entityManager.initEntities(2);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+	        isSecondStageInitialized = true;
 		}
         
 

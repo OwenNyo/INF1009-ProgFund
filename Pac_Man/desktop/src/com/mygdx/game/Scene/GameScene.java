@@ -73,6 +73,9 @@ public class GameScene extends ScreenAdapter {
     // Variable to track if second stage of game is initialized
     private boolean isSecondStageInitialized = false;
     
+    // Button to move to next stage
+    private TextButton nextButton;
+    
     // Point variable tracking
     private int SavePlayerScore = 0;
     
@@ -159,7 +162,31 @@ public class GameScene extends ScreenAdapter {
         showingStagePopup = new AtomicBoolean(false);
 
         // Schedule tasks to hide the popups after 3 seconds
-        timer.timerCountdown(3, showingBlackholePopup);    
+        timer.timerCountdown(3, showingBlackholePopup);
+        
+        // Initialize Next Stage Button
+        nextButton = new TextButton("NEXT STAGE", skin);
+        // Calculate the Y position to vertically center the button on the screen
+        float posY = (Gdx.graphics.getHeight() / 2) - (nextButton.getHeight() / 2);
+
+        // Set the position of the button.
+        nextButton.setPosition(1740, posY);
+        nextButton.setSize(180, 100); // Adjust size as needed
+        nextButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                proceedToNextStage();
+            }
+        });
+
+        overlayStage.addActor(nextButton);
+        // Make the button initially visible if the game starts in Stage 1
+        if (!isSecondStageInitialized) {
+            nextButton.setVisible(true);
+        } else {
+            nextButton.setVisible(false); // Hide if the game is not in Stage 1
+        }
+
         
     }
 
@@ -245,6 +272,9 @@ public class GameScene extends ScreenAdapter {
 
         // Update and draw score
         hud.drawScore(player.getPoints());
+        
+        // Set input processor
+        Gdx.input.setInputProcessor(overlayStage);
         
         if (player.getPoints() > 200 && player.getPoints() < 400) {
             AstronautLabel.setText("You've become a \n Rookie Astronaut!!!");
@@ -371,12 +401,25 @@ public class GameScene extends ScreenAdapter {
         overlayStage.dispose();
         AsteroidLabel.clear();
         BlackholeLabel.clear();
+        StageLabel.clear();
         sceneManager.setEndScreen(player.getPoints());
     }
     
     // Method to update game state
     public void updateGameState(GameState newState) {
         this.gameState = newState;
+    }
+    
+    private void proceedToNextStage() {
+        if (!isSecondStageInitialized) {
+			timer.setTime(30);
+			SavePlayerScore = player.getPoints();
+	        entityManager.swapEntities();
+	        entityManager.initEntities(2, SavePlayerScore);
+	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+	        isSecondStageInitialized = true;
+            nextButton.setVisible(false); // Hide the button after moving to the next stage
+        }
     }
         
     @Override

@@ -5,6 +5,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -45,12 +46,20 @@ public class EndScene extends ScreenAdapter {
         batch = new SpriteBatch();
         hud = new HUD();
 
-        // Load background texture
-        backgroundTexture = new Texture("PacMan_Background.jpg");
+        // Select the appropriate background image based on the final score
+        if (finalScore < 200) {
+            backgroundTexture = new Texture("ZeroPointsBg.png");
+        } else if (finalScore < 400) {
+            backgroundTexture = new Texture("NoviceAstronautBg.png");
+        } else if (finalScore < 700) {
+            backgroundTexture = new Texture("AstronautVeteranBg.png");
+        } else {
+            backgroundTexture = new Texture("MasterAstronomerBg.png");
+        }
         
         this.scoreFont = new BitmapFont();
         this.scoreFont.getData().setScale(3);
-        this.endScore = "Game Over!\nScore : " + finalScore;
+        
 
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -84,11 +93,18 @@ public class EndScene extends ScreenAdapter {
             }
         });
 
+        // Calculate the button positions to be side by side at the bottom
+        float buttonWidth = playAgainButton.getWidth();
+        float buttonSpacing = 20; // Space between buttons
+        float buttonX = (Gdx.graphics.getWidth() - (2 * buttonWidth + buttonSpacing)) / 2;
+        playAgainButton.setPosition(buttonX, 50);
+        mainMenuButton.setPosition(buttonX + buttonWidth + buttonSpacing, 50);
+
         // Add buttons to the stage
         stage.addActor(playAgainButton);
         stage.addActor(mainMenuButton);
-
     }
+
     
     @Override
     public void render(float delta) {
@@ -102,13 +118,21 @@ public class EndScene extends ScreenAdapter {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         
-        // Draw player score
+     // Draw player score and game over text side by side
         drawPlayerScore();
     }
     
     private void drawPlayerScore() {
+        // Calculate width of game over and score texts
+        GlyphLayout gameOverLayout = new GlyphLayout(scoreFont, "Game Over!");
+        GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: " + finalScore);
+
+        float totalWidth = gameOverLayout.width + scoreLayout.width + 20; // 20 for padding
+        float startingX = (Gdx.graphics.getWidth() - totalWidth) / 2;
+
         batch.begin();
-        scoreFont.draw(batch, endScore, 390, 660);
+        scoreFont.draw(batch, "Game Over!", startingX, Gdx.graphics.getHeight() - 50);
+        scoreFont.draw(batch, "Score: " + finalScore, startingX + gameOverLayout.width + 20, Gdx.graphics.getHeight() - 50);
         batch.end();
     }
     

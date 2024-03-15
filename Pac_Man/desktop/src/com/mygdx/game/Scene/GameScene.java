@@ -73,6 +73,9 @@ public class GameScene extends ScreenAdapter {
     // Variable to track if second stage of game is initialized
     private boolean isSecondStageInitialized = false;
     
+    // Point variable tracking
+    private int SavePlayerScore = 0;
+    
     // Game State management
     public enum GameState {
         RUNNING,
@@ -99,7 +102,7 @@ public class GameScene extends ScreenAdapter {
         cManager = new CollisionManager();
         ioManager = new IOManager();
         entityManager = new EntityManager();
-        entityManager.initEntities(1);
+        entityManager.initEntities(1, SavePlayerScore);
         entityList = entityManager.getEntityList();
         
         // Load background texture
@@ -342,8 +345,9 @@ public class GameScene extends ScreenAdapter {
         // Timer Over change to scene 2
 		if(timer.getTime() == 0 && !isSecondStageInitialized) {
 			timer.setTime(30);
-	        entityManager.disposeEntities();
-	        entityManager.initEntities(2);
+			SavePlayerScore = player.getPoints();
+	        entityManager.swapEntities();
+	        entityManager.initEntities(2, SavePlayerScore);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;
 		}

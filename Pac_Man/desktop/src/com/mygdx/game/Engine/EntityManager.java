@@ -38,7 +38,7 @@ public class EntityManager {
 	// Manager Attributes
 	
 	// Initialize all Entities
-	public void initEntities(int Stage) {
+	public void initEntities(int Stage, int SavedPoints) {
 		
 		// Create Array List
 		entityList = new ArrayList<>();
@@ -94,6 +94,7 @@ public class EntityManager {
     		// Add entities to the list
     		entityList.add(player);
     		entityList.add(enemy);
+    		player.setPoints(SavedPoints);
     		
     		// Create Planet Objects
     		collectibles = new Collectible[4];
@@ -253,6 +254,20 @@ public class EntityManager {
         	if (entity.getTex() != null && entity instanceof Player == false){
         		entity.getTex().dispose();
         	}
+        }
+    }
+	
+	public void swapEntities() {
+        batch.dispose();
+        shape.dispose();
+        for (Entity entity : entityList) {
+        	if(entity instanceof Player) {
+        		
+        	} else {
+	    		if (entity.getTex() != null ){
+	    			entity.getTex().dispose();
+	    		}
+        	}     	
         }
     }
 }

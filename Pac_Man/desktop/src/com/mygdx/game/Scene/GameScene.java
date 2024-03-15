@@ -402,7 +402,9 @@ public class GameScene extends ScreenAdapter {
         AsteroidLabel.clear();
         BlackholeLabel.clear();
         StageLabel.clear();
-        sceneManager.setEndScreen(player.getPoints());
+        
+        sceneManager.setTriviaScreen(player);
+//        sceneManager.setEndScreen(player.getPoints());sceneManager.setEndScreen(player.getPoints());
     }
     
     // Method to update game state

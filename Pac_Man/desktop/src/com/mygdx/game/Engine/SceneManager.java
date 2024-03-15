@@ -7,6 +7,7 @@ import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
 import com.mygdx.game.Scene.OptionScene;
 import com.mygdx.game.Scene.PlanetScene;
+import com.mygdx.game.Scene.TriviaScene;
 
 public class SceneManager {
 
@@ -80,6 +81,16 @@ public class SceneManager {
         else {
         	System.out.println("Error, previous screen is null");
         }
+    }
+    
+    
+    //Method to to set the trivia scene (after game, before end) 
+    public void setTriviaScreen(Player player) {
+    	// Initialize EndScene
+    	TriviaScene triviaScene = new TriviaScene(gameMaster, this, player);
+    	System.out.println("ehre");
+    	// Set the screen using the GameMaster
+    	gameMaster.setScreen(triviaScene);
     }
     
     // Method to set the end screen

@@ -50,11 +50,12 @@ public class GameScene extends ScreenAdapter {
     private GameMaster gameMaster;
     
     // Static Tables
-    private Label BlackholeLabel, AsteroidLabel, AstronautLabel;
-    private Table BHTable, AsteroidTable, ATable;
+    private Label BlackholeLabel, AsteroidLabel, AstronautLabel, StageLabel;
+    private Table BHTable, AsteroidTable, ATable, StageTable;
     private AtomicBoolean showingBlackholePopup;
     private AtomicBoolean showingAsteroidPopup;
     private AtomicBoolean showingAstronautPopup;
+    private AtomicBoolean showingStagePopup;
 
     // Texture and Drawings
     private Texture backgroundTexture, astronautVeteran, astronautCommander, astronautMaster;
@@ -137,6 +138,14 @@ public class GameScene extends ScreenAdapter {
         ATable.setFillParent(true);
         ATable.add(AstronautLabel).expand().bottom().right();
         
+        StageLabel = new Label("Stage over!", skin);
+        StageLabel.setAlignment(Align.right);
+        StageLabel.setFontScale(2.5f);
+        
+        StageTable = new Table();
+        StageTable.setFillParent(true);
+        StageTable.add(StageLabel).expand().center();
+        
         // Initialize popup visibility
         // Set true explicitly
         
@@ -144,6 +153,7 @@ public class GameScene extends ScreenAdapter {
         showingBlackholePopup = new AtomicBoolean(true);
         showingAsteroidPopup = new AtomicBoolean(false);
         showingAstronautPopup = new AtomicBoolean(false);
+        showingStagePopup = new AtomicBoolean(false);
 
         // Schedule tasks to hide the popups after 3 seconds
         timer.timerCountdown(3, showingBlackholePopup);    
@@ -197,6 +207,12 @@ public class GameScene extends ScreenAdapter {
             overlayStage.addActor(ATable);
         } else {
         	ATable.remove(); // Remove the table if the popup is not showing
+        }
+        
+        if (showingStagePopup.get()) {
+        	overlayStage.addActor(StageTable);
+        } else {
+        	StageTable.remove();
         }
         
         overlayStage.act(delta);
@@ -294,6 +310,10 @@ public class GameScene extends ScreenAdapter {
                 // Pause Timer
                 timer.pauseTimer();
         		
+                StageLabel.setText("Current Stage over!");
+                showingStagePopup.set(true);
+                timer.timerCountdown(3, showingStagePopup);
+                
                 // Set the timer to 6 seconds if all planets are collected
         		timer.setTime(6); 
         	} else {
@@ -363,6 +383,7 @@ public class GameScene extends ScreenAdapter {
         overlayStage.dispose();
         AsteroidLabel.clear();
         BlackholeLabel.clear();
+        StageLabel.clear();
     }
     
 }

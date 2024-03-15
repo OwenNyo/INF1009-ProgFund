@@ -53,7 +53,7 @@ public class CollisionManager {
                     System.out.println("Space Station Collision detected");
                     //play collect sound effect
                     ioManager.playSECollect(); 
-                    return true;
+                    return false;
             	}
             	else {
                     c.GenerateSpawnPoint(player.getX(), player.getY());

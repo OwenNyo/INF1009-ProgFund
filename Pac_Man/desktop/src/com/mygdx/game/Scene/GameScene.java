@@ -347,7 +347,9 @@ public class GameScene extends ScreenAdapter {
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;
 		}
-        
+		else if(timer.getTime() == 0 && isSecondStageInitialized) {
+            gameState = GameState.GAME_OVER;
+		}
 
         // Play background music
 		if (gameState != GameState.PAUSED) {

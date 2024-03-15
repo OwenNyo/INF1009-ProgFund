@@ -46,30 +46,35 @@ public class Collectible extends Entity {
 		}
 		 
 		public void GenerateSpawnPoint(float playerX, float playerY) {
-	        Random rand = new Random();
-	        System.out.println("Generate the collectible spawning position to not spawn on top of the player or other collectibles");
+		    Random rand = new Random();
+		    System.out.println("Generate the collectible spawning position to not spawn on top of the player or other collectibles");
 
-	        // Generate a min and max pos, prevent collectibles from spawning in this range
-	        float minX = playerX - NoSpawnRadius;
-	        float maxX = playerX + NoSpawnRadius;
-	        float minY = playerY - NoSpawnRadius;
-	        float maxY = playerY + NoSpawnRadius;
+		    // Generate a min and max pos, prevent collectibles from spawning in this range
+		    float minX = playerX - NoSpawnRadius;
+		    float maxX = playerX + NoSpawnRadius;
+		    float minY = playerY - NoSpawnRadius;
+		    float maxY = playerY + NoSpawnRadius;
 
-	        // Initialize x and y coordinates to generate spawn location
-	        int x = 0;
-	        int y = 0;
+		    // Initialize x and y coordinates to generate spawn location
+		    int x = 0;
+		    int y = 0;
 
-	        // Adjust the range for x and y to be within the screen boundaries and not spawn on top of other collectibles
-	        do {
-	            x = rand.nextInt(1500);
-	            y = rand.nextInt(900);
-	        } while ((x > minX && x < maxX && y > minY && y < maxY) || isOnExistingCollectible(x, y, collectiblePositions));
+		    // Adjust the range for x and y to be within the screen boundaries and not spawn on top of other collectibles
+		    do {
+		        x = rand.nextInt(1500);
+		        y = rand.nextInt(900);
+		    } while ((x > minX && x < maxX && y > minY && y < maxY) || isOnExistingCollectible(x, y, collectiblePositions) || isOnPlayer(x, y, playerX, playerY));
 
-	        // Set the spawn location after confirming not within range of player or other collectibles
-	        super.setX(x);
-	        super.setY(y);
-	        rand = null;
-	    }
+		    // Set the spawn location after confirming not within range of player or other collectibles
+		    super.setX(x);
+		    super.setY(y);
+		    rand = null;
+		}
+		
+		private boolean isOnPlayer(float x, float y, float playerX, float playerY) {
+		    float distance = Vector2.dst(x, y, playerX, playerY);
+		    return distance < NoSpawnRadius * 2; // Adjust the value based on your preference
+		}
 		
 		// Method to check if the potential spawn point is too close to existing collectibles
 		private boolean isOnExistingCollectible(float x, float y, List<Vector2> collectiblePositions) {

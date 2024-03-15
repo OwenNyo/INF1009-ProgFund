@@ -179,13 +179,8 @@ public class GameScene extends ScreenAdapter {
             }
         });
 
-        overlayStage.addActor(nextButton);
         // Make the button initially visible if the game starts in Stage 1
-        if (!isSecondStageInitialized) {
-            nextButton.setVisible(true);
-        } else {
-            nextButton.setVisible(false); // Hide if the game is not in Stage 1
-        }
+        
 
         
     }
@@ -346,6 +341,14 @@ public class GameScene extends ScreenAdapter {
                 StageLabel.setText("Current Stage over!");
                 showingStagePopup.set(true);
                 timer.timerCountdown(3, showingStagePopup);
+                
+                overlayStage.addActor(nextButton);
+                
+                if (!isSecondStageInitialized) {
+                    nextButton.setVisible(true);
+                } else {
+                    nextButton.setVisible(false); // Hide if the game is not in Stage 1
+                }
                 
                 // Set the timer to 6 seconds if all planets are collected
         		timer.setTime(6); 

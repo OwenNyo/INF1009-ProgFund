@@ -60,7 +60,7 @@ public class EntityManager {
 		String[] planets = {"earth.png", "uranus.png", "moon.png"
 				, "mercury.png", "venus.png", "mars.png", "jupiter.png", "saturn.png", "neptune.png"};
 
-		int[] planetSize = {140, 180, 120, 90, 130, 110, 220, 200, 160};
+		int[] planetSize = {240, 280, 220, 190, 230, 210, 320, 300, 260};
     	
     	if(Stage == 1)
     	{

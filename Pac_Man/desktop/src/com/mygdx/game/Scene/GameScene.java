@@ -338,17 +338,18 @@ public class GameScene extends ScreenAdapter {
                 // Pause Timer
                 timer.pauseTimer();
         		
-                StageLabel.setText("Current Stage over!");
-                showingStagePopup.set(true);
                 timer.timerCountdown(3, showingStagePopup);
                 
                 overlayStage.addActor(nextButton);
                 
                 if (!isSecondStageInitialized) {
                     nextButton.setVisible(true);
+                    StageLabel.setText("Current Stage over!");
                 } else {
                     nextButton.setVisible(false); // Hide if the game is not in Stage 1
+                    StageLabel.setText("Game over!");
                 }
+                showingStagePopup.set(true);
                 
                 // Set the timer to 6 seconds if all planets are collected
         		timer.setTime(6); 

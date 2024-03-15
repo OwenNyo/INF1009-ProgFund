@@ -68,6 +68,14 @@ public class IOManager {
         SEMusicCollect.play(SEVolume);
     }
 
+<<<<<<< Updated upstream
+=======
+    // Method to play sound effects - collect pellets 
+//    public void playSECollect() {
+//        SEMusicCollect.play(SEVolume);
+//    }
+
+>>>>>>> Stashed changes
     // Method to stop background music
     public void stopBG() {
         if (BGMusic.isPlaying()) {

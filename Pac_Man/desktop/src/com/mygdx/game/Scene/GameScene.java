@@ -168,6 +168,104 @@ public class GameScene extends ScreenAdapter {
         }
     }
 
+<<<<<<< Updated upstream
+=======
+        // Draw timer and entities
+        timer.draw();
+        entityManager.drawEntities();
+        entityManager.moveEntities();
+        
+        // Get Entities Instances
+        player = entityManager.getPlayer();
+        enemy = entityManager.getEnemy();
+        collectibles = entityManager.getCollectiblesArray();
+        asteroids = entityManager.getAsteroidArray();
+
+        // Update and draw score
+        hud.drawScore(player.getPoints());
+        
+        // Handle player logic to display different avatars
+        if(player.getPoints() > 100 && player.getPoints() < 200) {
+        	player.setTex(astronautVeteran);
+        }
+        else if (player.getPoints() > 200){
+        	player.setTex(astronautCommander);
+        }
+
+        // Check for player collision with asteroids
+        if (cManager.checkCollectibleCollision(player, asteroids)) {
+            // Handle collectible collision
+        	// Handle asteroid collision
+        	if (firstAsteroidCollision) {
+                // Handle asteroid collision
+        		// Set true explicitly
+                showingAsteroidPopup.set(true);
+                
+                // Schedule tasks to hide the popups after 2 seconds
+                timer.timerCountdown(2, showingAsteroidPopup);
+                // Set to false after the first collision
+                firstAsteroidCollision = false; 
+            }
+        }
+        
+        // Check for player collision with planets
+        if (cManager.checkCollectibleCollision(player, collectibles)) {
+        	player.PlayerScorePoints(10);
+        	
+            // Pause game when player collides with a planet
+            gameState = GameState.PAUSED;
+            
+            // Stop BG music
+            ioManager.stopBG();
+            
+            // Set screen to planet fun fact scene
+            System.out.println("Planet: " +cManager.getLastCollidedPlanetName());
+            sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());
+        }
+
+        // Check for collision with enemy
+        if (player != null && enemy != null) {
+            int remainingHealth = player.getHealth();
+            if (remainingHealth > 0) {
+                cManager.checkEnemyCollision(player, enemy);
+                hud.drawRemainingHealth(player.getHealth());
+            } else {
+                gameState = GameState.GAME_OVER;
+            }
+        }
+        
+        // Timer Over change to scene 2
+		if(timer.getTime() == 0) {
+			timer.setTime(30);
+	        entityManager.disposeEntities();
+	        entityManager.initEntities(2);
+	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+		}
+        
+
+        // Play background music
+		if (gameState != GameState.PAUSED) {
+			ioManager.playBG();
+		}
+    }
+    
+    // Render game elements when game state is GAME_OVER
+    private void renderGameOverState() {
+        // Dispose resources and switch to end screen
+        backgroundTexture.dispose();
+        entityManager.disposeEntities();
+        ioManager.dispose();
+        hud.dispose();
+        sceneManager.setTriviaScreen(player);
+//        sceneManager.setEndScreen(player.getPoints());
+    }
+    
+    // Method to update game state
+    public void updateGameState(GameState newState) {
+        this.gameState = newState;
+    }
+        
+>>>>>>> Stashed changes
     @Override
     public void dispose() {
         // Properly dispose of textures

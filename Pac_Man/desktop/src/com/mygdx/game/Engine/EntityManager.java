@@ -181,24 +181,30 @@ public class EntityManager {
 	    return null; // Return null if ghost is not found
 	}
 
-	public Collectible[] getCollectiblesArray() {
+	public Collectible[] getCollectiblesArray(String type) {
+		// Retrieve original list of collectibles
 	    List<Collectible> collectibleList = getCollectibles();
-	    return collectibleList.toArray(new Collectible[0]);
-	}
-	
-	public Collectible[] getAsteroidArray() {
-	    List<Collectible> collectibleList = getCollectibles();
-	    List<Collectible> asteroidList = new ArrayList<>();
-
-	    // Filter collectibles with type "asteroid"
+	    
+	    // Make new lists to return only collectibles we want
+	    List<Collectible> filteredList = new ArrayList<>();
+	    
+	 // Filter collectibles based on type
 	    for (Collectible collectible : collectibleList) {
-	        if (collectible.getType() == "asteroid") {
-	            asteroidList.add(collectible);
-	        }
+	    	if(type.equals("asteroid") && collectible.getType().equals("asteroid")) {
+	    		filteredList.add(collectible);
+	    	}
+	    	else if (type.equals("spaceStation") && collectible.getType().equals("spaceStation")) {
+	    		filteredList.add(collectible);
+	    	}
+	    	else if (!type.equals("spaceStation") && !type.equals("asteroid")) {
+	    		if(!collectible.getType().equalsIgnoreCase("asteroid") && !collectible.getType().equalsIgnoreCase("spaceStation")) {
+	    			filteredList.add(collectible);
+	    		}
+	    	}
 	    }
-
+	       
 	    // Convert the filtered list to an array
-	    return asteroidList.toArray(new Collectible[0]);
+	    return filteredList.toArray(new Collectible[0]);
 	}
     
     public void removePlanetFromCollectibles(String planetName) {    	

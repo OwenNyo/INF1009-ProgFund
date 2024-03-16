@@ -39,7 +39,7 @@ public class GameScene extends ScreenAdapter {
     // Entities
     private Player player;
     private Enemy enemy;
-    private Collectible collectibles[], asteroids[];
+    private Collectible planets[], asteroids[], stations[];
     private List<Entity> entityList;
 
     // Initialize Managers and classes
@@ -50,12 +50,13 @@ public class GameScene extends ScreenAdapter {
     private GameMaster gameMaster;
     
     // Static Tables
-    private Label BlackholeLabel, AsteroidLabel, AstronautLabel, StageLabel;
-    private Table BHTable, AsteroidTable, ATable, StageTable;
+    private Label BlackholeLabel, AsteroidLabel, AstronautLabel, StageLabel, StationLabel;
+    private Table BHTable, AsteroidTable, ATable, StageTable, StationTable;
     private AtomicBoolean showingBlackholePopup;
     private AtomicBoolean showingAsteroidPopup;
     private AtomicBoolean showingAstronautPopup;
     private AtomicBoolean showingStagePopup;
+    private AtomicBoolean showingStationPopup;
 
     // Texture and Drawings
     private Texture backgroundTexture, astronautVeteran, astronautCommander, astronautMaster;
@@ -68,6 +69,7 @@ public class GameScene extends ScreenAdapter {
     
     // Variable to track if the player collided with an asteroid before
     private boolean firstAsteroidCollision = true;
+    private boolean firstStationCollision = true;
     private boolean achievementUnlock = true;
     
     // Variable to track if second stage of game is initialized
@@ -113,21 +115,32 @@ public class GameScene extends ScreenAdapter {
         astronautVeteran = new Texture("astronaut.png");  
         astronautCommander = new Texture("astronautCommander.png");
         astronautMaster = new Texture("astronautRocket.png");
-
-        // Initialize Labels & Tables
+        
+        // Setting Skin for Game Scene
         Skin skin = new Skin(Gdx.files.internal("freezing-ui.json")); 
         
-        BHTable = new Table();
-        AsteroidTable = new Table();
-        
+        // Initializing Labels      
         BlackholeLabel = new Label("Welcome New Astronaut!\n Let's Discover the Space Together!", skin);
         BlackholeLabel.setAlignment(Align.center);
         BlackholeLabel.setFontScale(2.5f);
         
-        AsteroidLabel = new Label("You collided with an asteroid!!!", skin);
+        AsteroidLabel = new Label("You collided with an asteroid!", skin);
         AsteroidLabel.setAlignment(Align.center);
         AsteroidLabel.setFontScale(2.5f);
         
+        StationLabel = new Label("You will receive a temporary speed buff with the knowledge of the station!", skin);
+        StationLabel.setAlignment(Align.center);
+        StationLabel.setFontScale(2.5f);
+        
+        AstronautLabel = new Label("You've become a \n Astronaut Veteran!!!", skin);
+        AstronautLabel.setAlignment(Align.right);
+        AstronautLabel.setFontScale(2.5f);
+        
+        StageLabel = new Label("Stage over!", skin);
+        StageLabel.setAlignment(Align.right);
+        StageLabel.setFontScale(2.5f);   
+        
+        // Setting Labels onto Table
         BHTable = new Table();
         BHTable.setFillParent(true);
         BHTable.add(BlackholeLabel).expand().center();
@@ -136,30 +149,24 @@ public class GameScene extends ScreenAdapter {
         AsteroidTable.setFillParent(true);
         AsteroidTable.add(AsteroidLabel).expand().center();
         
-        AstronautLabel = new Label("You've become a \n Astronaut Veteran!!!", skin);
-        AstronautLabel.setAlignment(Align.right);
-        AstronautLabel.setFontScale(2.5f);
+        StationTable = new Table();
+        StationTable.setFillParent(true);
+        StationTable.add(StationLabel).expand().center();
         
         ATable = new Table();
         ATable.setFillParent(true);
-        ATable.add(AstronautLabel).expand().bottom().right();
-        
-        StageLabel = new Label("Stage over!", skin);
-        StageLabel.setAlignment(Align.right);
-        StageLabel.setFontScale(2.5f);
+        ATable.add(AstronautLabel).expand().bottom().right();        
         
         StageTable = new Table();
         StageTable.setFillParent(true);
-        StageTable.add(StageLabel).expand().center();
-        
-        // Initialize popup visibility
-        // Set true explicitly
+        StageTable.add(StageLabel).expand().center();         
         
         // Initialize popup visibility
         showingBlackholePopup = new AtomicBoolean(true);
         showingAsteroidPopup = new AtomicBoolean(false);
         showingAstronautPopup = new AtomicBoolean(false);
         showingStagePopup = new AtomicBoolean(false);
+        showingStationPopup = new AtomicBoolean(false);
 
         // Schedule tasks to hide the popups after 3 seconds
         timer.timerCountdown(3, showingBlackholePopup);
@@ -240,6 +247,12 @@ public class GameScene extends ScreenAdapter {
         	StageTable.remove();
         }
         
+        if(showingStationPopup.get()) {
+        	overlayStage.addActor(StationTable);
+        } else {
+        	StationTable.remove();
+        }
+        
         overlayStage.act(delta);
         overlayStage.draw();
         
@@ -262,8 +275,9 @@ public class GameScene extends ScreenAdapter {
         // Get Entities Instances
         player = entityManager.getPlayer();
         enemy = entityManager.getEnemy();
-        collectibles = entityManager.getCollectiblesArray();
-        asteroids = entityManager.getAsteroidArray();
+        planets = entityManager.getCollectiblesArray("");
+        asteroids = entityManager.getCollectiblesArray("asteroid");
+        stations = entityManager.getCollectiblesArray("spaceStation");
 
         // Update and draw score
         hud.drawScore(player.getPoints());
@@ -307,19 +321,37 @@ public class GameScene extends ScreenAdapter {
             // Handle collectible collision
         	// Handle asteroid collision
         	if (firstAsteroidCollision) {
-                // Handle asteroid collision
+
         		// Set true explicitly
                 showingAsteroidPopup.set(true);
                 
                 // Schedule tasks to hide the popups after 2 seconds
                 timer.timerCountdown(2, showingAsteroidPopup);
+                
                 // Set to false after the first collision
                 firstAsteroidCollision = false; 
             }
         }
         
+        // Check for player collision with stations
+        if (cManager.checkCollectibleCollision(player, stations)) {
+            // Handle collectible collision
+        	// Handle asteroid collision
+        	if (firstStationCollision) {
+
+        		// Set true explicitly
+                showingStationPopup.set(true);
+
+                // Schedule tasks to hide the popups after 2 seconds
+                timer.timerCountdown(1, showingStationPopup);
+                
+                // Set to false after the first collision
+                firstStationCollision = false; 
+            }
+        }
+        
         // Check for player collision with planets
-        if (cManager.checkCollectibleCollision(player, collectibles)) {
+        if (cManager.checkCollectibleCollision(player, planets)) {
         	player.PlayerScorePoints(110);
         	
         	// Set screen to planet fun fact scene

@@ -355,6 +355,7 @@ public class GameScene extends ScreenAdapter {
         
         // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, planets)) {
+        	//Player score points
         	player.PlayerScorePoints(110);
         	
         	// Set screen to planet fun fact scene
@@ -389,8 +390,6 @@ public class GameScene extends ScreenAdapter {
                 // Pause game when player collides with a planet
                 gameState = GameState.PAUSED;
                 
-                // Stop BG music
-                ioManager.stopBG();
                 
                 // Pause Timer
                 timer.pauseTimer();

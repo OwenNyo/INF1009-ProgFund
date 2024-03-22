@@ -20,10 +20,6 @@ public class Collectible extends Entity {
 		private SpriteBatch batch;
 		private float Speed;
 		
-		
-		// Collection of spawned collectible positions
-	    private static List<Vector2> collectiblePositions = new ArrayList<>();
-	 
 		 // Constructors
 		 public Collectible() {
 			 super();

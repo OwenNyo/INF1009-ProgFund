@@ -86,6 +86,8 @@ public class EntityManager {
     		for (int i = 0; i < asteroids.length; i++) {
                 asteroids[i] = new Collectible("asteroid", "asteroid.png", 0, 0, 1
     		    		, 80, 80, false);
+                System.out.println("Player X :" + player.getX());
+                System.out.println("Player Y : " + player.getY());
                 asteroids[i].GenerateSpawnPoint(player.getX(), player.getY());
     		    entityList.add(asteroids[i]);
     		 }	

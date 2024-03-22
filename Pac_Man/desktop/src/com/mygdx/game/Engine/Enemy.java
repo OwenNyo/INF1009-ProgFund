@@ -12,7 +12,6 @@ public class Enemy extends Entity{
 		int NoSpawnRadius = 30;
 
 		// Class Attributes
-		private float Speed;
 		private int Damage;	
 		private SpriteBatch batch;
 		
@@ -20,23 +19,14 @@ public class Enemy extends Entity{
 		// Constructors
 		public Enemy() {
 			super();
-			this.Speed = 0;
 			this.Damage = 0;
 		}
+		
 		public Enemy(String type, String filename, float x, float y, float speed, int damage, float height, float width, boolean AIControlled) {
-			super(type, filename, x, y, height, width, AIControlled);
-			this.Speed = speed;
+			super(type, filename, x, y, height, width, speed, AIControlled);
 			this.Damage = damage;
 		}
 		
-		
-		// Getters and Setters
-		public float getSpeed() {
-			return Speed;
-		}
-		public void setSpeed(float speed) {
-			Speed = speed;
-		}
 		public int getDamage() {
 			return Damage;
 		}

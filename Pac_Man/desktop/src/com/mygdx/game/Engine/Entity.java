@@ -15,6 +15,7 @@ public abstract class Entity{
 	private float Y;
 	private float width;
 	private float height;
+	private float speed;
 	private boolean AIControlled;
 	
 	
@@ -26,6 +27,7 @@ public abstract class Entity{
 		this.Y = 0;
 		this.width = 0;
 		this.height = 0;
+		this.speed = 0;
 		this.AIControlled = false;
 	}
 	
@@ -36,13 +38,14 @@ public abstract class Entity{
 		this.AIControlled = b;
 	}
 	
-	public Entity(String t, String filename, float x, float y, float height, float width, boolean b) {
+	public Entity(String t, String filename, float x, float y, float height, float width, float speed, boolean b) {
 		this.Type = t;
 		this.Tex = new Texture(Gdx.files.internal(filename));
 		this.X = x;
 		this.Y = y;
 		this.height = height;
 		this.width = width;
+		this.speed = speed;
 		this.AIControlled = b;
 	}
 	
@@ -89,6 +92,13 @@ public abstract class Entity{
 	}
 	public void setHeight(float h) {
 		height = h;
+	}
+
+	public float getSpeed() {
+		return speed;
+	}
+	public void setSpeed(float Speed) {
+		speed = Speed;
 	}
 	
 	public boolean getAIControlled() {

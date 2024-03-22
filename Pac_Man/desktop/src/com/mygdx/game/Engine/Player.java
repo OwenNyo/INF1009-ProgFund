@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Timer;
 public class Player extends Entity{
 
 		/// Class Attributes
-		private float Speed;
 		private float ReducedSpeed;
 		private int Health;
 		private int Points;
@@ -22,14 +21,12 @@ public class Player extends Entity{
 		
 		//	Constructors
 		public Player() {
-			this.Speed = 0;
 			this.Health = 0;
 		}
 		
 		// Player to earn points via pellet eating -> win cond = survive longer than other player while stacking
 		public Player(String type, String filename, float x, float y, float speed, int health, int points, float height, float width, boolean AIControlled, boolean fp) {
-			super(type, filename, x, y, width, height, AIControlled);
-			this.Speed = speed;
+			super(type, filename, x, y, width, height, speed, AIControlled);
 			this.Health = health;
 			this.IsFirstPlayer = fp;
 			this.Points = points;
@@ -38,12 +35,6 @@ public class Player extends Entity{
 		
 		
 		//	Getters and Setters
-		public float getSpeed() {
-			return Speed;
-		}
-		public void setSpeed(float speed) {
-			Speed = speed;
-		}
 		public int getHealth() {
 			return Health;
 		}

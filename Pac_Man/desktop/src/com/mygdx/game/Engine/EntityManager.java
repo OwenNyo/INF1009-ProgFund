@@ -74,7 +74,7 @@ public class EntityManager {
     		
     		for (int i = 0; i < collectibles.length; i++) {
                 
-                collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0
+                collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0, 0
                 		, planetSize[i], planetSize[i], false);
                 collectibles[i].GenerateSpawnPoint(player.getX(), player.getY());
                 entityList.add(collectibles[i]);
@@ -108,7 +108,7 @@ public class EntityManager {
                 float randomY = random.nextInt(Gdx.graphics.getHeight());
                 
                 collectibles[i] = new Collectible(planetsName[i+collectibles.length]
-                		, planets[i+collectibles.length], randomX, randomY
+                		, planets[i+collectibles.length], randomX, randomY, 0
                 		, planetSize[i+collectibles.length], planetSize[i+collectibles.length], false);
                entityList.add(collectibles[i]);
             }	

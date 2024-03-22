@@ -37,12 +37,14 @@ public class GameSettings {
     
     // Getter method for difficulty
     public String getDifficulty() {
-        if (speedMultiplier == 2.5f) {
+        if (speedMultiplier == 5.0f) {
             return "Easy";
         } else if (speedMultiplier == 10.0f) {
             return "Medium";
-        } else {
+        } else if (speedMultiplier == 30.0f) {
             return "Hard";
+        } else {
+            return "Unknown";
         }
     }
 
@@ -69,7 +71,8 @@ public class GameSettings {
     private void saveSettings() {
     	// Save speed multiplier
         prefs.putFloat("speedMultiplier", speedMultiplier);
-        prefs.flush(); // Flush to save the changes to file
+     // Flush to save the changes to file
+        prefs.flush(); 
     }
 
     private void loadSettings() {

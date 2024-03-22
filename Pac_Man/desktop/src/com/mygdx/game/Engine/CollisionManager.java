@@ -46,11 +46,13 @@ public class CollisionManager {
             	if(c.getType().equals("asteroid")){
             		c.GenerateSpawnPoint(player.getX(), player.getY());
             		System.out.println("Asteroid Collision detected");
+            		player.PlayerSpeedReduced();
     				return true;
             	}
             	else if(c.getType().equals("spaceStation")) {
                     c.GenerateSpawnPoint(player.getX(), player.getY());
                     System.out.println("Space Station Collision detected");
+                    player.PlayerHealthHealed(10);
                     //play collect sound effect
                     ioManager.playSECollect(); 
                     return true;

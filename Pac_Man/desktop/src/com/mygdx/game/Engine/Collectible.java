@@ -13,7 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 public class Collectible extends Entity {
 	
 		// Static Variables
-		int NoSpawnRadius = 30;
+		int NoSpawnRadius = 100;
 	    private float radius;
 	    private Color color;
 	    private ShapeRenderer shapeRenderer;
@@ -63,27 +63,12 @@ public class Collectible extends Entity {
 		    do {
 		        x = rand.nextInt(1500);
 		        y = rand.nextInt(900);
-		    } while ((x > minX && x < maxX && y > minY && y < maxY) || isOnExistingCollectible(x, y, collectiblePositions) || isOnPlayer(x, y, playerX, playerY));
+		    } while ((x > minX && x < maxX && y > minY && y < maxY));
 
 		    // Set the spawn location after confirming not within range of player or other collectibles
 		    super.setX(x);
 		    super.setY(y);
 		    rand = null;
-		}
-		
-		private boolean isOnPlayer(float x, float y, float playerX, float playerY) {
-		    float distance = Vector2.dst(x, y, playerX, playerY);
-		    return distance < NoSpawnRadius * 2; // Adjust the value based on your preference
-		}
-		
-		// Method to check if the potential spawn point is too close to existing collectibles
-		private boolean isOnExistingCollectible(float x, float y, List<Vector2> collectiblePositions) {
-		    for (Vector2 pos : collectiblePositions) {
-		        if (pos.dst(x, y) < NoSpawnRadius * 2) { // Ensure sufficient distance between collectibles
-		            return true;
-		        }
-		    }
-		    return false;
 		}
 		 
 

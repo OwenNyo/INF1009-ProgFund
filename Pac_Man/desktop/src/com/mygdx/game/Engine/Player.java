@@ -1,14 +1,18 @@
 package com.mygdx.game.Engine;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.utils.Timer;
 
 public class Player extends Entity{
 
 		/// Class Attributes
 		private float Speed;
+		private float ReducedSpeed;
 		private int Health;
 		private int Points;
 		private boolean IsFirstPlayer;
@@ -76,6 +80,29 @@ public class Player extends Entity{
 			else {
 				System.out.println("Player has lost all his health!");
 			}
+		}
+		
+		public void PlayerHealthHealed(int heal) {
+			Health = getHealth();
+			Health += heal;
+			
+			System.out.println("Heal Taken by Player, Health left:" + getHealth());
+		}
+		
+		public void PlayerSpeedReduced() {
+			ReducedSpeed = 300 / 2;
+			
+			setSpeed(ReducedSpeed);
+
+		    // Schedule a task to restore original speed after the specified duration
+		    Timer.schedule(new Timer.Task() {
+		        @Override
+		        public void run() {
+		            // Restore original speed after the duration
+		            setSpeed(300);
+		        }
+		    }, 5);
+	
 		}
 		
 		

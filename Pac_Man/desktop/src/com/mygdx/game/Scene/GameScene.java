@@ -80,6 +80,8 @@ public class GameScene extends ScreenAdapter {
     
     // Point variable tracking
     private int SavePlayerScore = 0;
+    private int SavePlayerHealth = 0;
+
     
     // Game State management
     public enum GameState {
@@ -107,7 +109,7 @@ public class GameScene extends ScreenAdapter {
         cManager = new CollisionManager();
         ioManager = new IOManager();
         entityManager = new EntityManager();
-        entityManager.initEntities(1, SavePlayerScore);
+        entityManager.initEntities(1, SavePlayerScore, SavePlayerHealth);
         entityList = entityManager.getEntityList();
         
         // Load background texture
@@ -124,11 +126,11 @@ public class GameScene extends ScreenAdapter {
         BlackholeLabel.setAlignment(Align.center);
         BlackholeLabel.setFontScale(2.5f);
         
-        AsteroidLabel = new Label("You collided with an asteroid!", skin);
+        AsteroidLabel = new Label("You collided with an asteroid, speed lowered temporarily!", skin);
         AsteroidLabel.setAlignment(Align.center);
         AsteroidLabel.setFontScale(2.5f);
         
-        StationLabel = new Label("You will receive a temporary speed buff with the knowledge of the station!", skin);
+        StationLabel = new Label("You will receive a heal buff with the knowledge of the station!", skin);
         StationLabel.setAlignment(Align.center);
         StationLabel.setFontScale(2.5f);
         
@@ -327,6 +329,7 @@ public class GameScene extends ScreenAdapter {
                 
                 // Schedule tasks to hide the popups after 2 seconds
                 timer.timerCountdown(2, showingAsteroidPopup);
+                player.getSpeed();
                 
                 // Set to false after the first collision
                 firstAsteroidCollision = false; 
@@ -343,7 +346,7 @@ public class GameScene extends ScreenAdapter {
                 showingStationPopup.set(true);
 
                 // Schedule tasks to hide the popups after 2 seconds
-                timer.timerCountdown(1, showingStationPopup);
+                timer.timerCountdown(3, showingStationPopup);
                 
                 // Set to false after the first collision
                 firstStationCollision = false; 
@@ -363,9 +366,6 @@ public class GameScene extends ScreenAdapter {
         	if (entityManager.countRemainingPlanets() == 0) {
                 // Pause game when player collides with a planet
                 gameState = GameState.PAUSED;
-                
-                // Stop BG music
-                ioManager.stopBG();
                 
                 // Pause Timer
                 timer.pauseTimer();
@@ -408,12 +408,14 @@ public class GameScene extends ScreenAdapter {
             }
         }
         
+        
         // Timer Over change to scene 2
 		if(timer.getTime() == 0 && !isSecondStageInitialized) {
 			timer.setTime(30);
 			SavePlayerScore = player.getPoints();
+			SavePlayerHealth = player.getHealth();
 	        entityManager.swapEntities();
-	        entityManager.initEntities(2, SavePlayerScore);
+	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;
 		}
@@ -450,10 +452,13 @@ public class GameScene extends ScreenAdapter {
     
     private void proceedToNextStage() {
         if (!isSecondStageInitialized) {
-			timer.setTime(30);
+			
+			// Save Player Health and Score
 			SavePlayerScore = player.getPoints();
+			SavePlayerHealth = player.getHealth();
+			
 	        entityManager.swapEntities();
-	        entityManager.initEntities(2, SavePlayerScore);
+	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;
             nextButton.setVisible(false); // Hide the button after moving to the next stage

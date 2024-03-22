@@ -38,7 +38,7 @@ public class EntityManager {
 	// Manager Attributes
 	
 	// Initialize all Entities
-	public void initEntities(int Stage, int SavedPoints) {
+	public void initEntities(int Stage, int SavedPoints, int SavedHealth) {
 		
 		// Create Array List
 		entityList = new ArrayList<>();
@@ -95,6 +95,7 @@ public class EntityManager {
     		entityList.add(player);
     		entityList.add(enemy);
     		player.setPoints(SavedPoints);
+    		player.setHealth(SavedHealth);
     		
     		// Create Planet Objects
     		collectibles = new Collectible[4];

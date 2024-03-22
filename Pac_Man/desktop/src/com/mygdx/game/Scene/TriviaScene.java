@@ -1,74 +1,52 @@
 package com.mygdx.game.Scene;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.GameMaster;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.mygdx.game.Engine.Collectible;
-import com.mygdx.game.Engine.CollisionManager;
-import com.mygdx.game.Engine.Entity;
 import com.mygdx.game.Engine.EntityManager;
-import com.mygdx.game.Engine.Enemy;
 import com.mygdx.game.Engine.IOManager;
 import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.SceneManager;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Engine.HUD;
-import com.mygdx.game.Engine.TimerClass;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TriviaScene extends ScreenAdapter {
 	private Stage stage;
     private GameMaster gameMaster;
     private SceneManager sceneManager;
-    private int finalScore;
-    
+
     private IOManager ioManager;
     private Player player;
     private EntityManager entityManager;
 
-    // Background texture
-//    private Texture backgroundTexture;
-    private Texture[] backgrounds; // Array to hold different background textures
-    private String[] answers;
-    private String[] trivia;
+    // Quiz Questions
+    private String[][] planetsList;
+    private Texture background;
+    private String answer;
+    private String answerText;
+    
+    private int finalScore; // Calculate final score
     private int currentBackgroundIndex = 0; // Index to track the current background
     
-//    private int quizscore;
-    // planetList=[]
-    //planetList.append([backhround,answer(yes or no),answer text?])h x in planetList : Askquestion(x)
-    //askQues
-    //for eactiom(list list){
-    //background = list[0], answer=list[1],text=list[2]
-    //onclicknextbtn??????????????????
-    
-    //
-    
-    
-    
+    //IDK stop 
+//    private List<String[]> response = new ArrayList<>();
+        
     // Batch texture
     private SpriteBatch batch;
     
     private BitmapFont scoreFont;
-    private String endScore;
     
     private HUD hud;
     
@@ -83,22 +61,24 @@ public class TriviaScene extends ScreenAdapter {
         hud = new HUD();
         // Class & Manager Initialization
         ioManager = new IOManager();
-        
-
-        // Load different background textures (quiz qns)
-        backgrounds = new Texture[3]; 
-        backgrounds[0] = new Texture("quiz/earthquiz.jpg");
-        backgrounds[1] = new Texture("quiz/neptunequiz.jpg");
-        backgrounds[2] = new Texture("quiz/venusquiz.jpg");
-        
-    
-       
+          
+        // Questions list and answers 
+        String[][] planetsListlocal = {
+            {"quiz/earthquiz.png", "False", "Water covers 71% of Earth’s surface."},
+            {"quiz/venusquiz.png", "False", "Venus is similar to Earth’s size"},
+            {"quiz/mecuryquiz.png", "True", " "},
+            {"quiz/uranusquiz.png", "True", " "},
+            {"quiz/jupiterquiz.png", "False", "Jupiter is the largest planet in our Solar System."},
+            {"quiz/marsquiz.png", "True", " "},
+            {"quiz/neptunequiz.png", "False", "Neptune is the farthest planet to the Sun."},
+            {"quiz/moonquiz.png", "True", " "},
+            {"quiz/saturnquiz.png", "True", " "},
+        };
+        planetsList=planetsListlocal;
        
         this.scoreFont = new BitmapFont();
         this.scoreFont.getData().setScale(3);
-        this.endScore = "Game Over!\nScore : ";
         
-        //player = entityManager.getPlayer();
         finalScore = player.getPoints();
         System.out.println(player.getPoints());
         
@@ -112,56 +92,78 @@ public class TriviaScene extends ScreenAdapter {
         // Get the default button style from the skin
         TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
 
-        // Initialize button
-        TextButton OptionButton1 = new TextButton("True", buttonStyle);
-        OptionButton1.setPosition(Gdx.graphics.getWidth() /4 - OptionButton1.getWidth() /4 ,
-                                    Gdx.graphics.getHeight() /4 - OptionButton1.getHeight() /2);
-        OptionButton1.addListener(new ClickListener() {
+
+        // Initialize button - "True" Option
+        TextButton TrueButton = new TextButton("True", buttonStyle);
+        TrueButton.setPosition(Gdx.graphics.getWidth() /4 - TrueButton.getWidth() /4 ,
+                                    Gdx.graphics.getHeight() /4 - TrueButton.getHeight() /2);
+        TrueButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	ioManager.playSECollect();
-            	//add score ??????????????? 
-            	finalScore = finalScore + 10;
-            	System.out.println("before if statement");
-            	System.out.println(currentBackgroundIndex);
-            	//load next question 
-            	//can try to randomize or something idk kill me 
-            	if (currentBackgroundIndex<2) {
-            		
+            	
+            	// checks if the answer is correct
+            	if (answer == "True") {
+            		// play correct sound
+            		ioManager.playSECollect();
+            		//add score 
+                	finalScore = finalScore + 10;
+            	} 
+            	else {
+            		// play incorrect sound
+            		ioManager.playSE();
+            		// Draw quiz answer IDK HOW 
+//                    drawAnswer(answerText);
+            	}
+			
+            	// load next question, change background 
+            	if (currentBackgroundIndex<8) {
             		currentBackgroundIndex = currentBackgroundIndex+1;
-            		System.out.println(currentBackgroundIndex);
             	}
             	else {
-            		
+            		// when quiz ends 
             		sceneManager.setEndScreen(finalScore);
             		}
-            	
             }
         });
         
         
-        // Initialize button
-        TextButton OptionButton2 = new TextButton("False", buttonStyle);
-        OptionButton2.setPosition(Gdx.graphics.getWidth() / 2 - OptionButton2.getWidth() / 2,
-                                   Gdx.graphics.getHeight() / 4 - OptionButton2.getHeight() / 2);
-        OptionButton2.addListener(new ClickListener() {
+        // Initialize button - "False" Option
+        TextButton FalseButton = new TextButton("False", buttonStyle);
+        FalseButton.setPosition(Gdx.graphics.getWidth() / 2 - FalseButton.getWidth() / 2,
+                                   Gdx.graphics.getHeight() / 4 - FalseButton.getHeight() / 2);
+        FalseButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-            	ioManager.playSE();
-            	//set qn status as wrong or some shit 
-            	//load next question 
-            	if (currentBackgroundIndex<2) {
-            		
+            	
+            	// checks if the answer is correct
+            	if (answer == "False") {
+            		// play correct sound
+            		ioManager.playSECollect();
+            		//add score 
+                	finalScore = finalScore + 10;
+            	} 
+            	else {
+            		// play incorrect sound
+            		ioManager.playSE();
+            		// Draw quiz answer IDK HOW 
+//                    drawAnswer(answerText);
+            	}
+            	
+            	// load next question 
+            	if (currentBackgroundIndex<8) {
             	currentBackgroundIndex = currentBackgroundIndex+1;
             	}
-            	else {sceneManager.setEndScreen(finalScore);}
+            	
+            	else {
+            		// when quiz ends 
+            		sceneManager.setEndScreen(finalScore);
+            	}
             }
         });
 
         // Add buttons to the stage
-        stage.addActor(OptionButton1);
-        stage.addActor(OptionButton2);
-     // stage.addActor(playAgainButton2);
+        stage.addActor(TrueButton);
+        stage.addActor(FalseButton);
         
     }
     @Override
@@ -171,13 +173,37 @@ public class TriviaScene extends ScreenAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         // Draw background texture
-        hud.drawBackground(backgrounds[currentBackgroundIndex]);
+        
+        List<String[]> responses = askQuestion(planetsList);
+        
+        // Loop through current question 
+        for (String[] response : responses) {
+        	background = new Texture(response[0]);
+        	answer = response[1];
+        	answerText = response[2];
+            System.out.println("Background: " + response[0]);
+            System.out.println("Answer: " + answer);
+            System.out.println("Answer Text: " + answerText);
+            System.out.println();
+        }
+        
+        
+        hud.drawBackground(background);
+        // timer here ??????????? stop 
+        
+//        hud.drawBackground(background[currentBackgroundIndex]);
         
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         
      // Draw player score
         drawPlayerScore();
+        
+     // Draw quiz answer IDK HOW 
+        // should show only after clicking the wrong option
+        // IS IT EVEN SUPPOSED TO BE HERE 
+        
+        drawAnswer(answerText);
         
     }
     
@@ -187,19 +213,42 @@ public class TriviaScene extends ScreenAdapter {
         batch.end();
     }
     
+    private void drawAnswer(String a) {
+    	// getting but not enough time to show the shit on the screen 
+    	// also idk if it would bc it's not inside render (probably not)
+    	// also the formatting 
+    	// no beta we die 
+    	System.out.println("inside drawans : " + a);
+        batch.begin(); 
+        scoreFont.draw(batch, a, 1200, 300);
+        batch.end();
+    }
+    
+//  // QUIZ more like brain aneurysm 
+    public List<String[]> askQuestion(String[][] planetsList) {
+        List<String[]> questionResponses = new ArrayList<>();
+        
+        // Retrieve question details 
+        if (currentBackgroundIndex < planetsList.length) {
+        	String[] question = planetsList[currentBackgroundIndex];
+            String backgroundpath = question[0];
+            String answer = question[1];
+            String answerText = question[2];
+            
+            // Store in new list to pass to main
+            String[] response = {backgroundpath, answer, answerText};
+            questionResponses.add(response);
+        }
+        return questionResponses;
+    }
+    
 
     
     @Override
     public void dispose() {
- 
         batch.dispose();
         scoreFont.dispose();
-//        backgrounds.dispose();
-        
-     // Dispose all loaded textures when application exits
-        for (Texture background : backgrounds) {
-            background.dispose();
-        }
+        background.dispose();
     }
 
 }

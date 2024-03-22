@@ -25,19 +25,19 @@ public class Collectible extends Entity {
 			 super();
 		}
 		 
-		 public Collectible(String type, float x, float y, Color color, float radius, boolean AIControlled) {
+		 public Collectible(String type, float x, float y, Color color, float radius, float speed, boolean AIControlled) {
 			 super(type, x, y, AIControlled);
 			 this.radius = radius;
 		     this.color = color;
 		}
 
 
-		public Collectible(String type, String filename, float x, float y, float height, float width, boolean AIControlled) {
-			super(type, filename, x, y, height, width, AIControlled);
-		}
+//		public Collectible(String type, String filename, float x, float y, float height, float width, boolean AIControlled) {
+//			super(type, filename, x, y, height, width, AIControlled);
+//		}
 		
 		public Collectible(String type, String filename, float x, float y, float speed, float height, float width, boolean AIControlled) {
-			super(type, filename, x, y, height, width, AIControlled);
+			super(type, filename, x, y, height, width, speed, AIControlled);
 			this.Speed = speed;
 		}
 		 

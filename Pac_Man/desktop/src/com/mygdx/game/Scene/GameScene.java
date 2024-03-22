@@ -185,13 +185,9 @@ public class GameScene extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 proceedToNextStage();
+    			timer.setTime(30);
             }
         });
-
-        // Make the button initially visible if the game starts in Stage 1
-        
-
-        
     }
 
     @Override

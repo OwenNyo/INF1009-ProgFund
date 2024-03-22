@@ -109,7 +109,7 @@ public class TriviaScene extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 if (answer.equals("True")) {
                     ioManager.playSECollect();
-                    finalScore += 10;
+                    finalScore += 100;
                 } else {
                     ioManager.playSE();
                     showAnswer = true;
@@ -129,7 +129,7 @@ public class TriviaScene extends ScreenAdapter {
             public void clicked(InputEvent event, float x, float y) {
                 if (answer.equals("False")) {
                     ioManager.playSECollect();
-                    finalScore += 10;
+                    finalScore += 100;
                 } else {
                     ioManager.playSE();
                     showAnswer = true;

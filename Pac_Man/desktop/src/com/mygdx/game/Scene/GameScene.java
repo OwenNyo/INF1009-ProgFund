@@ -352,7 +352,7 @@ public class GameScene extends ScreenAdapter {
         // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, planets)) {
         	//Player score points
-        	player.PlayerScorePoints(110);
+        	player.PlayerScorePoints(50);
         	
         	// Set screen to planet fun fact scene
             sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());

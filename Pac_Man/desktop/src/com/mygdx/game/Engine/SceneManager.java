@@ -88,7 +88,6 @@ public class SceneManager {
     public void setTriviaScreen(Player player) {
     	// Initialize EndScene
     	TriviaScene triviaScene = new TriviaScene(gameMaster, this, player);
-    	System.out.println("ehre");
     	// Set the screen using the GameMaster
     	gameMaster.setScreen(triviaScene);
     }

@@ -52,6 +52,9 @@ public class TriviaScene extends ScreenAdapter {
     private int finalScore; 
     private int currentBackgroundIndex = 0; 
     
+    // Buttons
+    private TextButton TrueButton;
+    private TextButton FalseButton;
     
     public TriviaScene(GameMaster gameMaster, SceneManager sceneManager, Player player) {
     	this.gameMaster = gameMaster;
@@ -63,6 +66,14 @@ public class TriviaScene extends ScreenAdapter {
         hud = new HUD();
         questionTimer = new Timer();
         answerTimer = new Timer();
+        
+        // Button Initialization
+        // Load atlas file to create skin for UI elements
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
+        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
+        TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
+        TrueButton = new TextButton("True", buttonStyle);
+        FalseButton = new TextButton("False", buttonStyle);
         
         // Class & Manager Initialization
         ioManager = new IOManager();
@@ -86,21 +97,13 @@ public class TriviaScene extends ScreenAdapter {
         this.scoreFont.getData().setScale(3);
         
         finalScore = player.getPoints();
-        System.out.println(player.getPoints());
+
         
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        // Load atlas file to create skin for UI elements
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
-        Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
-
-        // Get the default button style from the skin
-        TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
-
 
         // Initialize button - "True" Option
-        TextButton TrueButton = new TextButton("True", buttonStyle);
         TrueButton.setPosition(Gdx.graphics.getWidth() /4 - TrueButton.getWidth() /4 ,
                                     Gdx.graphics.getHeight() /4 - TrueButton.getHeight() /2);
         // Inside True button click listener
@@ -115,12 +118,15 @@ public class TriviaScene extends ScreenAdapter {
                     showAnswer = true;
                 }
                 startQuestionTimer();
+                
+             // Hide buttons after answering
+                TrueButton.setVisible(false);
+                FalseButton.setVisible(false);
             }
         });
         
         
         // Initialize button - "False" Option
-        TextButton FalseButton = new TextButton("False", buttonStyle);
         FalseButton.setPosition(Gdx.graphics.getWidth() / 2 - FalseButton.getWidth() / 2,
                                    Gdx.graphics.getHeight() / 4 - FalseButton.getHeight() / 2);
         // Inside False button click listener
@@ -135,6 +141,10 @@ public class TriviaScene extends ScreenAdapter {
                     showAnswer = true;
                 }
                 startQuestionTimer();
+                
+                // Hide buttons after answering
+                TrueButton.setVisible(false);
+                FalseButton.setVisible(false);
             }
         });
 
@@ -159,6 +169,9 @@ public class TriviaScene extends ScreenAdapter {
             public void run() {
                 // Switch to the next question
                 nextQuestion();
+             // Hide buttons after answering
+                TrueButton.setVisible(true);
+                FalseButton.setVisible(true);
             }
         }, 2); // Delay for 5 seconds
     }
@@ -208,11 +221,6 @@ public class TriviaScene extends ScreenAdapter {
     }
     
     private void drawAnswer(String a) {
-    	// getting but not enough time to show the shit on the screen 
-    	// also idk if it would bc it's not inside render (probably not)
-    	// also the formatting 
-    	// no beta we die 
-    	System.out.println("inside drawans : " + a);
         batch.begin(); 
         scoreFont.draw(batch, a, 1200, 300);
         batch.end();

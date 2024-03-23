@@ -4,13 +4,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Engine.IOManager;
 
 public class CollisionManager {
-	
-	private IOManager ioManager = new IOManager();
-	
-	// Reference to last collided planet's name
-	private String lastCollidedPlanetName = "";
+    
+    // Manager Initialization
+    private IOManager ioManager = new IOManager();
+    
+    // Fields
+    private String lastCollidedPlanetName = "";
 
-	// Logic to check for collision with Ghost
+    // Logic to check for collision with Ghost
     public static boolean collidedWithEnemy(Player player, Enemy enemy) {
         Rectangle playerBounds = player.getBoundingRectangle();
         Rectangle ghostBounds = enemy.getBoundingRectangle();
@@ -18,14 +19,14 @@ public class CollisionManager {
         return playerBounds.overlaps(ghostBounds);
     }
     
-    // Logic to handle what happens if there is a collision with Ghost
+    // Logic to handle collision with Ghost
     public void checkEnemyCollision(Player player, Enemy enemy) {
         if (collidedWithEnemy(player, enemy)) {
             System.out.println("Ghost Collision detected");
             player.PlayerDamageTaken(enemy.getDamage());
             enemy.GenerateSpawnPoint(player.getX(), player.getY());
             
-            // Play Sound
+            // Play sound effect
             ioManager.playSE();
         }
     }
@@ -37,36 +38,49 @@ public class CollisionManager {
         return playerBounds.overlaps(collectibleBounds);
     }
 
-    // Logic to handle what happens if there is a collision with Planet / Station / Asteroid
-    public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {    	
+    // Logic to handle collision with Planet / Station / Asteroid
+    public boolean checkCollectibleCollision(Player player, Collectible collectibles[]) {        
         for (Collectible c : collectibles) {
             if (collidedWithCollectible(player, c)) {
-            	
-            	// If asteroid, return asteroid, else, return planet
-            	if(c.getType().equals("asteroid")){
-            		c.GenerateSpawnPoint(player.getX(), player.getY());
-            		System.out.println("Asteroid Collision detected");
-            		player.PlayerSpeedReduced();
-    				return true;
-            	}
-            	else if(c.getType().equals("spaceStation")) {
+                
+                // Handle collision based on collectible type
+                if (c.getType().equals("asteroid")) {
+                	
+                	// Generate new spawn point for object
                     c.GenerateSpawnPoint(player.getX(), player.getY());
-                    System.out.println("Space Station Collision detected");
-                    player.PlayerHealthHealed(10);
-                    //play collect sound effect
-                    ioManager.playSECollect(); 
+                    
+                    // Player Buff / Debuff
+                    player.PlayerSpeedReduced();
+                    
                     return true;
-            	}
-            	else {
+                    
+                } 
+                else if (c.getType().equals("spaceStation")) {
+                	
+                	// Generate new spawn point for object
                     c.GenerateSpawnPoint(player.getX(), player.getY());
-                    System.out.println("Planet Collision detected");
-                    //play collect sound effect
+                    
+                    // Player Buff / Debuff
+                    player.PlayerHealthHealed(10);
+                    
+                    // Play collect sound effect
                     ioManager.playSECollect(); 
+                    
+                    return true;
+                } 
+                else {
+                	
+                	// Generate new spawn point for object
+                    c.GenerateSpawnPoint(player.getX(), player.getY());
+                    
+                    // Play collect sound effect
+                    ioManager.playSECollect(); 
+                    
                     // Store collided planet's name
                     lastCollidedPlanetName = c.getType(); 
+                    
                     return true;
-            	}
-      
+                }
             }
         }
         return false;
@@ -74,9 +88,6 @@ public class CollisionManager {
     
     // Getter for last collided planet's name
     public String getLastCollidedPlanetName() {
-    	return lastCollidedPlanetName;
+        return lastCollidedPlanetName;
     }
-    
-
 }
-

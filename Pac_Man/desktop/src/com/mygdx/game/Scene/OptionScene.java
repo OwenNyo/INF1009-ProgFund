@@ -26,17 +26,20 @@ import com.mygdx.game.GameMaster;
 
 public class OptionScene extends ScreenAdapter {
 
+	// Managers
     private final GameMaster gameMaster;
     private final SceneManager sceneManager;
     private final IOManager ioManager;
-
+    
+    // Classes
     private final SpriteBatch batch;
     private final Stage stage;
     private final Texture optionTexture;
     private HUD hud;
 
+    // Constructors
     public OptionScene(GameMaster gameMaster, SceneManager sceneManager, IOManager ioManager) {
-        // Initialize game objects
+    	// Initialize game objects
         this.gameMaster = gameMaster;
         this.sceneManager = sceneManager;
         this.ioManager = ioManager;
@@ -46,7 +49,7 @@ public class OptionScene extends ScreenAdapter {
         stage = new Stage(new ScreenViewport());
         hud = new HUD();
         Gdx.input.setInputProcessor(stage);
-
+        
         // Load menu background texture and UI skin
         optionTexture = new Texture("Icy_background.jpg");
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
@@ -55,30 +58,22 @@ public class OptionScene extends ScreenAdapter {
         // Get button and label styles from the skin
         TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
         Label.LabelStyle labelStyle = skin.get("dark", Label.LabelStyle.class);
-
-        // Create back button
-        TextButton backButton = createButton("BACK", buttonStyle, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 4);
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                sceneManager.setMenuScreen();
-            }
-        });
-        stage.addActor(backButton);
         
-        // Calculate Y position starting from top with an initial offset of 50
-        float currentY = Gdx.graphics.getHeight() - 50;
-
-        // Create background music volume label and slider
+        // Create labels
         Label bgLabel = new Label("Background Music Volume", labelStyle);
-        bgLabel.setPosition(Gdx.graphics.getWidth() / 2 - bgLabel.getWidth() / 2, currentY - bgLabel.getHeight());
-        stage.addActor(bgLabel);
-    
+        bgLabel.setPosition(Gdx.graphics.getWidth() / 2 - bgLabel.getWidth() / 2, Gdx.graphics.getHeight() * 3 / 4);
+        
+        Label seLabel = new Label("Sound Effects Volume", labelStyle);
+        seLabel.setPosition(Gdx.graphics.getWidth() / 2 - seLabel.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        
+        Label difficultyLabel = new Label("Game Difficulty", labelStyle);
+        difficultyLabel.setPosition(Gdx.graphics.getWidth() / 2 - difficultyLabel.getWidth() / 2, Gdx.graphics.getHeight() / 4);
+        
+        // Create sliders
         Slider bgVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
-        currentY -= (bgLabel.getHeight() + 50 + bgVolumeSlider.getHeight());
         bgVolumeSlider.setValue(ioManager.getBGVolume());
-        bgVolumeSlider.setSize(400, 50);
-        bgVolumeSlider.setPosition(Gdx.graphics.getWidth() / 2 - bgVolumeSlider.getWidth() / 2, currentY);
+        bgVolumeSlider.setSize(600, 50);
+        bgVolumeSlider.setPosition(Gdx.graphics.getWidth() / 2 - bgVolumeSlider.getWidth() / 2, Gdx.graphics.getHeight() * 2 / 3);
         bgVolumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -87,19 +82,11 @@ public class OptionScene extends ScreenAdapter {
                 ioManager.setBGVolume(volume);
             }
         });
-        stage.addActor(bgVolumeSlider);
-
-        // Create sound effects volume label and slider
-        Label seLabel = new Label("Sound Effects Volume", labelStyle);
-        currentY -= (bgVolumeSlider.getHeight() + seLabel.getHeight());
-        seLabel.setPosition(Gdx.graphics.getWidth() / 2 - seLabel.getWidth() / 2, currentY - seLabel.getHeight());
-        stage.addActor(seLabel);
-        
+       
         Slider seVolumeSlider = new Slider(0, 1, 0.1f, false, skin);
-        currentY -= (seLabel.getHeight() + 50 + seVolumeSlider.getHeight());
         seVolumeSlider.setValue(ioManager.getSEVolume());
-        seVolumeSlider.setSize(400, 50);
-        seVolumeSlider.setPosition(Gdx.graphics.getWidth() / 2 - seVolumeSlider.getWidth() / 2, currentY);
+        seVolumeSlider.setSize(600, 50);
+        seVolumeSlider.setPosition(Gdx.graphics.getWidth() / 2 - seVolumeSlider.getWidth() / 2, Gdx.graphics.getHeight() * 5 / 12);
         seVolumeSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -107,17 +94,13 @@ public class OptionScene extends ScreenAdapter {
                 float volume = slider.getValue();
                 ioManager.setSEVolume(volume);
             }
-        });
-        stage.addActor(seVolumeSlider);
+        });       
 
-        // Create mute checkbox
+        // Create checkbox
         CheckBox.CheckBoxStyle checkBoxStyle = skin.get("default", CheckBox.CheckBoxStyle.class);
         CheckBox muteCheckbox = new CheckBox("", checkBoxStyle);
-        currentY -= (seVolumeSlider.getHeight() + 50 + muteCheckbox.getHeight());
-        // Adjust position to shift more towards the left
-        muteCheckbox.setPosition(backButton.getX() - muteCheckbox.getWidth() - 40, currentY);
-        // Make the checkbox bigger
-        muteCheckbox.setSize(150, 150);
+        float muteCheckboxX = Gdx.graphics.getWidth() / 2 - muteCheckbox.getWidth() / 2;
+        muteCheckbox.setPosition(muteCheckboxX - 30, Gdx.graphics.getHeight() / 3);
         muteCheckbox.setChecked(ioManager.getMuteState());
         muteCheckbox.addListener(new ChangeListener() {
             @Override
@@ -133,28 +116,14 @@ public class OptionScene extends ScreenAdapter {
                 bgVolumeSlider.setValue(ioManager.getBGVolume());
                 seVolumeSlider.setValue(ioManager.getSEVolume());
             }
-        });
-        stage.addActor(muteCheckbox);
-
-        // Add a label next to the checkbox
-        Label muteLabel = new Label("Mute", labelStyle);
-        muteLabel.setPosition(muteCheckbox.getX() + muteCheckbox.getWidth() + 10, muteCheckbox.getY() + (muteCheckbox.getHeight() - muteLabel.getHeight()) / 2);
-        stage.addActor(muteLabel);
+        }); 
         
-        // Create label for game difficulty selection
-        Label difficultyLabel = new Label("Game Difficulty", labelStyle);
-        currentY -= (muteLabel.getHeight());
-        difficultyLabel.setPosition(Gdx.graphics.getWidth() / 2 - difficultyLabel.getWidth() / 2, currentY + difficultyLabel.getHeight());
-        stage.addActor(difficultyLabel);
-        
-        // Create difficulty selection dropdown box
+        // Create dropdown box
         SelectBox<String> difficultySelectBox = new SelectBox<>(skin);
         difficultySelectBox.setItems("Easy", "Medium", "Hard");
-        System.out.println("Difficulty is: " +GameSettings.getInstance().getDifficulty());
-        difficultySelectBox.setSelected(GameSettings.getInstance().getDifficulty()); 
+        difficultySelectBox.setSelected(GameSettings.getInstance().getDifficulty());
         difficultySelectBox.setSize(200, 50);
-        currentY -= (difficultyLabel.getHeight() + difficultySelectBox.getHeight());
-        difficultySelectBox.setPosition(Gdx.graphics.getWidth() / 2 - difficultySelectBox.getWidth() / 2, currentY + difficultySelectBox.getHeight() - 15);
+        difficultySelectBox.setPosition(Gdx.graphics.getWidth() / 2 - difficultySelectBox.getWidth() / 2, Gdx.graphics.getHeight() / 5);
         difficultySelectBox.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -163,9 +132,40 @@ public class OptionScene extends ScreenAdapter {
                 GameSettings.getInstance().setDifficulty(selectedDifficulty);
             }
         });
-        stage.addActor(difficultySelectBox);
+        
+        // Create button
+        TextButton backButton = createButton("BACK", buttonStyle, Gdx.graphics.getWidth() / 2, 50);
+        backButton.setPosition(Gdx.graphics.getWidth() / 2 - backButton.getWidth() / 2, 50);
+        backButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                sceneManager.setMenuScreen();
+            }
+        });
+        
+        
+        
+        // Create mute label based on checkbox location
+        Label muteLabel = new Label("Mute", labelStyle);
+        float muteLabelX = Gdx.graphics.getWidth() / 2 + muteCheckbox.getWidth() / 2 + 10;
+        muteLabel.setPosition(muteLabelX - 20, Gdx.graphics.getHeight() / 3); // Adjusted position
+        
+        
+        // Label Actors
+        stage.addActor(bgLabel);
+        stage.addActor(seLabel);
+        stage.addActor(difficultyLabel);
+        stage.addActor(muteLabel);
+        
+        // UI Interactive Element Actors
+        stage.addActor(bgVolumeSlider);
+        stage.addActor(seVolumeSlider);
+        stage.addActor(muteCheckbox);
+        stage.addActor(difficultySelectBox);     
+        stage.addActor(backButton);
     }
 
+    // Private function to ease the creation of buttons
     private TextButton createButton(String text, TextButton.TextButtonStyle style, float x, float y) {
         TextButton button = new TextButton(text, style);
         button.setPosition(x - button.getWidth() / 2, y - button.getHeight() / 2);

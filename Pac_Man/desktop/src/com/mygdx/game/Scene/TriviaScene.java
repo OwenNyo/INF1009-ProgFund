@@ -78,17 +78,17 @@ public class TriviaScene extends ScreenAdapter {
         // Class & Manager Initialization
         ioManager = new IOManager();
           
-        // Questions list and answers 
+     // List of Quiz Questions - background (question), answer, answer text 
         String[][] planetsListlocal = {
             {"quiz/earthquiz.png", "False", "Water covers 71% of Earth surface."},
-            {"quiz/venusquiz.png", "False", "Venus is similar to Earth size"},
-            {"quiz/mecuryquiz.png", "True", " "},
-            {"quiz/uranusquiz.png", "True", " "},
+            {"quiz/venusquiz.png", "False", "Venus is similar to Earth size."},
+            {"quiz/mecuryquiz.png", "True", "Mecury is the smallest planet in our Solar System."},
+            {"quiz/uranusquiz.png", "True", "Uranus has a cold and icy atmosphere."},
             {"quiz/jupiterquiz.png", "False", "Jupiter is the largest planet in our Solar System."},
-            {"quiz/marsquiz.png", "True", " "},
+            {"quiz/marsquiz.png", "True", "Mar's reddish appearance is caused by iron oxide (rust)."},
             {"quiz/neptunequiz.png", "False", "Neptune is the farthest planet to the Sun."},
-            {"quiz/moonquiz.png", "True", " "},
-            {"quiz/saturnquiz.png", "True", " "},
+            {"quiz/moonquiz.png", "True", "Space rocks form craters when it crashes into Moon's surface."},
+            {"quiz/saturnquiz.png", "True", "Saturn's ring is made of ice and rock."},
         };
         
         planetsList = planetsListlocal;
@@ -96,6 +96,7 @@ public class TriviaScene extends ScreenAdapter {
         this.scoreFont = new BitmapFont();
         this.scoreFont.getData().setScale(3);
         
+        // Get score from player class 
         finalScore = player.getPoints();
 
         
@@ -111,12 +112,15 @@ public class TriviaScene extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (answer.equals("True")) {
+                	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
                     finalScore += 100;
                 } else {
+                	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
                     showAnswer = true;
                 }
+             // Timer for each question 
                 startQuestionTimer();
                 
              // Hide buttons after answering
@@ -134,12 +138,15 @@ public class TriviaScene extends ScreenAdapter {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if (answer.equals("False")) {
+                	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
                     finalScore += 100;
                 } else {
+                	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
                     showAnswer = true;
                 }
+             // Timer for each question 
                 startQuestionTimer();
                 
                 // Hide buttons after answering
@@ -163,7 +170,7 @@ public class TriviaScene extends ScreenAdapter {
             questionTimer.clear();
         }
 
-        // Schedule the task for the next question after 5 seconds
+        // Schedule the task for the next question after 2 seconds
         questionTimer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
@@ -173,7 +180,7 @@ public class TriviaScene extends ScreenAdapter {
                 TrueButton.setVisible(true);
                 FalseButton.setVisible(true);
             }
-        }, 2); // Delay for 5 seconds
+        }, 2); // Delay for 2 seconds
     }
 
     
@@ -200,7 +207,6 @@ public class TriviaScene extends ScreenAdapter {
         // Draw the answer if it needs to be shown
         if (showAnswer) {
             drawAnswer(answerText);
-        	
         	answerTimer.scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
@@ -214,31 +220,38 @@ public class TriviaScene extends ScreenAdapter {
         
     }
     
+    // Player score display
     private void drawPlayerScore() {
         batch.begin();
         scoreFont.draw(batch, String.valueOf(finalScore), 600, 1000);
         batch.end();
     }
     
+    // Answer display 
     private void drawAnswer(String a) {
         batch.begin(); 
-        scoreFont.draw(batch, a, 1200, 300);
+        // change coordinates to show full text wxh
+        scoreFont.draw(batch, a, 500, 300);
         batch.end();
     }
     
-    // Method to load next question
+    // Load next question
     private void nextQuestion() {
+    	// Each time nextQuestion called 
         if (currentBackgroundIndex < 8) {
             currentBackgroundIndex++;
             List<String[]> responses = askQuestion(planetsList);
+            
+            // Set question details
             for (String[] response : responses) {
                 background = new Texture(response[0]);
                 answer = response[1];
                 answerText = response[2];
-                System.out.println("Background: " + response[0]);
-                System.out.println("Answer: " + answer);
-                System.out.println("Answer Text: " + answerText);
-                System.out.println();
+                //Testing 
+//                System.out.println("Background: " + response[0]);
+//                System.out.println("Answer: " + answer);
+//                System.out.println("Answer Text: " + answerText);
+//                System.out.println();
             }
             hud.drawBackground(background);
         } else {
@@ -246,13 +259,15 @@ public class TriviaScene extends ScreenAdapter {
         }
     }
     
-    
+    // is this still needed lol since on top ya 
     public List<String[]> askQuestion(String[][] planetsList) {
         List<String[]> questionResponses = new ArrayList<>();
         
-        // Retrieve question details 
+        // Retrieve list of question details 
         if (currentBackgroundIndex < planetsList.length) {
+        	// Set planetsList[currentBackgroundIndex] as a new "question" list 
         	String[] question = planetsList[currentBackgroundIndex];
+        	// Set question variables 
             String backgroundpath = question[0];
             String answer = question[1];
             String answerText = question[2];

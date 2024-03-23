@@ -77,8 +77,10 @@ public class TriviaScene extends ScreenAdapter {
         
         // Class & Manager Initialization
         ioManager = new IOManager();
-          
-     // List of Quiz Questions - background (question), answer, answer text 
+         
+
+        // List of Quiz Questions - background (question), answer, answer text 
+
         String[][] planetsListlocal = {
             {"quiz/earthquiz.png", "False", "Water covers 71% of Earth surface."},
             {"quiz/venusquiz.png", "False", "Venus is similar to Earth size."},
@@ -93,6 +95,7 @@ public class TriviaScene extends ScreenAdapter {
         
         planetsList = planetsListlocal;
        
+        
         this.scoreFont = new BitmapFont();
         this.scoreFont.getData().setScale(3);
         
@@ -114,7 +117,7 @@ public class TriviaScene extends ScreenAdapter {
                 if (answer.equals("True")) {
                 	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
-                    finalScore += 100;
+                    finalScore += 50;
                 } else {
                 	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
@@ -140,13 +143,13 @@ public class TriviaScene extends ScreenAdapter {
                 if (answer.equals("False")) {
                 	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
-                    finalScore += 100;
+                    finalScore += 50;
                 } else {
                 	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
                     showAnswer = true;
                 }
-             // Timer for each question 
+                // Timer for each question 
                 startQuestionTimer();
                 
                 // Hide buttons after answering
@@ -160,6 +163,7 @@ public class TriviaScene extends ScreenAdapter {
         stage.addActor(FalseButton);
         
     }
+    
     
     private void startQuestionTimer() {
     	// Initialize the timer if it's null
@@ -190,8 +194,10 @@ public class TriviaScene extends ScreenAdapter {
     	Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        
         List<String[]> responses = askQuestion(planetsList);
 
+        
         for (String[] response : responses) {
             background = new Texture(response[0]);
             answer = response[1];
@@ -206,6 +212,14 @@ public class TriviaScene extends ScreenAdapter {
 
         // Draw the answer if it needs to be shown
         if (showAnswer) {
+        	String iscorrect; 
+        	if (answer.equals(true)) {
+        		iscorrect= "Correct! ";
+        	}
+        	else {
+        		iscorrect= "Wrong! ";
+        	}
+        	answerText = iscorrect + answerText;
             drawAnswer(answerText);
         	answerTimer.scheduleTask(new Timer.Task() {
                 @Override
@@ -215,9 +229,7 @@ public class TriviaScene extends ScreenAdapter {
                 }
             }, 2);
         }
-        
-        
-        
+
     }
     
     // Player score display
@@ -252,6 +264,7 @@ public class TriviaScene extends ScreenAdapter {
 //                System.out.println("Answer: " + answer);
 //                System.out.println("Answer Text: " + answerText);
 //                System.out.println();
+
             }
             hud.drawBackground(background);
         } else {
@@ -259,7 +272,7 @@ public class TriviaScene extends ScreenAdapter {
         }
     }
     
-    // is this still needed lol since on top ya 
+    
     public List<String[]> askQuestion(String[][] planetsList) {
         List<String[]> questionResponses = new ArrayList<>();
         

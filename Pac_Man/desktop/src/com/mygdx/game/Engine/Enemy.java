@@ -37,7 +37,7 @@ public class Enemy extends Entity {
     // Class Methods
     
     // Generate spawn point for enemy
-    public void GenerateSpawnPoint(float playerX, float playerY) {
+    public void generateSpawnPoint(float playerX, float playerY) {
         Random rand = new Random();
         System.out.println("Generating the enemy spawn point to avoid spawning on top of the player");
 

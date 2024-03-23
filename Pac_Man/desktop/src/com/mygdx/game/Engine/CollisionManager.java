@@ -23,8 +23,8 @@ public class CollisionManager {
     public void checkEnemyCollision(Player player, Enemy enemy) {
         if (collidedWithEnemy(player, enemy)) {
             System.out.println("Ghost Collision detected");
-            player.PlayerDamageTaken(enemy.getDamage());
-            enemy.GenerateSpawnPoint(player.getX(), player.getY());
+            player.playerDamageTaken(enemy.getDamage());
+            enemy.generateSpawnPoint(player.getX(), player.getY());
             
             // Play sound effect
             ioManager.playSE();
@@ -47,10 +47,10 @@ public class CollisionManager {
                 if (c.getType().equals("asteroid")) {
                 	
                 	// Generate new spawn point for object
-                    c.GenerateSpawnPoint(player.getX(), player.getY());
+                    c.generateSpawnPoint(player.getX(), player.getY());
                     
                     // Player Buff / Debuff
-                    player.PlayerSpeedReduced();
+                    player.playerSpeedReduced();
                     
                     return true;
                     
@@ -58,10 +58,10 @@ public class CollisionManager {
                 else if (c.getType().equals("spaceStation")) {
                 	
                 	// Generate new spawn point for object
-                    c.GenerateSpawnPoint(player.getX(), player.getY());
+                    c.generateSpawnPoint(player.getX(), player.getY());
                     
                     // Player Buff / Debuff
-                    player.PlayerHealthHealed(10);
+                    player.playerHealthHealed(10);
                     
                     // Play collect sound effect
                     ioManager.playSECollect(); 
@@ -71,7 +71,7 @@ public class CollisionManager {
                 else {
                 	
                 	// Generate new spawn point for object
-                    c.GenerateSpawnPoint(player.getX(), player.getY());
+                    c.generateSpawnPoint(player.getX(), player.getY());
                     
                     // Play collect sound effect
                     ioManager.playSECollect(); 

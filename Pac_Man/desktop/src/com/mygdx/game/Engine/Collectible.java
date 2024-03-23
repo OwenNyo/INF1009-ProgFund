@@ -35,7 +35,7 @@ public class Collectible extends Entity {
 		}
 			 
 		// Methods
-		public void GenerateSpawnPoint(float playerX, float playerY) {
+		public void generateSpawnPoint(float playerX, float playerY) {
 			Random rand = new Random();
 	
 			// Generate min and max positions to prevent spawning near player

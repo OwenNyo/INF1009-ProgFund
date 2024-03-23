@@ -44,7 +44,7 @@ public class EntityManager {
 	    	player = new Player("player", "spaceDog.png", PLAYER_SPAWN_X, PLAYER_SPAWN_Y,
 	    			PLAYER_SPEED, PLAYER_HEALTH, PLAYER_POINTS, 100, 100, false, true);
 			enemy = new Enemy("enemy", "blackhole.png", 0, 0, ENEMY_SPEED, ENEMY_DAMAGE, 80, 80, true);
-			enemy.GenerateSpawnPoint(player.getX(), player.getY());
+			enemy.generateSpawnPoint(player.getX(), player.getY());
 			
 			String[] planetsName = {"Earth", "Uranus", "Moon", "Mercury",
 					"Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
@@ -62,7 +62,7 @@ public class EntityManager {
 	    		for (int i = 0; i < collectibles.length; i++) {
 	                collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0, 0,
 	                		planetSize[i], planetSize[i], false);
-	                collectibles[i].GenerateSpawnPoint(player.getX(), player.getY());
+	                collectibles[i].generateSpawnPoint(player.getX(), player.getY());
 	                entityList.add(collectibles[i]);
 	            }	
 	    		
@@ -71,7 +71,7 @@ public class EntityManager {
 	    		for (int i = 0; i < asteroids.length; i++) {
 	                asteroids[i] = new Collectible("asteroid", "asteroid.png", 0, 0, 1,
 	    		    		80, 80, false);
-	                asteroids[i].GenerateSpawnPoint(player.getX(), player.getY());
+	                asteroids[i].generateSpawnPoint(player.getX(), player.getY());
 	    		    entityList.add(asteroids[i]);
 	    		 }	
 	    	}		

@@ -9,42 +9,35 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TimerClass {
 	
+	// Class Attributes
 	private SpriteBatch batch;
-	private int time = 30; // Initial time
+	private BitmapFont TimeFont;
+	private Task timerTask; 
+	private boolean isPaused = true; 
+	private int time = 30; 
 	private String TimerText = "";
-	BitmapFont TimeFont;
-	private Task timerTask; // Reference to the scheduled task
-	private boolean isPaused = true; // Is timer currently paused
 	
 	public TimerClass() {
 		
 	    // Initialize score and scoreSystem
 	    TimerText = "Time Remaining : " + time;
 	    
-	 // Initialize timer text
+	    // Initialize timer text
         updateTimerText();
-        
-//        // Schedule a task to decrease time every second
-//        Timer.schedule(new Task() {
-//            @Override
-//            public void run() {
-//                if (time > 0) {
-//                    time--; // Decrease time by 1 second
-//                    updateTimerText(); // Update timer text
-//                }
-//            }
-//        }, 1, 1); // Initial delay of 1 second, repeat every 1 second
+      
+        // Schedule the timer task
         scheduleTimerTask();
 	}
 	
+	// Update timer text
 	private void updateTimerText() {
 		TimerText = "Time Remaining: " + time;
     }
 	
+	// Draw timer text on screen
 	public void draw() {
 		int screenHeight = Gdx.graphics.getHeight();
 	    batch = new SpriteBatch();
-		// Initialize batch and ScoreFont
 	    batch.begin();
 	    TimeFont = new BitmapFont();
 	    TimeFont.getData().setScale(2);
@@ -53,18 +46,22 @@ public class TimerClass {
 	    batch.end();
 	}
 	
+	// Getter and Setter
+	
+	// Get current time
 	public int getTime() {
         return time;
     }
 	
+	// Set current time
 	public void setTime(int time) {
 		this.time = time;
 	}
 	
-	public class MutableBoolean {
-	    public boolean value;
-	}
-
+    
+    // Class Methods //
+    
+    // For Popup Variables
 	public void timerCountdown(int seconds, AtomicBoolean variable) {
         Timer.schedule(new Timer.Task() {
             @Override
@@ -73,34 +70,38 @@ public class TimerClass {
             }
         }, seconds);
     }
-	
-    public void pauseTimer() {
-    	if (!isPaused) {
-	        if (timerTask != null) {
-	        	isPaused = true;
-	            timerTask.cancel(); // Cancel the current task to pause the timer
-	        }
-    	}
-    }
     
-    public void resumeTimer() {
-    	if (isPaused) {
-    		scheduleTimerTask(); // Schedule the timer task to resume counting down
-    	}
-    }
-    
+	// Method to schedule the timer task
     private void scheduleTimerTask() {
     	isPaused = false;
         timerTask = new Task() {
             @Override
             public void run() {
                 if (time > 0) {
-                    time--; // Decrease time by 1 second
-                    updateTimerText(); // Update timer text
+                    time--; 
+                    updateTimerText(); 
                 }
             }
         };
-        Timer.schedule(timerTask, 1, 1); // Initial delay of 1 second, repeat every 1 second
+        // Initial delay of 1 second, repeat every 1 second
+        Timer.schedule(timerTask, 1, 1); 
+    }
+    
+    // Method to pause timer
+    public void pauseTimer() {
+    	if (!isPaused) {
+	        if (timerTask != null) {
+	        	isPaused = true;
+	            timerTask.cancel();
+	        }
+    	}
+    }
+    
+    // Method to resume timer
+    public void resumeTimer() {
+    	if (isPaused) {
+    		scheduleTimerTask();
+    	}
     }
     
 }

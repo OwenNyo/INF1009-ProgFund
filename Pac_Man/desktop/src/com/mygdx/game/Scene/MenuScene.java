@@ -50,6 +50,7 @@ public class MenuScene extends ScreenAdapter {
         // Get the default button style from the skin
         TextButton.TextButtonStyle buttonStyle = skin.get("default", TextButton.TextButtonStyle.class);
 
+        // Button creation
         // Create and configure PLAY button
         TextButton playButton = createButton("PLAY", buttonStyle, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() * 3 / 4);
         playButton.addListener(new ClickListener() {
@@ -58,8 +59,7 @@ public class MenuScene extends ScreenAdapter {
                 // Switch to the game screen when PLAY button is clicked
                 sceneManager.setGameScreen();
             }
-        });
-        stage.addActor(playButton);
+        });     
 
         // Create and configure OPTIONS button
         TextButton optionsButton = createButton("OPTIONS", buttonStyle, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
@@ -69,8 +69,7 @@ public class MenuScene extends ScreenAdapter {
                 // Add code to handle options button click
             	sceneManager.setOptionScreen();
             }
-        });
-        stage.addActor(optionsButton);
+        });        
 
         // Create and configure EXIT button
         TextButton exitButton = createButton("EXIT", buttonStyle, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 4);
@@ -81,6 +80,12 @@ public class MenuScene extends ScreenAdapter {
                 Gdx.app.exit();
             }
         });
+        
+        
+        
+        // Add Stage Actors
+        stage.addActor(playButton);
+        stage.addActor(optionsButton);
         stage.addActor(exitButton);
     }
 
@@ -93,6 +98,7 @@ public class MenuScene extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+    	
         // Clear the screen
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -107,6 +113,7 @@ public class MenuScene extends ScreenAdapter {
 
     @Override
     public void dispose() {
+    	
         // Dispose of resources when the screen is disposed
         batch.dispose();
         menuTexture.dispose();

@@ -175,10 +175,7 @@ public class GameScene extends ScreenAdapter {
         
         // Initialize Next Stage Button
         nextButton = new TextButton("NEXT STAGE", skin);
-        // Calculate the Y position to vertically center the button on the screen
         float posY = (Gdx.graphics.getHeight() / 2) - (nextButton.getHeight() / 2);
-
-        // Set the position of the button.
         nextButton.setPosition(1740, posY);
         nextButton.setSize(180, 100); // Adjust size as needed
         nextButton.addListener(new ClickListener() {
@@ -192,6 +189,7 @@ public class GameScene extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+    	
         // Clear screen with dark blue background
         ScreenUtils.clear(0 , 0, 0.2f, 1); 
 
@@ -218,25 +216,51 @@ public class GameScene extends ScreenAdapter {
             break;
         }
         
+        // Update Camera Periodically
         camera.update();
         
-        // Draw Pop Up Messages
+        // Draw Pop-up Message
+        drawPopup();
+       
+        // Draw Overlay stage
+        overlayStage.act(delta);
+        overlayStage.draw();
+        
+    }
+    
+    @Override
+    public void dispose() {
+        // Properly dispose of textures
+        backgroundTexture.dispose();
+        entityManager.disposeEntities();
+        ioManager.dispose();
+        hud.dispose();
+        overlayStage.dispose();
+        AsteroidLabel.clear();
+        BlackholeLabel.clear();
+        StageLabel.clear();
+    }
+    
+    // Class Methods //
+    
+    // Method to draw pop-up messages
+    private void drawPopup() {
         if (showingBlackholePopup.get()) {
             overlayStage.addActor(BHTable);
         } else {
-            BHTable.remove(); // Remove the table if the popup is not showing
+            BHTable.remove(); 
         }
         
         if (showingAsteroidPopup.get()) {
             overlayStage.addActor(AsteroidTable);
         } else {
-            AsteroidTable.remove(); // Remove the table if the popup is not showing
+            AsteroidTable.remove(); 
         }
         
         if (showingAstronautPopup.get()) {
             overlayStage.addActor(ATable);
         } else {
-        	ATable.remove(); // Remove the table if the popup is not showing
+        	ATable.remove(); 
         }
         
         if (showingStagePopup.get()) {
@@ -250,11 +274,57 @@ public class GameScene extends ScreenAdapter {
         } else {
         	StationTable.remove();
         }
-        
-        overlayStage.act(delta);
-        overlayStage.draw();
-        
     }
+    
+    // Method to change player avatar based on score
+    private void playerTextureChange() {
+    	// Player Texture change 
+        if (player.getPoints() > 200 && player.getPoints() < 400) {
+            AstronautLabel.setText("You've become a \n Rookie Astronaut!!!");
+            if (!achievementUnlock) {
+                player.setTex(astronautVeteran);
+                showingAstronautPopup.set(true);
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = true; // Indicate that an achievement has been unlocked
+            }
+        } else if (player.getPoints() >= 400 && player.getPoints() < 700) {
+            if (!achievementUnlock) {
+                AstronautLabel.setText("You've become a \n Astronaut Commander!!!");
+                player.setTex(astronautCommander);
+                showingAstronautPopup.set(true);
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = true;
+            }
+        } else if (player.getPoints() >= 700) {
+            if (!achievementUnlock) {
+                AstronautLabel.setText("You've become a \n Master Astronomer!!!");
+                player.setTex(astronautMaster);
+                showingAstronautPopup.set(true);
+                timer.timerCountdown(4, showingAstronautPopup);
+                achievementUnlock = true;
+            }
+        }
+    }
+    
+    // Method for button creation to next stage
+    private void proceedToNextStage() {
+        if (!isSecondStageInitialized) {
+			
+			// Save Player Health and Score
+			SavePlayerScore = player.getPoints();
+			SavePlayerHealth = player.getHealth();
+			
+			// Dispose entities and swap to stage 2
+	        entityManager.disposeEntities();
+	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
+	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
+	        isSecondStageInitialized = true;
+            nextButton.setVisible(false); 
+        }
+    }
+    
+    
+    // Game States //
     
     // Render game elements when game state is RUNNING
     private void renderRunningState() {
@@ -283,35 +353,12 @@ public class GameScene extends ScreenAdapter {
         // Set input processor
         Gdx.input.setInputProcessor(overlayStage);
         
-        if (player.getPoints() > 200 && player.getPoints() < 400) {
-            AstronautLabel.setText("You've become a \n Rookie Astronaut!!!");
-            if (!achievementUnlock) {
-                player.setTex(astronautVeteran);
-                showingAstronautPopup.set(true);
-                timer.timerCountdown(4, showingAstronautPopup);
-                achievementUnlock = true; // Indicate that an achievement has been unlocked
-            }
-        } else if (player.getPoints() >= 400 && player.getPoints() < 700) {
-            if (!achievementUnlock) {
-                AstronautLabel.setText("You've become a \n Astronaut Commander!!!");
-                player.setTex(astronautCommander);
-                showingAstronautPopup.set(true);
-                timer.timerCountdown(4, showingAstronautPopup);
-                achievementUnlock = true;
-            }
-        } else if (player.getPoints() >= 700) {
-            if (!achievementUnlock) {
-                AstronautLabel.setText("You've become a \n Master Astronomer!!!");
-                player.setTex(astronautMaster);
-                showingAstronautPopup.set(true);
-                timer.timerCountdown(4, showingAstronautPopup);
-                achievementUnlock = true;
-            }
-        }
+        // Player Texture Change
+        playerTextureChange();
 
-        // After displaying any achievement and starting the countdown, reset the flag
+        // After displaying any achievement and starting the count down, reset the flag
         if (achievementUnlock) {
-            achievementUnlock = false; // Ensure this is set after the popup logic
+            achievementUnlock = false; 
         }
 
         // Check for player collision with asteroids
@@ -361,6 +408,7 @@ public class GameScene extends ScreenAdapter {
         	entityManager.removePlanetFromCollectibles(cManager.getLastCollidedPlanetName());
         	
         	if (entityManager.countRemainingPlanets() == 0) {
+        		
                 // Pause game when player collides with a planet
                 gameState = GameState.PAUSED;
                 
@@ -371,27 +419,30 @@ public class GameScene extends ScreenAdapter {
                 
                 overlayStage.addActor(nextButton);
                 
+                // Check whether to go stage 2 or end game
                 if (!isSecondStageInitialized) {
                     nextButton.setVisible(true);
                     StageLabel.setText("Current Stage over!");
-                } else {
-                    nextButton.setVisible(false); // Hide if the game is not in Stage 1
+                } 
+                else {
+                    nextButton.setVisible(false);
                     StageLabel.setText("Game over!");
                 }
                 showingStagePopup.set(true);
                 
-                // Set the timer to 6 seconds if all planets are collected
-        		timer.setTime(6); 
-        	} else {
+                // Set the timer to 5 seconds if all planets are collected
+        		timer.setTime(5);        		
+        	} 
+        	else {
                 // Pause game when player collides with a planet
-                gameState = GameState.PAUSED;
-                
+                gameState = GameState.PAUSED;               
                 
                 // Pause Timer
                 timer.pauseTimer();
         	}
         }
 
+        
         // Check for collision with enemy
         if (player != null && enemy != null) {
             int remainingHealth = player.getHealth();
@@ -402,7 +453,6 @@ public class GameScene extends ScreenAdapter {
                 gameState = GameState.GAME_OVER;
             }
         }
-        
         
         // Timer Over change to scene 2
 		if(timer.getTime() == 0 && !isSecondStageInitialized) {
@@ -434,43 +484,13 @@ public class GameScene extends ScreenAdapter {
         overlayStage.dispose();
         AsteroidLabel.clear();
         BlackholeLabel.clear();
-        StageLabel.clear();
-        
+        StageLabel.clear();       
         sceneManager.setTriviaScreen(player);
-//        sceneManager.setEndScreen(player.getPoints());sceneManager.setEndScreen(player.getPoints());
     }
     
     // Method to update game state
     public void updateGameState(GameState newState) {
         this.gameState = newState;
-    }
-    
-    private void proceedToNextStage() {
-        if (!isSecondStageInitialized) {
-			
-			// Save Player Health and Score
-			SavePlayerScore = player.getPoints();
-			SavePlayerHealth = player.getHealth();
-			
-	        entityManager.disposeEntities();
-	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
-	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
-	        isSecondStageInitialized = true;
-            nextButton.setVisible(false); // Hide the button after moving to the next stage
-        }
-    }
-        
-    @Override
-    public void dispose() {
-        // Properly dispose of textures
-        backgroundTexture.dispose();
-        entityManager.disposeEntities();
-        ioManager.dispose();
-        hud.dispose();
-        overlayStage.dispose();
-        AsteroidLabel.clear();
-        BlackholeLabel.clear();
-        StageLabel.clear();
     }
     
 }

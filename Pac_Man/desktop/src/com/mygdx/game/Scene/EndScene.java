@@ -20,33 +20,69 @@ import com.mygdx.game.Engine.SceneManager;
 
 public class EndScene extends ScreenAdapter {
 	
-    private Stage stage;
-    private GameMaster gameMaster;
+	// Managers 
+	private GameMaster gameMaster;
     private SceneManager sceneManager;
-    private int finalScore;
     
-    // Background texture
+    // Classes
+    private Stage stage;
     private Texture backgroundTexture;
-    
-    // Batch texture
-    private SpriteBatch batch;
-    
-    private BitmapFont scoreFont;
-    private String endScore;
-    
     private HUD hud;
+    private SpriteBatch batch;  
+    private BitmapFont scoreFont;
+    
+    // Variables
+    private int finalScore;
+    private String endScore;
 
     public EndScene(GameMaster gameMaster, SceneManager sceneManager, int finalScore) {
     	
+    	 // Class Initialization
         this.gameMaster = gameMaster;
         this.sceneManager = sceneManager;
         this.finalScore = finalScore;
         
-        // Create a new SpriteBatch instance
+        // Initialize stage
+        this.stage = new Stage(new ScreenViewport());
+        
+        // Initialize font
+        this.scoreFont = new BitmapFont();
+        this.scoreFont.getData().setScale(3);
+        
+        // Create Instances
         batch = new SpriteBatch();
         hud = new HUD();
+        
+        // Set Stage Input Processor
+        Gdx.input.setInputProcessor(stage);
 
-        // Select the appropriate background image based on the final score
+        // Load background texture based on final score
+        setBackgroundTexture();
+
+        // Setup UI buttons
+        setupButtons();
+    }
+    
+    // Class Methods //
+    
+    // Method to draw player score
+    private void drawPlayerScore() {
+        // Calculate width of game over and score texts
+        GlyphLayout gameOverLayout = new GlyphLayout(scoreFont, "Game Over!");
+        GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: " + finalScore);
+
+        float totalWidth = gameOverLayout.width + scoreLayout.width + 20; // 20 for padding
+        float startingX = (Gdx.graphics.getWidth() - totalWidth) / 2;
+
+        batch.begin();
+        scoreFont.draw(batch, "Game Over!", startingX, Gdx.graphics.getHeight() - 50);
+        scoreFont.draw(batch, "Score: " + finalScore, startingX + gameOverLayout.width + 20, Gdx.graphics.getHeight() - 50);
+        batch.end();
+    }
+    
+    // Method to setup buttons
+ // Method to set the appropriate background texture based on the final score
+    private void setBackgroundTexture() {
         if (finalScore < 200) {
             backgroundTexture = new Texture("ZeroPointsBg.png");
         } else if (finalScore < 400) {
@@ -56,15 +92,11 @@ public class EndScene extends ScreenAdapter {
         } else {
             backgroundTexture = new Texture("MasterAstronomerBg.png");
         }
-        
-        this.scoreFont = new BitmapFont();
-        this.scoreFont.getData().setScale(3);
-        
+    }
 
-        this.stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
-
-        // Load atlas file to create skin for UI elements
+    // Method to setup UI buttons
+    private void setupButtons() {
+        // Load UI atlas and skin
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("freezing-ui.atlas"));
         Skin skin = new Skin(Gdx.files.internal("freezing-ui.json"), atlas);
 
@@ -93,7 +125,7 @@ public class EndScene extends ScreenAdapter {
             }
         });
 
-        // Calculate the button positions to be side by side at the bottom
+        // Adjust the button positions to be side by side at the bottom.
         float buttonWidth = playAgainButton.getWidth();
         float buttonSpacing = 20; // Space between buttons
         float buttonX = (Gdx.graphics.getWidth() - (2 * buttonWidth + buttonSpacing)) / 2;
@@ -118,23 +150,11 @@ public class EndScene extends ScreenAdapter {
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         stage.draw();
         
-     // Draw player score and game over text side by side
+        // Draw player score and game over text side by side
         drawPlayerScore();
     }
     
-    private void drawPlayerScore() {
-        // Calculate width of game over and score texts
-        GlyphLayout gameOverLayout = new GlyphLayout(scoreFont, "Game Over!");
-        GlyphLayout scoreLayout = new GlyphLayout(scoreFont, "Score: " + finalScore);
 
-        float totalWidth = gameOverLayout.width + scoreLayout.width + 20; // 20 for padding
-        float startingX = (Gdx.graphics.getWidth() - totalWidth) / 2;
-
-        batch.begin();
-        scoreFont.draw(batch, "Game Over!", startingX, Gdx.graphics.getHeight() - 50);
-        scoreFont.draw(batch, "Score: " + finalScore, startingX + gameOverLayout.width + 20, Gdx.graphics.getHeight() - 50);
-        batch.end();
-    }
     
     @Override
     public void dispose() {

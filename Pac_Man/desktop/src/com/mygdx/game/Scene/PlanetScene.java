@@ -17,19 +17,24 @@ import com.mygdx.game.Engine.SceneManager;
 
 public class PlanetScene extends ScreenAdapter {
 	
+	// Class and Managers
     private Stage stage;
     private GameMaster gameMaster;
     private SceneManager sceneManager;
+    
+    // Class Attributes
     private String planetName;
     private Texture planetTexture;
     
     public PlanetScene(GameMaster gameMaster, SceneManager sceneManager, String planetName) {
-        this.gameMaster = gameMaster;
+    	// Initialize variables and setup stage
+    	this.gameMaster = gameMaster;
         this.planetName = planetName;
         this.sceneManager = sceneManager;
         this.stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         
+        // Determine the image path based on the planet name
     	String planetFactImagePath = "";
     	switch (planetName) {
     	case "Earth":
@@ -60,11 +65,14 @@ public class PlanetScene extends ScreenAdapter {
     		planetFactImagePath = "moon_funfact.png";
     		break;
     	}
-
+        
+        // Load planet fact image
         planetTexture = new Texture(Gdx.files.internal(planetFactImagePath));
         Image planetImage = new Image(planetTexture);
+        
         // Set image size
         planetImage.setSize(1080, 1080); 
+        
         // Set image position
         planetImage.setPosition(0, 0);
         
@@ -78,28 +86,31 @@ public class PlanetScene extends ScreenAdapter {
             }
         });
         
+        // Create a table to organize UI elements
         Table table = new Table();
         table.setFillParent(true);
         table.add(planetImage).center();
         
-        // Add table and button to stage
+        // Add table and close button to stage
         stage.addActor(table);
         stage.addActor(closeButton);
     }
 
     @Override
     public void render(float delta) {
-        // Clear OpenGL color buffer
+    	// Clear OpenGL color buffer
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        // Render stage
         stage.act(delta);
         stage.draw();
     }
 
     @Override
     public void dispose() {
-    	planetTexture.dispose();
+    	// Dispose of resources
+        planetTexture.dispose();
         stage.dispose();
     }
 }

@@ -352,7 +352,7 @@ public class GameScene extends ScreenAdapter {
         // Check for player collision with planets
         if (cManager.checkCollectibleCollision(player, planets)) {
         	//Player score points
-        	player.PlayerScorePoints(50);
+        	player.playerScorePoints(50);
         	
         	// Set screen to planet fun fact scene
             sceneManager.setPlanetScreen(cManager.getLastCollidedPlanetName());
@@ -409,7 +409,7 @@ public class GameScene extends ScreenAdapter {
 			timer.setTime(30);
 			SavePlayerScore = player.getPoints();
 			SavePlayerHealth = player.getHealth();
-	        entityManager.swapEntities();
+	        entityManager.disposeEntities();
 	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;
@@ -452,7 +452,7 @@ public class GameScene extends ScreenAdapter {
 			SavePlayerScore = player.getPoints();
 			SavePlayerHealth = player.getHealth();
 			
-	        entityManager.swapEntities();
+	        entityManager.disposeEntities();
 	        entityManager.initEntities(2, SavePlayerScore, SavePlayerHealth);
 	        camera.position.set(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2, 0);
 	        isSecondStageInitialized = true;

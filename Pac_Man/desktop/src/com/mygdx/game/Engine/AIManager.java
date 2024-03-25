@@ -14,6 +14,7 @@ public class AIManager {
     private float playerY;
     private float asteroidX;
     private float asteroidY;
+    private float asteroidSpeed;
     private Collectible asteroid;
     
     // Constructors
@@ -23,10 +24,11 @@ public class AIManager {
         this.playerY = playerY;
     }
     
-    public AIManager(Collectible asteroid, float asteroidX, float asteroidY) {
+    public AIManager(Collectible asteroid, float asteroidX, float asteroidY, float asteroidSpeed) {
         this.asteroid = asteroid;
         this.asteroidX = asteroidX;
         this.asteroidY = asteroidY;
+        this.asteroidSpeed = asteroidSpeed;
     }
 
     // Methods

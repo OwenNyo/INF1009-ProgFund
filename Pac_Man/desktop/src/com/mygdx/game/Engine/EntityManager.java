@@ -41,39 +41,32 @@ public class EntityManager {
 			batch = new SpriteBatch();
 	    	shape = new ShapeRenderer();
 	    	
-	    	player = new Player("player", "spaceDog.png", PLAYER_SPAWN_X, PLAYER_SPAWN_Y,
-	    			PLAYER_SPEED, PLAYER_HEALTH, PLAYER_POINTS, 100, 100, false, true);
-			enemy = new Enemy("enemy", "blackhole.png", 0, 0, ENEMY_SPEED, ENEMY_DAMAGE, 80, 80, true);
+	    	player = EntityFactory.createPlayer(PLAYER_SPAWN_X, PLAYER_SPAWN_Y,
+	    			PLAYER_SPEED, PLAYER_HEALTH, PLAYER_POINTS);
+	    	
+	    	enemy = EntityFactory.createEnemy(0, 0, ENEMY_SPEED, ENEMY_DAMAGE);
 			enemy.generateSpawnPoint(player.getX(), player.getY());
 			
-			String[] planetsName = {"Earth", "Uranus", "Moon", "Mercury",
-					"Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
-			String[] planets = {"earth.png", "uranus.png", "moon.png",
-					"mercury.png", "venus.png", "mars.png", "jupiter.png", "saturn.png", "neptune.png"};
-			int[] planetSize = {240, 280, 220, 190, 230, 210, 320, 300, 260};
 	    	
 	    	if(stage == 1) {
 	    		entityList.add(player);
 	    		entityList.add(enemy);
 	    		
 	    		collectibles = new Collectible[MAX_COLLECTIBLES];
-	    	    Random random = new Random();
-	    		
-	    		for (int i = 0; i < collectibles.length; i++) {
-	                collectibles[i] = new Collectible(planetsName[i], planets[i], 0, 0, 0,
-	                		planetSize[i], planetSize[i], false);
-	                collectibles[i].generateSpawnPoint(player.getX(), player.getY());
-	                entityList.add(collectibles[i]);
-	            }	
-	    		
 	    		asteroids = new Collectible[MAX_COLLECTIBLES];
+	    	    
+	    		for (int i = 0; i < collectibles.length; i++) {
+	    	        Collectible collectible = EntityFactory.createRandomCollectible(0, 0, i);
+	    	        collectible.generateSpawnPoint(player.getX(), player.getY());
+	    	        entityList.add(collectible);
+	    	    }
+
+	            for (int i = 0; i < asteroids.length; i++) {
+	                Collectible asteroid = EntityFactory.createAsteroid(0, 0);
+	                asteroid.generateSpawnPoint(player.getX(), player.getY());
+	                entityList.add(asteroid);
+	            }
 	    		
-	    		for (int i = 0; i < asteroids.length; i++) {
-	                asteroids[i] = new Collectible("asteroid", "asteroid.png", 0, 0, 1,
-	    		    		80, 80, false);
-	                asteroids[i].generateSpawnPoint(player.getX(), player.getY());
-	    		    entityList.add(asteroids[i]);
-	    		 }	
 	    	}		
 	    	else if(stage == 2) {
 	    		entityList.add(player);
@@ -82,26 +75,18 @@ public class EntityManager {
 	    		player.setHealth(savedHealth);
 	    		
 	    		collectibles = new Collectible[MAX_COLLECTIBLES];
-	    	    Random random = new Random();
-	    		
-	    		for (int i = 0; i < collectibles.length; i++) {
-	                float randomX = random.nextInt(Gdx.graphics.getWidth());
-	                float randomY = random.nextInt(Gdx.graphics.getHeight());
-	                
-	                collectibles[i] = new Collectible(planetsName[i + collectibles.length],
-	                		planets[i + collectibles.length], randomX, randomY, 0,
-	                		planetSize[i + collectibles.length], planetSize[i + collectibles.length], false);
-	               entityList.add(collectibles[i]);
-	            }	
-	    		
 	    		asteroids = new Collectible[MAX_COLLECTIBLES];
-	    				
-	    		for (int i = 0; i < asteroids.length; i++) {
-	                float randomX = random.nextInt(Gdx.graphics.getWidth());
-	                asteroids[i] = new Collectible("spaceStation", "space_station.png", randomX, 1200, 1,
-	    		    		80, 80, false);
-	    		    entityList.add(asteroids[i]);
-	    		 }	
+	    		
+	    		for (int i = 0; i < 3; i++) {
+	    	        Collectible collectible = EntityFactory.createRandomCollectible(0, 0, i + MAX_COLLECTIBLES);
+	    	        entityList.add(collectible);
+	    	    }
+	    		
+	            for (int i = 0; i < 3; i++) {
+	                Collectible spaceStation = EntityFactory.createSpaceStation(0, 1200);
+	                spaceStation.generateSpawnPoint(player.getX(), player.getY());
+	                entityList.add(spaceStation);
+	            }
 	    	}
 		}
 		
@@ -114,19 +99,21 @@ public class EntityManager {
 		
 		// Movement logic for all Entities
 		public void moveEntities() {
-	        for (Entity entity : entityList) {
+			for (Entity entity : entityList) {
 	            if (entity instanceof Player) {
 	                PlayerControlManager playerControlManager = new PlayerControlManager((Player) entity);
 	                playerControlManager.handleMovement();
 	            } else if (entity instanceof Enemy) {
-	                AIManager aiManager = new AIManager((Enemy) entity, player.getX(), player.getY()); // Pass player coordinates
+	                AIManager aiManager = new AIManager((Enemy) entity, getPlayer().getX(), getPlayer().getY());
 	                aiManager.handleMovement();
-	            } 
+	            }
 	        }
-	        
-	        for (int i = 0; i < asteroids.length; i++) {
-	        	AIManager aiManager = new AIManager(asteroids[i], asteroids[i].getX(), asteroids[i].getY());
-	        	aiManager.handleMovement(asteroids[i].getSpeed());
+
+	        for (Entity entity : entityList) {
+	            if (entity instanceof Collectible) {
+	                AIManager aiManager = new AIManager((Collectible) entity, entity.getX(), entity.getY(), entity.getSpeed());
+	                aiManager.handleMovement(entity.getSpeed());
+	            }
 	        }
 	    }
 		
@@ -211,49 +198,37 @@ public class EntityManager {
 		// Class Methods //
 		
 		// Remove Planet from Collectibles Array
-		public void removePlanetFromCollectibles(String planetName) {    	
-	        // Count how many collectibles that match the planetName to remove
-	        int removeCount = 0;
-	        for (int i = 0; i < collectibles.length; i++) {
-	            if (collectibles[i].getType().equalsIgnoreCase(planetName)) {
-	                removeCount++;
-	            }
-	        }
+		public void removePlanetFromCollectibles(String planetName) {
+		    List<Collectible> collectibleList = getCollectibles();
 
-	        // If nothing to remove, return and end method
-	        if (removeCount == 0) {
-	            return;
-	        }
-	        
-	        // Create a new array for collectibles excluding the removed planet
-	        Collectible[] newCollectibles = new Collectible[collectibles.length - removeCount];
-	        
-	        int index = 0;
-	        for (int i = 0; i < collectibles.length; i++) {
-	            if (!collectibles[i].getType().equalsIgnoreCase(planetName)) {
-	                newCollectibles[index++] = collectibles[i];
-	            } else {
-	                // Remove the collectible from entityList
-	                entityList.remove(collectibles[i]);
-	            }
-	        }
-	        
-	        // Update the collectibles array
-	        collectibles = newCollectibles; 
-	    }
-	    
-		// Count Remaining Planets in Collectibles Array
-	    public int countRemainingPlanets() {
-	        int planetCount = 0;
-	        for (Collectible collectible : collectibles) {
-	            if (collectible.getType().equals("Earth") || collectible.getType().equals("Uranus") || 
-	                collectible.getType().equals("Moon") || collectible.getType().equals("Mercury") ||
-	                collectible.getType().equals("Venus") || collectible.getType().equals("Mars") || 
-	                collectible.getType().equals("Jupiter") || collectible.getType().equals("Saturn") ||
-	                collectible.getType().equals("Neptune")) {
-	                planetCount++;
-	            }
-	        }
-	        return planetCount;
-	    }	
+		    // Count how many collectibles that match the planetName to remove
+		    int removeCount = 0;
+		    for (Collectible collectible : collectibleList) {
+		        if (collectible.getType().equalsIgnoreCase(planetName)) {
+		            removeCount++;
+		            entityList.remove(collectible);
+		        }
+		    }
+		}
+
+		public int countRemainingPlanets() {
+		    int planetCount = 0;
+		    List<Collectible> collectibleList = getCollectibles();
+		    for (Collectible collectible : collectibleList) {
+		        if (isPlanet(collectible.getType())) {
+		            planetCount++;
+		        }
+		    }
+		    return planetCount;
+		}
+
+		private boolean isPlanet(String type) {
+		    String[] planetNames = {"Earth", "Uranus", "Moon", "Mercury", "Venus", "Mars", "Jupiter", "Saturn", "Neptune"};
+		    for (String planet : planetNames) {
+		        if (type.equalsIgnoreCase(planet)) {
+		            return true;
+		        }
+		    }
+		    return false;
+		}
 }

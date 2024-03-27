@@ -101,7 +101,7 @@ public class EntityManager {
 		public void moveEntities() {
 			for (Entity entity : entityList) {
 	            if (entity instanceof Player) {
-	                PlayerControlManager playerControlManager = new PlayerControlManager((Player) entity);
+	                PlayerControlManager playerControlManager = new PlayerControlManager((Player) entity, new FirstPlayerMovement());
 	                playerControlManager.handleMovement();
 	            } else if (entity instanceof Enemy) {
 	                AIManager aiManager = new AIManager((Enemy) entity, getPlayer().getX(), getPlayer().getY());

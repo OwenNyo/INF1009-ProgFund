@@ -12,8 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.SceneManager;
+import com.mygdx.game.Logic.HUD;
 import com.mygdx.game.GameMaster;
 
 public class MenuScene extends ScreenAdapter {

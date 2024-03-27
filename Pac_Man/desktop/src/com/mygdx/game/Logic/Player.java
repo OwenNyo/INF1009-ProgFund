@@ -1,12 +1,10 @@
-package com.mygdx.game.Engine;
-
-import java.util.concurrent.atomic.AtomicBoolean;
+package com.mygdx.game.Logic;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Timer;
+import com.mygdx.game.Engine.Entity;
 
 public class Player extends Entity {
 
@@ -16,8 +14,6 @@ public class Player extends Entity {
     private int points;
     private boolean isFirstPlayer;
     private SpriteBatch batch;
-    private String remainingHealth = "";
-    private BitmapFont healthFont;
 
     // Constructors
     public Player() {

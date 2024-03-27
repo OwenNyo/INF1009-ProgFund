@@ -8,6 +8,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.mygdx.game.Logic.Collectible;
+import com.mygdx.game.Logic.Enemy;
+import com.mygdx.game.Logic.EntityFactory;
+import com.mygdx.game.Logic.FirstPlayerMovement;
+import com.mygdx.game.Logic.Player;
 
 public class EntityManager {
 	

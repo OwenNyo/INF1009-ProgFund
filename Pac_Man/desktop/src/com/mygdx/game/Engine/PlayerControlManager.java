@@ -2,6 +2,8 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.mygdx.game.Logic.Player;
+import com.mygdx.game.Logic.PlayerMovement;
 
 public class PlayerControlManager {
     

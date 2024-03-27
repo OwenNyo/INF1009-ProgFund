@@ -20,17 +20,17 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.GameMaster;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.mygdx.game.Engine.Collectible;
 import com.mygdx.game.Engine.CollisionManager;
 import com.mygdx.game.Engine.Entity;
 import com.mygdx.game.Engine.EntityManager;
-import com.mygdx.game.Engine.Enemy;
 import com.mygdx.game.Engine.IOManager;
-import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.SceneManager;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.TimerClass;
+import com.mygdx.game.Logic.Collectible;
+import com.mygdx.game.Logic.Enemy;
+import com.mygdx.game.Logic.HUD;
+import com.mygdx.game.Logic.Player;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -106,8 +106,8 @@ public class GameScene extends ScreenAdapter {
         // Class & Manager Initialization
         hud = new HUD();
         timer = new TimerClass();
-        cManager = new CollisionManager();
-        ioManager = new IOManager();
+        cManager = CollisionManager.getInstance();
+        ioManager = IOManager.getInstance();
         entityManager = new EntityManager();
         entityManager.initEntities(1, SavePlayerScore, SavePlayerHealth);
         entityList = entityManager.getEntityList();

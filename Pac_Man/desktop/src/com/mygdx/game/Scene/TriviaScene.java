@@ -15,10 +15,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.mygdx.game.GameMaster;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.game.Engine.IOManager;
-import com.mygdx.game.Engine.Player;
 import com.mygdx.game.Engine.SceneManager;
+import com.mygdx.game.Logic.HUD;
+import com.mygdx.game.Logic.Player;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.Engine.HUD;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -82,7 +82,7 @@ public class TriviaScene extends ScreenAdapter {
         FalseButton = new TextButton("False", buttonStyle);
         
         // Class & Manager Initialization
-        ioManager = new IOManager();
+        ioManager = IOManager.getInstance();
          
 
         // Load Quiz Questions and Answers

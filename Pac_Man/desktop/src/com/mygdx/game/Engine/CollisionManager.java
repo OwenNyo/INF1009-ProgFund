@@ -2,14 +2,29 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.Engine.IOManager;
+import com.mygdx.game.Logic.Collectible;
+import com.mygdx.game.Logic.Enemy;
+import com.mygdx.game.Logic.Player;
 
 public class CollisionManager {
+	
+	// Singleton Instance
+	private static CollisionManager instance;
+	
     
     // Manager Initialization
-    private IOManager ioManager = new IOManager();
+    private IOManager ioManager = IOManager.getInstance();
     
     // Fields
     private String lastCollidedPlanetName = "";
+    
+    // Method to get the singleton instance
+    public static CollisionManager getInstance() {
+        if (instance == null) {
+            instance = new CollisionManager();
+        }
+        return instance;
+    }
 
     // Logic to check for collision with Ghost
     public static boolean collidedWithEnemy(Player player, Enemy enemy) {

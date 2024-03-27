@@ -19,8 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.Engine.SceneManager;
+import com.mygdx.game.Logic.HUD;
 import com.mygdx.game.Settings.GameSettings;
-import com.mygdx.game.Engine.HUD;
 import com.mygdx.game.Engine.IOManager;
 import com.mygdx.game.GameMaster;
 

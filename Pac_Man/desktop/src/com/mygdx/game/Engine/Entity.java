@@ -110,7 +110,7 @@ public abstract class Entity{
 	}
 	
 	// Class | Abstract Methods
-	abstract void draw();
+	public abstract void draw();
 	
 	// Check collision
 	protected Rectangle getBoundingRectangle() {

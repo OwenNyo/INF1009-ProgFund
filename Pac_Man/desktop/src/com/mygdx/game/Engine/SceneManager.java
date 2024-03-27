@@ -2,6 +2,7 @@ package com.mygdx.game.Engine;
 
 import com.badlogic.gdx.Screen;
 import com.mygdx.game.GameMaster;
+import com.mygdx.game.Logic.Player;
 import com.mygdx.game.Scene.EndScene;
 import com.mygdx.game.Scene.GameScene;
 import com.mygdx.game.Scene.MenuScene;
@@ -44,7 +45,7 @@ public class SceneManager {
     // Method to set the option screen
     public void setOptionScreen() {
     	// Initialize IOManager
-        IOManager ioManager = new IOManager();
+        IOManager ioManager = IOManager.getInstance();
         // Initialize OptionScene
     	OptionScene optionScene = new OptionScene(gameMaster, this, ioManager);
     	// Set the screen using the GameMaster

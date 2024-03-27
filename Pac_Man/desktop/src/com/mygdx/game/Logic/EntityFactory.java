@@ -1,6 +1,4 @@
-package com.mygdx.game.Engine;
-
-import java.util.Random;
+package com.mygdx.game.Logic;
 
 public class EntityFactory {
 	 // Method to create a player entity

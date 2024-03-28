@@ -45,7 +45,7 @@ public class SceneManager {
     // Method to set the option screen
     public void setOptionScreen() {
     	// Initialize IOManager
-        IOManager ioManager = IOManager.getInstance();
+        IOManager ioManager = new IOManager();
         // Initialize OptionScene
     	OptionScene optionScene = new OptionScene(gameMaster, this, ioManager);
     	// Set the screen using the GameMaster

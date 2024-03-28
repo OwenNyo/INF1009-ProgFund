@@ -7,8 +7,6 @@ import com.badlogic.gdx.audio.Sound;
 
 public class IOManager {
 	
-	// Singleton instance
-    private static IOManager instance;
 
 	// Attributes for managing audio
     protected Music BGMusic;
@@ -32,15 +30,6 @@ public class IOManager {
 
         // Load settings from preferences
         loadSettings();
-    }
-    
-    // Static method to get the singleton instance of IOManager
-    public static IOManager getInstance() {
-        // Create a new instance if it doesn't exist
-        if (instance == null) {
-            instance = new IOManager();
-        }
-        return instance;
     }
 
     // Method to load settings from preferences

@@ -13,7 +13,7 @@ public class CollisionManager {
 	
     
     // Manager Initialization
-    private IOManager ioManager = IOManager.getInstance();
+    private IOManager ioManager = new IOManager();
     
     // Fields
     private String lastCollidedPlanetName = "";

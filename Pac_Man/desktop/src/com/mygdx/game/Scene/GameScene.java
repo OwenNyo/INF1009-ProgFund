@@ -107,7 +107,7 @@ public class GameScene extends ScreenAdapter {
         hud = new HUD();
         timer = new TimerClass();
         cManager = CollisionManager.getInstance();
-        ioManager = IOManager.getInstance();
+        ioManager = new IOManager();
         entityManager = new EntityManager();
         entityManager.initEntities(1, SavePlayerScore, SavePlayerHealth);
         entityList = entityManager.getEntityList();

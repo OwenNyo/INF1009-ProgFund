@@ -82,7 +82,7 @@ public class TriviaScene extends ScreenAdapter {
         FalseButton = new TextButton("False", buttonStyle);
         
         // Class & Manager Initialization
-        ioManager = IOManager.getInstance();
+        ioManager = new IOManager();
          
 
         // Load Quiz Questions and Answers

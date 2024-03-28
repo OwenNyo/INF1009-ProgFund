@@ -46,7 +46,8 @@ public class TriviaScene extends ScreenAdapter {
     private String[][] planetsList;
     private String answer;
     private String answerText;
-    private boolean showAnswer = false;
+    private boolean showWrongAnswer = false;
+    private boolean showCorrectAnswer = false;
     
     // Static Variables
     private int finalScore; 
@@ -113,10 +114,11 @@ public class TriviaScene extends ScreenAdapter {
                 	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
                     finalScore += 50;
+                    showCorrectAnswer = true;
                 } else {
                 	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
-                    showAnswer = true;
+                    showWrongAnswer = true;
                 }
                 // Timer for each question 
                 startQuestionTimer();
@@ -139,10 +141,11 @@ public class TriviaScene extends ScreenAdapter {
                 	// If correct answer is chosen, play "correct" sound effect and add score
                     ioManager.playSECollect();
                     finalScore += 50;
+                    showCorrectAnswer = true;
                 } else {
                 	// If wrong answer is chosen, play "wrong" sound effect and show correct answer (answerText)
                     ioManager.playSE();
-                    showAnswer = true;
+                    showWrongAnswer = true;
                 }
                 // Timer for each question 
                 startQuestionTimer();
@@ -183,15 +186,32 @@ public class TriviaScene extends ScreenAdapter {
         // Draw Player Score
         drawPlayerScore();
 
-        // Draw the answer if it needs to be shown
-        if (showAnswer) {
-            String isCorrect = answer.equals("True") ? "Correct! " : "Wrong! ";
-            answerText = isCorrect + answerText;
+        // Draw the Asnwer for when they select correctly
+        if (showCorrectAnswer) {
+        	String isCorrect = "Correct Answer! ";
+            answerText = isCorrect;
             drawAnswer(answerText);
+            
             answerTimer.scheduleTask(new Timer.Task() {
                 @Override
                 public void run() {
-                    showAnswer = false;
+                    showCorrectAnswer = false;
+                    answerTimer.clear();
+                }
+            }, 2);
+        }
+        
+        // Draw the Answer for when they select wrongly
+        if(showWrongAnswer) {
+        	String isWrong = "Wrong Answer! ";
+        	answerText = isWrong + answerText;
+        	drawAnswer(answerText);
+        	
+        	answerTimer.scheduleTask(new Timer.Task() {
+                @Override
+                public void run() {
+                    showWrongAnswer = false;
+                    answerTimer.clear();
                 }
             }, 2);
         }
